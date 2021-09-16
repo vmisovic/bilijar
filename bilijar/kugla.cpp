@@ -1,11 +1,11 @@
 #include "kugla.h"
 
-float intenzitet(sf::Vector2f a)
+float intenzitet(sf::Vector2f a)//vraca vrednost intenziteta vektora
 {
 	return sqrt(a.x * a.x + a.y * a.y);
 }
 
-float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v)
+float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v)//cos fi=u*v/(|u|*|v|) gde je u*v skalarni proizvod vektora
 {
 	if ((u.x * v.x + u.y * v.y) == 0)return 0;
 	if((intenzitet(u)==0 || intenzitet(v))==0)return 1;
@@ -19,7 +19,7 @@ void zameni(float* a, float* b)
 	*b = pom;
 }
 
-sf::Vector2f rotiraj90(sf::Vector2f a)
+sf::Vector2f rotiraj90(sf::Vector2f a)//trenutno ne sluzi nicemu
 {
 	zameni(&a.x, &a.y);
 	a.x* (-1.f);
@@ -28,25 +28,25 @@ sf::Vector2f rotiraj90(sf::Vector2f a)
 
 kugla::kugla()
 {
-	prozor = NULL;
+	prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
 	boja = sf::Color::Red;
 	pozicija = sf::Vector2f(200.f, 200.f);
-
+	//podesavanje za iscrtavanja
 	krug.setRadius(poluprecnik);
 	krug.setFillColor(boja);
 }
 
-void kugla::podesi(sf::Color b, sf::Vector2f p, sf::Vector2f v)
+void kugla::podesi(sf::Color b, sf::Vector2f p, sf::Vector2f v)//dodeljuje pocetne vrednosti boje, pozicije i vektora brzine
 {
 	boja = b;
 	pozicija = p;
 	brzina = v;
-
+	//podesavanje za iscrtavanja
 	krug.setRadius(poluprecnik);
 	krug.setFillColor(boja);
 }
 
-void kugla::osvezi(sf::Time vreme)
+void kugla::osvezi(sf::Time vreme)//glupa funkcija pomeranja kugli, treba temeljne izmene
 {
 	if (pozicija.x < 0 + poluprecnik)
 		brzina.x = fabs(brzina.x) * 0.9f;
@@ -60,7 +60,7 @@ void kugla::osvezi(sf::Time vreme)
 	pozicija += brzina*(vreme.asMilliseconds()*0.01f);
 }
 
-bool kugla::sudar(kugla* druga)
+bool kugla::sudar(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo doo sudara
 {
 	sf::Vector2f d = druga->pozicija - this->pozicija;
 	if (intenzitet(d) > 2 * poluprecnik)
@@ -77,7 +77,7 @@ bool kugla::sudar(kugla* druga)
 	return 1;
 }
 
-void kugla::crtaj()
+void kugla::crtaj()//iscrtavanje
 {
 	krug.setPosition(pozicija.x - poluprecnik, pozicija.y - poluprecnik);
 	prozor->draw(krug);

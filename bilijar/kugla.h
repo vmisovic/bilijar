@@ -1,4 +1,3 @@
-#pragma once
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
@@ -8,10 +7,10 @@ class kugla
 	sf::Vector2f pozicija;
 	sf::Vector2f brzina;
 
-	float masa=1;
+	float masa=1;//jos uvek nije implementirana
 	float poluprecnik = 20.f;
 	float trenje = 0.05f;
-
+	//grafika
 	sf::CircleShape krug;
 	sf::RenderWindow* prozor;
 public:

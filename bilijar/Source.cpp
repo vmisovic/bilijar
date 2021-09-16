@@ -15,16 +15,15 @@ int main()
     for (int i = 0; i < 16; i++)
         k[i].povezi_grafiku(&prozor);
 
-    k[0].podesi(sf::Color::Yellow, sf::Vector2f(800.f, 200.f), sf::Vector2f(0.f, 0.f));
+    k[0].podesi(sf::Color::White, sf::Vector2f(800.f, 200.f), sf::Vector2f(0.f, 0.f));
     k[1].podesi(sf::Color::Green, sf::Vector2f(800.f+40/sqrt(2.f), 500.f), sf::Vector2f(0.f, -50.f));
-    k[2].dodeli_poziciju(sf::Vector2f(400.f, 350.f));
+    k[2].podesi(sf::Color::Yellow, sf::Vector2f(400.f, 350.f), sf::Vector2f(0.f, 0.f));
     k[3].podesi(sf::Color::Magenta, sf::Vector2f(500.f, 500.f), sf::Vector2f(100.f, 140.f));
     k[4].podesi(sf::Color::Blue, sf::Vector2f(500.f, 400.f), sf::Vector2f(50.f, -120.f));
     
     for (int i = 5; i < 16; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
     
-
     while (prozor.isOpen())
     {
         prozor.clear();
