@@ -5,7 +5,7 @@ float intenzitet(sf::Vector2f a)//vraca vrednost intenziteta vektora
 	return sqrt(a.x * a.x + a.y * a.y);
 }
 
-float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v)//cos fi=u*v/(|u|*|v|) gde je u*v skalarni proizvod vektora
+float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v)//cos fi=u*v/(|u|*|v|) gde je u*v skalarni proizvod vektora, fi ugao izmedju u i v
 {
 	if ((u.x * v.x + u.y * v.y) == 0)return 0;
 	if((intenzitet(u)==0 || intenzitet(v))==0)return 1;
@@ -22,7 +22,7 @@ void zameni(float* a, float* b)
 sf::Vector2f rotiraj90(sf::Vector2f a)//trenutno ne sluzi nicemu
 {
 	zameni(&a.x, &a.y);
-	a.x* (-1.f);
+	a.x*= (-1.f);
 	return a;
 }
 
@@ -60,20 +60,33 @@ void kugla::osvezi(sf::Time vreme)//glupa funkcija pomeranja kugli, treba temelj
 	pozicija += brzina*(vreme.asMilliseconds()*0.01f);
 }
 
-bool kugla::sudar(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo doo sudara
+bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
 {
 	sf::Vector2f d = druga->pozicija - this->pozicija;
 	if (intenzitet(d) > 2 * poluprecnik)
 		return 0;
-	sf::Vector2f pomocna_brzina0, pomocna_brzina1, pomocna_brzina2, krajnja_brzina1, krajnja_brzina2;
-	float cos_u1;
-	pomocna_brzina0 = brzina - druga->brzina;
-	cos_u1 = cos_uglaIzmedjuVektora(pomocna_brzina0, d);
-	pomocna_brzina2 = d * (intenzitet(pomocna_brzina0) / intenzitet(d) * cos_u1);
-	krajnja_brzina1 = -pomocna_brzina2 + brzina;
-	krajnja_brzina2 = pomocna_brzina2 + druga->brzina;
-	brzina = krajnja_brzina1;
-	druga->brzina = krajnja_brzina2;
+	float cos_u[2];
+	cos_u[0] = cos_uglaIzmedjuVektora(brzina, d);
+	cos_u[1] = cos_uglaIzmedjuVektora(druga->brzina, d);
+	sf::Vector2f normalna[2], paralelna[2];
+	normalna[0] = d * (intenzitet(brzina) * cos_u[0] / intenzitet(d));
+	normalna[1] = d * (intenzitet(druga->brzina) * cos_u[1] / intenzitet(d));
+	paralelna[0] = brzina - normalna[0];
+	paralelna[1] = druga->brzina - normalna[1];
+	brzina = paralelna[0] + (normalna[0] * (masa - druga->masa) + normalna[1] * (2 * druga->masa)) / (masa + druga->masa);
+	druga->brzina = paralelna[1] + (normalna[0] * (2 * masa) + normalna[1] * (druga->masa - masa)) / (masa + druga->masa);
+	return 1;
+}
+
+bool kugla::sudar_o_ivicu(ivica ivica1)
+{
+	if (ivica1.razdaljina_od(pozicija) > poluprecnik)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o ivicu
+		return 0;
+	sf::Vector2f normalna, paralelna;
+	float cos_u1 = cos_uglaIzmedjuVektora(brzina, ivica1.pravac);
+	paralelna =  ivica1.pravac * (intenzitet(brzina) * cos_u1 / intenzitet(ivica1.pravac));
+	normalna = brzina - paralelna;
+	brzina = paralelna - normalna;
 	return 1;
 }
 
@@ -84,11 +97,16 @@ void kugla::crtaj()//iscrtavanje
 }
 
 /*
-		pomocna_brzina0 = brzina - druga->brzina;
-		cos_u1 = cos_uglaIzmedjuVektora(pomocna_brzina0, d);
-		pomocna_brzina2 = d * (intenzitet(pomocna_brzina0) / intenzitet(d) * cos_u1);
-		krajnja_brzina1 = -pomocna_brzina2 + brzina;
-		krajnja_brzina2 = pomocna_brzina2 + druga->brzina;
-		brzina = krajnja_brzina1;
-		druga->brzina = krajnja_brzina2;
+	sf::Vector2f d = druga->pozicija - this->pozicija;
+	if (intenzitet(d) > 2 * poluprecnik)
+		return 0;
+	sf::Vector2f pomocna_brzina[3], krajnja_brzina1, krajnja_brzina2;
+	float cos_u1;
+	pomocna_brzina[0] = brzina - druga->brzina;
+	cos_u1 = cos_uglaIzmedjuVektora(pomocna_brzina[0], d);
+	pomocna_brzina[2] = d * (intenzitet(pomocna_brzina[0]) / intenzitet(d) * cos_u1);
+	krajnja_brzina1 = -pomocna_brzina[2] + brzina;
+	krajnja_brzina2 = pomocna_brzina[2] + druga->brzina;
+	brzina = krajnja_brzina1;
+	druga->brzina = krajnja_brzina2;
 */

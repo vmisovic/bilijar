@@ -21,9 +21,15 @@
     <ClCompile Include="kugla.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ivica.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kugla.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ivica.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

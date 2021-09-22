@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "ivica.h"
 #include <cmath>
 
 class kugla
@@ -7,7 +8,7 @@ class kugla
 	sf::Vector2f pozicija;
 	sf::Vector2f brzina;
 
-	float masa=1;//jos uvek nije implementirana
+	float masa=1;
 	float poluprecnik = 20.f;
 	float trenje = 0.05f;
 	//grafika
@@ -21,7 +22,8 @@ public:
 	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
 	sf::Vector2f getPosition() { return pozicija; }
 	void osvezi(sf::Time vreme);
-	bool sudar(kugla* druga);
+	bool sudar_kugli(kugla* druga);
+	bool sudar_o_ivicu(ivica ivica1);
 	void crtaj();
 };
 
