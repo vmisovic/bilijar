@@ -11,6 +11,9 @@ class kugla
 	float masa=1;
 	float poluprecnik = 20.f;
 	float trenje = 0.1f;
+
+	bool sudarena = 0;
+
 	//grafika
 	sf::CircleShape krug;
 	sf::RenderWindow* prozor;

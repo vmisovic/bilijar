@@ -58,8 +58,6 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		brzina.y = -fabs(brzina.y) * 0.9f;
 	brzina *= (1 - trenje*0.1f ) * !(intenzitet(brzina) < 2.8f);
 	pozicija += brzina*0.01f;
-	//brzina *= (1 - trenje * vreme.asMilliseconds() * 0.01f) * !(intenzitet(brzina) < 2.8f);
-	//pozicija += brzina * (vreme.asMilliseconds() * 0.01f);
 }
 
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
@@ -82,8 +80,8 @@ bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u k
 
 bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o ivicu
 {
-	if (ivica1.razdaljina_od(pozicija) > poluprecnik || 
-		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= 0 || 
+	if (ivica1.razdaljina_od(pozicija) > poluprecnik ||
+		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= 0 ||
 		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= 0)
 		return 0;
 	sf::Vector2f normalna, paralelna;

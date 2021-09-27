@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include<cmath>
+
 class ivica
 {
 public:
