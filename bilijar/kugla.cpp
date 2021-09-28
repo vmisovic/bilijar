@@ -56,8 +56,9 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		brzina.x = -fabs(brzina.x) * 0.9f;
 	if (pozicija.y > prozor->getSize().y - poluprecnik)
 		brzina.y = -fabs(brzina.y) * 0.9f;
-	brzina *= (1 - trenje*0.1f ) * !(intenzitet(brzina) < 2.8f);
-	pozicija += brzina*0.01f;
+	sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/120);
+	pozicija += (brzina+nova_brzina)/(2.f*120.f);
+	brzina = nova_brzina * (0.f + (intenzitet(brzina) > 2.8f));
 }
 
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
