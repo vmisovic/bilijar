@@ -153,6 +153,9 @@
     <ClInclude Include="ivica.h" />
     <ClInclude Include="kugla.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="slika.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
