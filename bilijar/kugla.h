@@ -14,13 +14,11 @@ class kugla
 	int br_frejmova_od_poslednjeg_s = 10;
 	
 	//konstante
-	sf::Color boja;
 	float masa=1;
 	float poluprecnik = 20.f;
 	float trenje = 0.1f;
 
 	//grafika
-	sf::CircleShape krug;
 	sf::Image slika;
 	sf::RenderWindow* prozor;
 public:
@@ -35,7 +33,7 @@ public:
 		if (!slika.loadFromFile(naziv.str()))
 			exit(br);
 	}
-	void podesi(sf::Color b, sf::Vector2f p, sf::Vector2f v);
+	void podesi(sf::Vector2f p, sf::Vector2f v);
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
 	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
 
@@ -51,5 +49,4 @@ public:
 
 	//funkcije za iscrtavanje
 	void crtaj();
-	void crtaj_2();
 };

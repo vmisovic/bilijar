@@ -38,23 +38,16 @@ float mapiranje(float vrednost, float poc1,float kraj1,float poc2,float kraj2)
 kugla::kugla()
 {
 	prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
-	boja = sf::Color::Red;
 	pozicija = sf::Vector2f(200.f, 200.f);
 	rotacija = sf::Vector2f(2.f, 0.f);
 	ugaona_brzina = sf::Vector2f(0.f,0.f);
 	//podesavanje za iscrtavanja
-	krug.setRadius(poluprecnik);
-	krug.setFillColor(boja);
 }
 
-void kugla::podesi(sf::Color b, sf::Vector2f p, sf::Vector2f v)//dodeljuje pocetne vrednosti boje, pozicije i vektora brzine
+void kugla::podesi(sf::Vector2f p, sf::Vector2f v)//dodeljuje pocetne vrednosti boje, pozicije i vektora brzine
 {
-	boja = b;
 	pozicija = p;
 	brzina = v;
-	//podesavanje za iscrtavanja
-	krug.setRadius(poluprecnik);
-	krug.setFillColor(boja);
 }
 
 void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
@@ -138,27 +131,6 @@ bool kugla::krece_se()
 
 void kugla::crtaj()//iscrtavanje
 {
-	krug.setPosition(pozicija.x - poluprecnik, pozicija.y - poluprecnik);
-	if (rotacija.x >= 2.f * 3.14f)
-		rotacija.x -= 2.f * 3.14f;
-	if (rotacija.x < 0)
-		rotacija.x += 2.f * 3.14f;
-	
-	sf::Vertex line[] =
-	{
-		sf::Vertex(pozicija),
-		sf::Vertex(pozicija + brzina*(sin(rotacija.x)*poluprecnik/intenzitet(brzina)))
-	};
-
-	prozor->draw(krug);
-	line[0].color = boja;
-	if (rotacija.x > 1.57f && rotacija.x < 3.14f * 2 - 1.5f)
-		line[1].color = sf::Color::Black;
-	prozor->draw(line, 2, sf::Lines);
-}
-
-void kugla::crtaj_2()
-{
 	sf::VertexArray pointmap(sf::Points, 4*poluprecnik*poluprecnik);
 	float d, sin_t, sin_s, cos_s, s, t;
 	for (int x = -poluprecnik; x < poluprecnik; x++)
@@ -181,5 +153,26 @@ void kugla::crtaj_2()
 				pointmap[rd_br].color = slika.getPixel(sx,sy);
 			}
 		}
+
 	prozor->draw(pointmap);
+
+	if (rotacija.x >= 2.f * 3.14f)
+		rotacija.x -= 2.f * 3.14f;
+	if (rotacija.x < 0)
+		rotacija.x += 2.f * 3.14f;
+
+	sf::Vertex line[] =
+	{
+		sf::Vertex(pozicija),
+		sf::Vertex(pozicija + brzina * (sin(rotacija.x) * poluprecnik / intenzitet(brzina)))
+	};
+
+	line[0].color = sf::Color::White;
+	line[1].color = sf::Color::White;
+	if (rotacija.x > 1.57f && rotacija.x < 3.14f * 2 - 1.5f)
+	{
+		line[0].color = sf::Color::Black;
+		line[1].color = sf::Color::Black;
+	}
+	prozor->draw(line, 2, sf::Lines);
 }

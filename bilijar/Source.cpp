@@ -83,11 +83,11 @@ int main()
         k[i].povezi_grafiku(&prozor,i);
     for (int i = 2; i < br_kugli; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
-    k[0].podesi(sf::Color::White, sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
-    k[1].podesi(sf::Color::Green, sf::Vector2f(600.f, 400.f), sf::Vector2f(1000.f, 0.f));
-    k[2].podesi(sf::Color::Yellow, sf::Vector2f(400.f, 320.f), sf::Vector2f(-350.f, -310.f));
-    k[3].podesi(sf::Color::Magenta, sf::Vector2f(500.f, 200.f), sf::Vector2f(500.f, 600.f));
-    k[4].podesi(sf::Color::Blue, sf::Vector2f(500.f, 400.f), sf::Vector2f(130.f, -400.f));
+    k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
+    k[1].podesi(sf::Vector2f(600.f, 400.f), sf::Vector2f(1000.f, 0.f));
+    k[2].podesi(sf::Vector2f(400.f, 320.f), sf::Vector2f(-350.f, -310.f));
+    k[3].podesi(sf::Vector2f(500.f, 200.f), sf::Vector2f(500.f, 600.f));
+    k[4].podesi(sf::Vector2f(500.f, 400.f), sf::Vector2f(130.f, -400.f));
 
     sf::RectangleShape pravougaonik;
     pravougaonik.setFillColor(sf::Color::Magenta);
@@ -129,7 +129,7 @@ int main()
 
         //iscrtavanje kugli
         for (int i = 0; i < br_kugli; i++)
-            k[i].crtaj_2();
+            k[i].crtaj();
         
         krecu_se = 0;
         for (int i = 0; i < br_kugli; i++)
