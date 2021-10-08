@@ -37,5 +37,53 @@
     <Image Include="slika.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="resources\kugla1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla7.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla8.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla9.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla10.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla11.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla12.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla13.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla14.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla15.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\kugla16.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

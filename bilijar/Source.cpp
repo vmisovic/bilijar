@@ -80,7 +80,7 @@ int main()
     int br_kugli = 16;
     kugla k[16];
     for (int i = 0; i < br_kugli; i++)
-        k[i].povezi_grafiku(&prozor);
+        k[i].povezi_grafiku(&prozor,i);
     for (int i = 2; i < br_kugli; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
     k[0].podesi(sf::Color::White, sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
@@ -141,7 +141,6 @@ int main()
         //iscrtavanje ivica
         for (int i = 0; i < br_ivica; i++)
             ivice[i].crtaj();
-        k[0].crtaj_2();
         //prikazivanje frejma
         prozor.display();
     }

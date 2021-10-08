@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "ivica.h"
 #include <cmath>
+#include <string>
+#include <sstream>
 
 class kugla
 {
@@ -24,11 +26,14 @@ class kugla
 public:
 	//funkcije za podesavanje kugle
 	kugla();
-	void povezi_grafiku(sf::RenderWindow* prozor1)
+	void povezi_grafiku(sf::RenderWindow* prozor1, int br)
 	{ 
 		this->prozor = prozor1;
-		if(!slika.loadFromFile("resources/slika.jpg"))
-			exit(3);
+		std::stringstream naziv;
+		naziv << "resources/kugla";
+		naziv << br << ".png\0";
+		if (!slika.loadFromFile(naziv.str()))
+			exit(br);
 	}
 	void podesi(sf::Color b, sf::Vector2f p, sf::Vector2f v);
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }

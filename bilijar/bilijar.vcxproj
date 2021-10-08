@@ -154,6 +154,22 @@
     <ClInclude Include="kugla.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\kugla1.png" />
+    <Image Include="resources\kugla10.png" />
+    <Image Include="resources\kugla11.png" />
+    <Image Include="resources\kugla12.png" />
+    <Image Include="resources\kugla13.png" />
+    <Image Include="resources\kugla14.png" />
+    <Image Include="resources\kugla15.png" />
+    <Image Include="resources\kugla16.png" />
+    <Image Include="resources\kugla2.png" />
+    <Image Include="resources\kugla3.png" />
+    <Image Include="resources\kugla4.png" />
+    <Image Include="resources\kugla5.png" />
+    <Image Include="resources\kugla6.png" />
+    <Image Include="resources\kugla7.png" />
+    <Image Include="resources\kugla8.png" />
+    <Image Include="resources\kugla9.png" />
     <Image Include="slika.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
