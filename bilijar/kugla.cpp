@@ -12,27 +12,12 @@ float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v)//cos fi=u*v/(|u|*|v
 	return (u.x * v.x + u.y * v.y) * (1 / intenzitet(u) / intenzitet(v));
 }
 
-void zameni(float* a, float* b)
-{
-	float pom = *a;
-	*a = *b;
-	*b = pom;
-}
-
 sf::Vector2f rotiraj(sf::Vector2f a, float alfa)//trenutno ne sluzi nicemu
 {
 	sf::Vector2f p;
 	p.x = a.x * cos(alfa) + a.y * sin(alfa);
 	p.y = -a.x * sin(alfa) + a.y * cos(alfa);
 	return p;
-}
-
-float mapiranje(float vrednost, float poc1,float kraj1,float poc2,float kraj2)
-{
-	vrednost -= poc1;
-	kraj1 -= poc1;
-	poc1 = 0;
-	return poc2+vrednost/kraj1*(kraj2-poc2);
 }
 
 kugla::kugla()
@@ -70,11 +55,8 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
 {
 	sf::Vector2f d = druga->pozicija - this->pozicija;
-	if (intenzitet(d) > 2 * poluprecnik || br_frejmova_od_poslednjeg_s < 10)
-	{
-		br_frejmova_od_poslednjeg_s++;
+	if (intenzitet(d) > 2 * poluprecnik)
 		return 0;
-	}
 	float cos_u[2];
 	cos_u[0] = cos_uglaIzmedjuVektora(brzina, d);
 	cos_u[1] = cos_uglaIzmedjuVektora(druga->brzina, d);
@@ -85,7 +67,6 @@ bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u k
 	paralelna[1] = druga->brzina - normalna[1];
 	brzina = paralelna[0] + (normalna[0] * (masa - druga->masa) + normalna[1] * (2 * druga->masa)) / (masa + druga->masa);
 	druga->brzina = paralelna[1] + (normalna[0] * (2 * masa) + normalna[1] * (druga->masa - masa)) / (masa + druga->masa);
-	br_frejmova_od_poslednjeg_s = 0;
 	return 1;
 }
 
@@ -93,34 +74,25 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 {
 	if (ivica1.razdaljina_od(pozicija) > poluprecnik ||
 		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= 0 ||
-		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= 0 ||
-		br_frejmova_od_poslednjeg_s < 10)
-	{
-		br_frejmova_od_poslednjeg_s++;
+		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= 0)
 		return 0;
-	}
 	sf::Vector2f normalna, paralelna;
 	float cos_u1 = cos_uglaIzmedjuVektora(brzina, ivica1.pravac);
 	paralelna =  ivica1.pravac * (intenzitet(brzina) * cos_u1 / intenzitet(ivica1.pravac));
 	normalna = brzina - paralelna;
 	brzina = paralelna - normalna;
-	br_frejmova_od_poslednjeg_s = 0;
 	return 1;
 }
 
 bool kugla::sudar_o_teme(sf::Vector2f tacka)
 {
 	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
-	if (intenzitet(d) > poluprecnik||br_frejmova_od_poslednjeg_s<10)
-	{
-		br_frejmova_od_poslednjeg_s++;
+	if (intenzitet(d) > poluprecnik)
 		return 0;
-	}
 	float cos_u = cos_uglaIzmedjuVektora(brzina, d);
 	normalna = d * (intenzitet(brzina) * cos_u / intenzitet(d));
 	paralelna = brzina - normalna;
 	brzina = paralelna - normalna;
-	br_frejmova_od_poslednjeg_s = 0;
 	return 1;
 }
 
@@ -131,36 +103,36 @@ bool kugla::krece_se()
 
 void kugla::crtaj()//iscrtavanje
 {
-	sf::VertexArray pointmap(sf::Points, 4*poluprecnik*poluprecnik);
-	float d, sin_t, sin_s, cos_s, s, t;
-	for (int x = -poluprecnik; x < poluprecnik; x++)
-		for (int y = -poluprecnik; y < poluprecnik; y++)
+	if (rotacija.x > 3.14f)
+		rotacija.x = -3.14f;
+	if (rotacija.x < 0)
+		rotacija.x = +3.14f;
+
+	sf::VertexArray pointmap(sf::Points, (int)(4*poluprecnik*poluprecnik));
+	float d, sin_t, cos_s, s, t;
+	int sx, sy;
+	for (int x = -(int)poluprecnik; x < (int)poluprecnik; x++)
+		for (int y = -(int)poluprecnik; y < (int)poluprecnik; y++)
 		{
-			d = sqrt(x * x + y * y);
+			d = (float)sqrt(x * x + y * y);
 			if (poluprecnik >= d)
 			{
-				int rd_br = x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f;
-				pointmap[rd_br].position = sf::Vector2f(x, y) + pozicija;
+				int rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
+				pointmap[rd_br].position = sf::Vector2f((float)x, (float)y) + pozicija;
 				sin_t = d / poluprecnik;//d>=0 sledi 1=>sin_t=0
 				t = asin(sin_t);//t element [0,pi/2]
-				cos_s = cos_uglaIzmedjuVektora(sf::Vector2f(0.f, -10.f), sf::Vector2f(x, y));
+				cos_s = cos_uglaIzmedjuVektora(sf::Vector2f(0.f, -10.f), sf::Vector2f((float)x, (float)y));
 				s = acos(cos_s);//s pripada [0,pi]
-				if (x < 0)
+				if (x > 0)
 					s = 2.f*3.14f-s;//nakon ovoga s pripada [0,2pi]
-				int sx, sy;
-				sy = t/(3.14f)*(slika.getSize().y-1);
-				sx = s/(3.14f*2.f)*(slika.getSize().x-1);
+				sy = ((int)((t+rotacija.x+1)/(3.14f)*(slika.getSize().y-1)))%slika.getSize().y;
+				sx = ((int)((s+rotacija.x)/(3.14f*2.f)*(slika.getSize().x-1)))%slika.getSize().x;
 				pointmap[rd_br].color = slika.getPixel(sx,sy);
 			}
 		}
-
 	prozor->draw(pointmap);
 
-	if (rotacija.x >= 2.f * 3.14f)
-		rotacija.x -= 2.f * 3.14f;
-	if (rotacija.x < 0)
-		rotacija.x += 2.f * 3.14f;
-
+	//iscrtavanja vektora pozicije
 	sf::Vertex line[] =
 	{
 		sf::Vertex(pozicija),

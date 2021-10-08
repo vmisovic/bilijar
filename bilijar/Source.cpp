@@ -84,7 +84,7 @@ int main()
     for (int i = 2; i < br_kugli; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
     k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
-    k[1].podesi(sf::Vector2f(600.f, 400.f), sf::Vector2f(1000.f, 0.f));
+    k[11].podesi(sf::Vector2f(600.f, 400.f), sf::Vector2f(1000.f, 0.f));
     k[2].podesi(sf::Vector2f(400.f, 320.f), sf::Vector2f(-350.f, -310.f));
     k[3].podesi(sf::Vector2f(500.f, 200.f), sf::Vector2f(500.f, 600.f));
     k[4].podesi(sf::Vector2f(500.f, 400.f), sf::Vector2f(130.f, -400.f));

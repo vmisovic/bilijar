@@ -11,7 +11,6 @@ class kugla
 	sf::Vector2f ugaona_brzina;//vektori ugaone brzine normalne na z i x osu
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
     sf::Vector2f rotacija;//x: trenutni ugao s0, y: trenutni ugao t0 odredjene tacke na kugli (tacka referentnog sistema, 0,0 na teksturi)
-	int br_frejmova_od_poslednjeg_s = 10;
 	
 	//konstante
 	float masa=1;
