@@ -129,7 +129,7 @@ int main()
 
         //iscrtavanje kugli
         for (int i = 0; i < br_kugli; i++)
-            k[i].crtaj();
+            k[i].crtaj_2();
         
         krecu_se = 0;
         for (int i = 0; i < br_kugli; i++)

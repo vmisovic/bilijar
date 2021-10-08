@@ -27,6 +27,14 @@ sf::Vector2f rotiraj(sf::Vector2f a, float alfa)//trenutno ne sluzi nicemu
 	return p;
 }
 
+float mapiranje(float vrednost, float poc1,float kraj1,float poc2,float kraj2)
+{
+	vrednost -= poc1;
+	kraj1 -= poc1;
+	poc1 = 0;
+	return poc2+vrednost/kraj1*(kraj2-poc2);
+}
+
 kugla::kugla()
 {
 	prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
@@ -159,21 +167,18 @@ void kugla::crtaj_2()
 			d = sqrt(x * x + y * y);
 			if (poluprecnik >= d)
 			{
-				pointmap[x + poluprecnik + (y + poluprecnik) * poluprecnik * 2].position = sf::Vector2f(x, y) + pozicija;
-				sin_t = d / poluprecnik;
-				t = asin(sin_t);
-				if (d != 0)
-				{
-					cos_s = x / d;
-					sin_s = y / d;
-					if (y >= 0)
-						s = acos(cos_s);
-					else if (x >= 0)
-						s = 2.f * 3.14f + asin(sin_s);
-					else
-						s = 3.14f + acos(cos_s);
-				}
-				pointmap[x + poluprecnik + (y + poluprecnik) * poluprecnik * 2].color = slika.getPixel(s*(slika.getSize().x-1)/(2.f*3.14f), (sin_t * (slika.getSize().y/2.f - 1)));
+				int rd_br = x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f;
+				pointmap[rd_br].position = sf::Vector2f(x, y) + pozicija;
+				sin_t = d / poluprecnik;//d>=0 sledi 1=>sin_t=0
+				t = asin(sin_t);//t element [0,pi/2]
+				cos_s = cos_uglaIzmedjuVektora(sf::Vector2f(0.f, -10.f), sf::Vector2f(x, y));
+				s = acos(cos_s);//s pripada [0,pi]
+				if (x < 0)
+					s = 2.f*3.14f-s;//nakon ovoga s pripada [0,2pi]
+				int sx, sy;
+				sy = t/(3.14f)*(slika.getSize().y-1);
+				sx = s/(3.14f*2.f)*(slika.getSize().x-1);
+				pointmap[rd_br].color = slika.getPixel(sx,sy);
 			}
 		}
 	prozor->draw(pointmap);
