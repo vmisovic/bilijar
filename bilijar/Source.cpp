@@ -1,11 +1,13 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "kugla.h"
+#include <GL/glew.h>
+#include <SFML/OpenGL.hpp>
 
+#include "kugla.h"
 using namespace std;
 int main()
 {
-    sf::RenderWindow prozor(sf::VideoMode(1000,600), "SFML works!");
+    sf::RenderWindow prozor(sf::VideoMode(1000,600), "SFML & openGL works!");
     prozor.setFramerateLimit(30);
     sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
@@ -15,6 +17,8 @@ int main()
     pozicija_rupe[4] = sf::Vector2f(400.f, 400.f) + pozicija_stola;
     pozicija_rupe[5] = sf::Vector2f(0.f, 400.f) + pozicija_stola;
 
+    //glEnable(GL_TEXTURE_2D);//da proveris dal radi opengl, necu koristiti opengl tako da je svejedno
+    
     //deklarisanje i posesavanja temena ivica
     int br_tacaka = 24;
     sf::Vector2f tacke[24];
@@ -107,40 +111,46 @@ int main()
         //brisanje prethodnog frejma
         prozor.clear();
 
-        //pomeranje kugli
-        for (int i = 0; i < br_kugli; i++)
-            k[i].osvezi();
-        
-        //provera kontakta kugli i realizacija sudara
-        for (int i = 0; i < br_kugli-1; i++)
-            for (int j = i + 1; j < br_kugli; j++)
-                k[i].sudar_kugli(&k[j]);
-
-        //provera kontakta kugle i zida i realizacija sudara
-        for (int i = 0; i < br_kugli; i++)
+        if (krecu_se)
         {
-            bool udar_o_teme = 0;
-            for (int j = 0; j < br_tacaka || udar_o_teme == 1; j++)
-                udar_o_teme = k[i].sudar_o_teme(tacke[j]) == 1;//u koliko kugla nije udarila u neko od temena
-            if(udar_o_teme==0)
-                for (int l = 0; l < br_ivica; l++)
-                    k[i].sudar_o_ivicu(ivice[l]);//proveri da li je udarila u neki od zidova
-        }
+            //pomeranje kugli u koliko se krecu (u koliko se ne krecu nema potrebe da izracunavamo novu brzinu)
+            for (int i = 0; i < br_kugli; i++)
+                if(k[i].krece_se())
+                    k[i].osvezi();
 
-        //iscrtavanje kugli
-        for (int i = 0; i < br_kugli; i++)
-            k[i].crtaj();
-        
-        krecu_se = 0;
-        for (int i = 0; i < br_kugli; i++)
-            if (k[i].krece_se()==1)
-                krecu_se = 1;
-        if (krecu_se==0)
-            prozor.draw(pravougaonik);
+            //provera kontakta kugli i realizacija sudara
+            for (int i = 0; i < br_kugli - 1; i++)
+                for (int j = i + 1; j < br_kugli; j++)
+                    k[i].sudar_kugli(&k[j]);
+
+            //provera kontakta kugle i zida i realizacija sudara
+            for (int i = 0; i < br_kugli; i++)
+            {
+                bool udar_o_teme = 0;
+                for (int j = 0; j < br_tacaka || udar_o_teme == 1; j++)
+                    udar_o_teme = k[i].sudar_o_teme(tacke[j]) == 1;//u koliko kugla nije udarila u neko od temena
+                if (udar_o_teme == 0)
+                    for (int l = 0; l < br_ivica; l++)
+                        k[i].sudar_o_ivicu(ivice[l]);//proveri da li je udarila u neki od zidova
+            }
+
+            //deo za ponovno ispitivanje da li je sistem u mirovanju
+            krecu_se = 0;
+            for (int i = 0; i < br_kugli; i++)
+                if (k[i].krece_se() == 1)
+                    krecu_se = 1;
+        }
 
         //iscrtavanje ivica
         for (int i = 0; i < br_ivica; i++)
             ivice[i].crtaj();
+        //iscrtavanje kugli
+        for (int i = 0; i < br_kugli; i++)
+            k[i].crtaj();
+        //isctravanje stapa u koliko su se kugle zaustavile
+        if (krecu_se==0)
+            prozor.draw(pravougaonik);
+
         //prikazivanje frejma
         prozor.display();
     }

@@ -11,10 +11,11 @@ class kugla
 	sf::Vector2f ugaona_brzina;//vektori ugaone brzine normalne na z i x osu
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
     sf::Vector2f rotacija;//x: trenutni ugao s0, y: trenutni ugao t0 odredjene tacke na kugli (tacka referentnog sistema, 0,0 na teksturi)
+	float ugao;//prethodni ugao vektora brzine i X ose (moram da pamtim kada se zaustavi kugla za iscrtavanje)
 	
 	//konstante
 	float masa=1;
-	float poluprecnik = 20.f;
+	float poluprecnik = 20.f;//za sve kugle isti!
 	float trenje = 0.1f;
 
 	//grafika
