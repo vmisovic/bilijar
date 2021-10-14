@@ -8,7 +8,9 @@ using namespace std;
 int main()
 {
     sf::RenderWindow prozor(sf::VideoMode(1000,600), "SFML & openGL works!");
+    //glEnable(GL_TEXTURE_2D);//da proveris dal radi opengl, necu koristiti opengl tako da je svejedno
     prozor.setFramerateLimit(30);
+
     sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
     pozicija_rupe[1] = sf::Vector2f(400.f, 0.f) + pozicija_stola;
@@ -16,8 +18,6 @@ int main()
     pozicija_rupe[3] = sf::Vector2f(800.f, 400.f) + pozicija_stola;
     pozicija_rupe[4] = sf::Vector2f(400.f, 400.f) + pozicija_stola;
     pozicija_rupe[5] = sf::Vector2f(0.f, 400.f) + pozicija_stola;
-
-    //glEnable(GL_TEXTURE_2D);//da proveris dal radi opengl, necu koristiti opengl tako da je svejedno
     
     //deklarisanje i posesavanja temena ivica
     int br_tacaka = 24;
@@ -96,7 +96,14 @@ int main()
     sf::RectangleShape pravougaonik;
     pravougaonik.setFillColor(sf::Color::Magenta);
     pravougaonik.setSize(sf::Vector2f(100.f, 100.f));
+    
     bool krecu_se = 1;
+    bool jednostavno_crtanje = 0;
+    bool pauzirano = 0;
+    bool osetljivo = 0;
+    bool fiksiran_stap = 0;
+    int tockic = 0;
+    sf::Vector2f mis;
 
     while (prozor.isOpen())
     {
@@ -106,12 +113,49 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 prozor.close();
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::T)
+                    jednostavno_crtanje = !jednostavno_crtanje;
+                if (event.key.code == sf::Keyboard::S)
+                    for (int i = 0; i < br_kugli; i++)
+                        k[i].dodeli_brzinu(sf::Vector2f(0.f, 0.f));
+                if (event.key.code == sf::Keyboard::P)
+                    pauzirano = !pauzirano;
+                if (event.key.code == sf::Keyboard::O)
+                    osetljivo = !osetljivo;
+            }
+            if (event.type == sf::Event::MouseWheelScrolled && !krecu_se)
+                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+                {
+                    if (osetljivo)
+                        tockic -= event.mouseWheelScroll.delta;
+                    else
+                        tockic -= event.mouseWheelScroll.delta * 5l;
+                    if (tockic < 0)
+                        tockic = 0;
+                    if (tockic > 100)
+                        tockic = 100;
+                    std::cout << tockic << std::endl;
+                }
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Right)
+                {
+                    mis = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+                    fiksiran_stap = !fiksiran_stap;
+                }
+            }
+            if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
+            {
+                mis = sf::Vector2f(event.mouseMove.x,event.mouseMove.y);
+            }
         }
 
         //brisanje prethodnog frejma
         prozor.clear();
 
-        if (krecu_se)
+        if (krecu_se && !pauzirano)
         {
             //pomeranje kugli u koliko se krecu (u koliko se ne krecu nema potrebe da izracunavamo novu brzinu)
             for (int i = 0; i < br_kugli; i++)
@@ -144,12 +188,21 @@ int main()
         //iscrtavanje ivica
         for (int i = 0; i < br_ivica; i++)
             ivice[i].crtaj();
+
         //iscrtavanje kugli
-        for (int i = 0; i < br_kugli; i++)
-            k[i].crtaj();
+        if(jednostavno_crtanje)
+            for (int i = 0; i < br_kugli; i++)
+                k[i].crtaj_jednostavno();
+        else
+            for (int i = 0; i < br_kugli; i++)
+                k[i].crtaj();
+        
         //isctravanje stapa u koliko su se kugle zaustavile
-        if (krecu_se==0)
+        if (krecu_se == 0)
+        {
+            pravougaonik.setPosition(mis);
             prozor.draw(pravougaonik);
+        }
 
         //prikazivanje frejma
         prozor.display();

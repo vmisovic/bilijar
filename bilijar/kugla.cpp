@@ -29,6 +29,8 @@ kugla::kugla()
 	ugaona_brzina = sf::Vector2f(0.f,0.f);
 	ugao = 0.f;
 	//podesavanje za iscrtavanja
+	krug.setRadius(poluprecnik);
+	kruzic.setRadius(poluprecnik * 0.7f);
 }
 
 void kugla::podesi(sf::Vector2f p, sf::Vector2f v)//dodeljuje pocetne vrednosti boje, pozicije i vektora brzine
@@ -144,4 +146,32 @@ void kugla::crtaj()//iscrtavanje
 		}
 	//iscrtavanje na prozor/ekran
 	prozor->draw(pointmap);
+}
+
+void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
+{
+	if (rotacija.x >= 2.f * 3.14f)
+		rotacija.x -= 2.f * 3.14f;
+	if (rotacija.x < 0)
+		rotacija.x += 2.f * 3.14f;
+
+	krug.setPosition(pozicija.x - poluprecnik, pozicija.y - poluprecnik);
+	prozor->draw(krug);
+	kruzic.setPosition(pozicija.x - kruzic.getRadius(), pozicija.y - kruzic.getRadius());
+	prozor->draw(kruzic);
+
+	sf::Vertex line[] =
+	{
+		sf::Vertex(pozicija),
+		sf::Vertex(pozicija + brzina * (sin(rotacija.x) * poluprecnik / intenzitet(brzina)))
+	};
+
+	line[0].color = sf::Color::White;
+	line[1].color = sf::Color::White;
+	if (rotacija.x > 1.57f && rotacija.x < 3.14f * 2 - 1.5f)
+	{
+		line[0].color = sf::Color::Black;
+		line[1].color = sf::Color::Black;
+	}
+	prozor->draw(line, 2, sf::Lines);
 }

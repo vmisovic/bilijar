@@ -20,6 +20,7 @@ class kugla
 
 	//grafika
 	sf::Image slika;
+	sf::CircleShape krug, kruzic;
 	sf::RenderWindow* prozor;
 public:
 	//funkcije za podesavanje kugle
@@ -32,6 +33,8 @@ public:
 		naziv << br << ".png\0";
 		if (!slika.loadFromFile(naziv.str()))
 			exit(br);
+		krug.setFillColor(slika.getPixel(128,128));
+		kruzic.setFillColor(slika.getPixel(30, 30));
 	}
 	void podesi(sf::Vector2f p, sf::Vector2f v);
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
@@ -49,4 +52,5 @@ public:
 
 	//funkcije za iscrtavanje
 	void crtaj();
+	void crtaj_jednostavno();
 };
