@@ -9,7 +9,7 @@ int main()
 {
     sf::RenderWindow prozor(sf::VideoMode(1000,600), "SFML & openGL works!");
     //glEnable(GL_TEXTURE_2D);//da proveris dal radi opengl, necu koristiti opengl tako da je svejedno
-    prozor.setFramerateLimit(30);
+    prozor.setFramerateLimit(120);
 
     sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
@@ -102,7 +102,7 @@ int main()
     bool pauzirano = 0;
     bool osetljivo = 0;
     bool fiksiran_stap = 0;
-    int tockic = 0;
+    int tockic = 50;
     sf::Vector2f mis;
 
     while (prozor.isOpen())
@@ -124,14 +124,17 @@ int main()
                     pauzirano = !pauzirano;
                 if (event.key.code == sf::Keyboard::O)
                     osetljivo = !osetljivo;
+                if (event.key.code == sf::Keyboard::R)
+                    for (int i = 0; i < br_kugli; i++)
+                        k[i].okreni();
             }
             if (event.type == sf::Event::MouseWheelScrolled && !krecu_se)
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
                 {
                     if (osetljivo)
-                        tockic -= event.mouseWheelScroll.delta;
+                        tockic -= (int)event.mouseWheelScroll.delta;
                     else
-                        tockic -= event.mouseWheelScroll.delta * 5l;
+                        tockic -= (int)event.mouseWheelScroll.delta * 5l;
                     if (tockic < 0)
                         tockic = 0;
                     if (tockic > 100)
@@ -142,13 +145,22 @@ int main()
             {
                 if (event.mouseButton.button == sf::Mouse::Right)
                 {
-                    mis = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+                    mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
                     fiksiran_stap = !fiksiran_stap;
                 }
+                if (event.mouseButton.button == sf::Mouse::Left && !krecu_se)
+                {
+                    k[0].udarac_stapa(mis, (float)tockic);
+                    krecu_se = 1;
+                    fiksiran_stap = 0;
+                    tockic = 50;
+                }
+                if (event.mouseButton.button == sf::Mouse::Middle)
+                    osetljivo = !osetljivo;
             }
             if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
             {
-                mis = sf::Vector2f(event.mouseMove.x,event.mouseMove.y);
+                mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
             }
         }
 
@@ -200,6 +212,7 @@ int main()
         //isctravanje stapa u koliko su se kugle zaustavile
         if (krecu_se == 0)
         {
+            k[0].crtaj_stap(mis, (float)tockic);
             pravougaonik.setPosition(mis);
             prozor.draw(pravougaonik);
         }

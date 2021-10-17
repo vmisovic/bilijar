@@ -50,12 +50,12 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		brzina.x = -fabs(brzina.x) * 0.9f;
 	if (pozicija.y > prozor->getSize().y - poluprecnik)
 		brzina.y = -fabs(brzina.y) * 0.9f;
-	sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/120);
+	sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
 	pozicija += (brzina+nova_brzina)/(2.f*120.f);
-	brzina = nova_brzina * (0.f + (intenzitet(brzina) > 2.8f));
+	brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
 	if (intenzitet(brzina) != 0)
 		ugao = acosf(cos_uglaIzmedjuVektora(sf::Vector2f(-10.f, 0.f), brzina));
-	ugaona_brzina.x = intenzitet(brzina) / poluprecnik;
+	ugaona_brzina = brzina / poluprecnik;
 	rotacija += ugaona_brzina * (1.f / 120.f);
 }
 
@@ -105,7 +105,13 @@ bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli
 
 bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 {
-	return (intenzitet(brzina) > 2.f);
+	return (intenzitet(brzina)!=0);
+}
+
+void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
+{
+	sf::Vector2f pravac_stapa = pozicija - poz_mis;
+	brzina = (pravac_stapa) / intenzitet(pravac_stapa) * (jacina+20) * 15.f;
 }
 
 void kugla::crtaj()//iscrtavanje
@@ -132,7 +138,7 @@ void kugla::crtaj()//iscrtavanje
 			if (poluprecnik >= d)
 			{
 				int rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
-				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), ugao) + pozicija;
+				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), 0.f) + pozicija;
 
 				sin_s = (float)x / poluprecnik;
 				sin_t = (float)y / poluprecnik;
@@ -175,3 +181,15 @@ void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 	}
 	prozor->draw(line, 2, sf::Lines);
 }
+
+void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
+{
+	sf::Vector2f pravac_stapa = pozicija - poz_mis;
+	sf::Vertex line[] =
+	{
+		sf::Vertex(pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f)),
+		sf::Vertex(pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f))
+	};
+	prozor->draw(line, 2, sf::Lines);
+}
+
