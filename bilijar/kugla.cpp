@@ -169,7 +169,7 @@ void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 	sf::Vertex line[] =
 	{
 		sf::Vertex(pozicija),
-		sf::Vertex(pozicija + brzina * (fsin(rotacija.x) * poluprecnik / intenzitet(brzina)))
+		sf::Vertex(pozicija + brzina * (float)(sin(rotacija.x) * poluprecnik / intenzitet(brzina)))
 	};
 
 	line[0].color = sf::Color::White;
