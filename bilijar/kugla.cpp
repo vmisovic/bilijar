@@ -41,15 +41,17 @@ void kugla::podesi(sf::Vector2f p, sf::Vector2f v)//dodeljuje pocetne vrednosti 
 
 void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 {
+	float usporenje=0.9;
+
 	//u koliko je udarila u ivicu prozora/ekrana
 	if (pozicija.x < 0 + poluprecnik)
-		brzina.x = fabs(brzina.x) * 0.9f;
+		brzina.x = fabs(brzina.x) * usporenje;
 	if (pozicija.y < 0 + poluprecnik)
-		brzina.y = fabs(brzina.y) * 0.9f;
+		brzina.y = fabs(brzina.y) * usporenje;
 	if (pozicija.x > prozor->getSize().x - poluprecnik)
-		brzina.x = -fabs(brzina.x) * 0.9f;
+		brzina.x = -fabs(brzina.x) * usporenje;
 	if (pozicija.y > prozor->getSize().y - poluprecnik)
-		brzina.y = -fabs(brzina.y) * 0.9f;
+		brzina.y = -fabs(brzina.y) * usporenje;
 	sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
 	pozicija += (brzina+nova_brzina)/(2.f*120.f);
 	brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));

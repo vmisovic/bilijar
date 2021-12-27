@@ -2,10 +2,8 @@
 #define KUGLA_H
 
 #include <SFML/Graphics.hpp>
-#include "ivica.h"
-#include <cmath>
-#include <string>
 #include <sstream>
+#include "ivica.h"
 
 class kugla
 {
