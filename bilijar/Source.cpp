@@ -1,12 +1,12 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "kugla.h"
 
 #define DEBUG 0
-#include "kugla.h"
 using namespace std;
 
-int br_tacaka = 24;
-sf::Vector2f tacke[24];
+const int br_tacaka = 24;
+sf::Vector2f tacke[br_tacaka];
 
 void inicijalizuj()
 {
@@ -51,8 +51,8 @@ void inicijalizuj()
     tacke[23] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[5];
 }
 
-int br_ivica = 18;
-ivica ivice[18];
+const int br_ivica = 18;
+ivica ivice[br_ivica];
 
 void inicijalizuj1(sf::RenderWindow *prozor)
 {
@@ -91,12 +91,14 @@ int main()
     inicijalizuj1(&prozor);
 
     //deklarisanje i podesavanja vrednosti kugli
-    int br_kugli = 16;
-    kugla k[16];
+    const int br_kugli = 16;
+    kugla k[br_kugli];
+
     for (int i = 0; i < br_kugli; i++)
         k[i].povezi_grafiku(&prozor,i);
     for (int i = 2; i < br_kugli; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
+
     k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
     k[11].podesi(sf::Vector2f(600.f, 400.f), sf::Vector2f(1000.f, 0.f));
     k[2].podesi(sf::Vector2f(400.f, 320.f), sf::Vector2f(-350.f, -310.f));
@@ -193,8 +195,10 @@ int main()
             for (int i = 0; i < br_kugli; i++)
             {
                 bool udar_o_teme = 0;
+		/*
                 for (int j = 0; j < br_tacaka || udar_o_teme == 1; j++)
                     udar_o_teme = k[i].sudar_o_teme(tacke[j]) == 1;//u koliko kugla nije udarila u neko od temena
+		    */
                 if (udar_o_teme == 0)
                     for (int l = 0; l < br_ivica; l++)
                         k[i].sudar_o_ivicu(ivice[l]);//proveri da li je udarila u neki od zidova
