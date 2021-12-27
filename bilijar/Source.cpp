@@ -1,14 +1,14 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "kugla.h"
 
 #define DEBUG 0
-#include "kugla.h"
 using namespace std;
 
-int br_tacaka = 24;
-sf::Vector2f tacke[24];
+const int br_tacaka = 24;
+sf::Vector2f tacke[br_tacaka];
 
-void inicijalizuj()
+void inicijalizuj_tacke()
 {
     sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
@@ -51,15 +51,15 @@ void inicijalizuj()
     tacke[23] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[5];
 }
 
-int br_ivica = 18;
-ivica ivice[18];
+const int br_ivica = 18;
+ivica ivice[br_ivica];
 
-void inicijalizuj1(sf::RenderWindow *prozor)
+void inicijalizuj_ivice(sf::RenderWindow *prozor)
 {
     //deklarisanje i podesavanja ivica preko temena
     for (int i = 0; i < br_ivica; i++) ivice[i].povezi_grafiku(prozor);
     {
-	ivice[0].podesi(tacke[0], tacke[2]);
+	    ivice[0].podesi(tacke[0], tacke[2]);
         ivice[1].podesi(tacke[1], tacke[3]);
         ivice[2].podesi(tacke[4], tacke[6]);
         ivice[3].podesi(tacke[5], tacke[7]);
@@ -81,31 +81,34 @@ void inicijalizuj1(sf::RenderWindow *prozor)
 
 }
 
+const int br_kugli = 16;
+kugla k[br_kugli];
 
-int main()
+void inicijalizuj_kugle(sf::RenderWindow* prozor)
 {
-    sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar");
-    prozor.setFramerateLimit(120);
-
-    inicijalizuj();
-    inicijalizuj1(&prozor);
-
     //deklarisanje i podesavanja vrednosti kugli
-    int br_kugli = 16;
-    kugla k[16];
     for (int i = 0; i < br_kugli; i++)
-        k[i].povezi_grafiku(&prozor,i);
+        k[i].povezi_grafiku(prozor, i);
     for (int i = 2; i < br_kugli; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
+
     k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
     k[11].podesi(sf::Vector2f(600.f, 400.f), sf::Vector2f(1000.f, 0.f));
     k[2].podesi(sf::Vector2f(400.f, 320.f), sf::Vector2f(-350.f, -310.f));
     k[3].podesi(sf::Vector2f(500.f, 200.f), sf::Vector2f(500.f, 600.f));
     k[4].podesi(sf::Vector2f(500.f, 400.f), sf::Vector2f(130.f, -400.f));
 
-    sf::RectangleShape pravougaonik;
-    pravougaonik.setFillColor(sf::Color::Magenta);
-    pravougaonik.setSize(sf::Vector2f(100.f, 100.f));
+}
+
+int main()
+{
+    sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar");
+    prozor.setFramerateLimit(120);
+    sf::Color boja_stola(10,100,10);
+
+    inicijalizuj_tacke();
+    inicijalizuj_ivice(&prozor);
+    inicijalizuj_kugle(&prozor);
     
     bool krecu_se = 1;
     bool jednostavno_crtanje = 0;
@@ -149,7 +152,7 @@ int main()
                         tockic = 0;
                     if (tockic > 100)
                         tockic = 100;
-		if(DEBUG) std::cout << tockic << std::endl;
+		            if(DEBUG) std::cout << tockic << std::endl;
                 }
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -175,7 +178,7 @@ int main()
         }
 
         //brisanje prethodnog frejma
-        prozor.clear();
+        prozor.clear(boja_stola);
 
         if (krecu_se && !pauzirano)
         {
@@ -193,8 +196,10 @@ int main()
             for (int i = 0; i < br_kugli; i++)
             {
                 bool udar_o_teme = 0;
+		        /*
                 for (int j = 0; j < br_tacaka || udar_o_teme == 1; j++)
                     udar_o_teme = k[i].sudar_o_teme(tacke[j]) == 1;//u koliko kugla nije udarila u neko od temena
+		        */
                 if (udar_o_teme == 0)
                     for (int l = 0; l < br_ivica; l++)
                         k[i].sudar_o_ivicu(ivice[l]);//proveri da li je udarila u neki od zidova
@@ -221,14 +226,7 @@ int main()
         
         //isctravanje stapa u koliko su se kugle zaustavile
 	if (krecu_se == 0)
-        {
-            k[0].crtaj_stap(mis, (float)tockic);
-	    if(DEBUG)
-	    {
-		pravougaonik.setPosition(mis);
-		prozor.draw(pravougaonik);
-	    }
-        }
+        k[0].crtaj_stap(mis, (float)tockic);
 
         //prikazivanje frejma
         prozor.display();

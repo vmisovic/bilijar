@@ -2,7 +2,7 @@
 #define IVICA_H
 
 #include <SFML/Graphics.hpp>
-#include<cmath>
+#include <cmath>
 
 class ivica
 {
