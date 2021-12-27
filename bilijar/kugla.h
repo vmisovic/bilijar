@@ -25,7 +25,17 @@ class kugla
 	sf::RenderWindow* prozor;
 public:
 	//funkcije za podesavanje kugle
-	kugla();
+	kugla()
+	{
+		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
+		pozicija = sf::Vector2f(200.f, 200.f);
+		rotacija = sf::Vector2f(3.14f, 3.14f);//da broj kugle gleda ka ekranu/igracu
+		ugaona_brzina = sf::Vector2f(0.f, 0.f);
+		ugao = 0.f;
+		//podesavanje za iscrtavanja
+		krug.setRadius(poluprecnik);
+		kruzic.setRadius(poluprecnik * 0.7f);
+	}
 	void povezi_grafiku(sf::RenderWindow* prozor1, int br)
 	{ 
 		this->prozor = prozor1;
