@@ -109,23 +109,12 @@ bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 
 void kugla::razdvoji_kugle(kugla *druga)
 {
-    int test_brz=100;
     if(!krece_se()&&!druga->krece_se()&&sudar(druga))
     {
-	brzina=sf::Vector2f(test_brz,test_brz);
-	druga->brzina=sf::Vector2f(test_brz,test_brz);
-
-	sf::Vector2f d = druga->pozicija - this->pozicija;
-	float cos_u[2];
-	cos_u[0] = cos_uglaIzmedjuVektora(brzina, d);
-	cos_u[1] = cos_uglaIzmedjuVektora(druga->brzina, d);
-	sf::Vector2f normalna[2], paralelna[2];
-	normalna[0] = d * (intenzitet(brzina) * cos_u[0] / intenzitet(d));
-	normalna[1] = d * (intenzitet(druga->brzina) * cos_u[1] / intenzitet(d));
-	paralelna[0] = brzina - normalna[0];
-	paralelna[1] = druga->brzina - normalna[1];
-	brzina = paralelna[0] + (normalna[0] * (masa - druga->masa) + normalna[1] * (2 * druga->masa)) / (masa + druga->masa);
-	druga->brzina = paralelna[1] + (normalna[0] * (2 * masa) + normalna[1] * (druga->masa - masa)) / (masa + druga->masa);
+	if(pozicija.x>druga->pozicija.x) pozicija=sf::Vector2f(pozicija.x+2,pozicija.y);
+	else pozicija=sf::Vector2f(pozicija.x-2,pozicija.y);
+	if(pozicija.y>druga->pozicija.y) pozicija=sf::Vector2f(pozicija.x,pozicija.y+2);
+	else pozicija=sf::Vector2f(pozicija.x,pozicija.y-2);
     }
 }
 
