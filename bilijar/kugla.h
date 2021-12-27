@@ -1,3 +1,6 @@
+#ifndef KUGLA_H
+#define KUGLA_H
+
 #include <SFML/Graphics.hpp>
 #include "ivica.h"
 #include <cmath>
@@ -57,3 +60,5 @@ public:
 	void crtaj_jednostavno();
 	void crtaj_stap(sf::Vector2f poz_mis, float jacina);
 };
+
+#endif

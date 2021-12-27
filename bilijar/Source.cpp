@@ -1,16 +1,15 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <GL/glew.h>
-#include <SFML/OpenGL.hpp>
 
+#define DEBUG 0
 #include "kugla.h"
 using namespace std;
-int main()
-{
-    sf::RenderWindow prozor(sf::VideoMode(1000,600), "SFML & openGL works!");
-    //glEnable(GL_TEXTURE_2D);//da proveris dal radi opengl, necu koristiti opengl tako da je svejedno
-    prozor.setFramerateLimit(120);
 
+int br_tacaka = 24;
+sf::Vector2f tacke[24];
+
+void inicijalizuj()
+{
     sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
     pozicija_rupe[1] = sf::Vector2f(400.f, 0.f) + pozicija_stola;
@@ -19,48 +18,48 @@ int main()
     pozicija_rupe[4] = sf::Vector2f(400.f, 400.f) + pozicija_stola;
     pozicija_rupe[5] = sf::Vector2f(0.f, 400.f) + pozicija_stola;
     
+
     //deklarisanje i posesavanja temena ivica
-    int br_tacaka = 24;
-    sf::Vector2f tacke[24];
-    {
-        tacke[0] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[0];
-        tacke[1] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[0];
-        tacke[2] = sf::Vector2f(0.f, 40.f) + pozicija_rupe[0];
-        tacke[3] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[0];
+    tacke[0] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[0];
+    tacke[1] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[0];
+    tacke[2] = sf::Vector2f(0.f, 40.f) + pozicija_rupe[0];
+    tacke[3] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[0];
 
-        tacke[4] = sf::Vector2f(-28.f, -20.f) + pozicija_rupe[1];
-        tacke[5] = sf::Vector2f(28.f, -20.f) + pozicija_rupe[1];
-        tacke[6] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[1];
-        tacke[7] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[1];
+    tacke[4] = sf::Vector2f(-28.f, -20.f) + pozicija_rupe[1];
+    tacke[5] = sf::Vector2f(28.f, -20.f) + pozicija_rupe[1];
+    tacke[6] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[1];
+    tacke[7] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[1];
 
-        tacke[8] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[2];
-        tacke[9] = sf::Vector2f(20.f, 20.f) + pozicija_rupe[2];
-        tacke[11] = sf::Vector2f(0.f, 40.f) + pozicija_rupe[2];
-        tacke[10] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[2];
+    tacke[8] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[2];
+    tacke[9] = sf::Vector2f(20.f, 20.f) + pozicija_rupe[2];
+    tacke[11] = sf::Vector2f(0.f, 40.f) + pozicija_rupe[2];
+    tacke[10] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[2];
 
-        tacke[12] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[3];
-        tacke[13] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[3];
-        tacke[14] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[3];
-        tacke[15] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[3];
+    tacke[12] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[3];
+    tacke[13] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[3];
+    tacke[14] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[3];
+    tacke[15] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[3];
 
-        tacke[16] = sf::Vector2f(28.f, 20.f) + pozicija_rupe[4];
-        tacke[17] = sf::Vector2f(-28.f, 20.f) + pozicija_rupe[4];
-        tacke[18] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[4];
-        tacke[19] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[4];
+    tacke[16] = sf::Vector2f(28.f, 20.f) + pozicija_rupe[4];
+    tacke[17] = sf::Vector2f(-28.f, 20.f) + pozicija_rupe[4];
+    tacke[18] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[4];
+    tacke[19] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[4];
 
-        tacke[20] = sf::Vector2f(20.f, 20.f) + pozicija_rupe[5];
-        tacke[21] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[5];
-        tacke[22] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[5];
-        tacke[23] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[5];
-    }
+    tacke[20] = sf::Vector2f(20.f, 20.f) + pozicija_rupe[5];
+    tacke[21] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[5];
+    tacke[22] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[5];
+    tacke[23] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[5];
+}
 
+int br_ivica = 18;
+ivica ivice[18];
+
+void inicijalizuj1(sf::RenderWindow *prozor)
+{
     //deklarisanje i podesavanja ivica preko temena
-    int br_ivica = 18;
-    ivica ivice[18];
-    for (int i = 0; i < br_ivica; i++)
-        ivice[i].povezi_grafiku(&prozor);
+    for (int i = 0; i < br_ivica; i++) ivice[i].povezi_grafiku(prozor);
     {
-        ivice[0].podesi(tacke[0], tacke[2]);
+	ivice[0].podesi(tacke[0], tacke[2]);
         ivice[1].podesi(tacke[1], tacke[3]);
         ivice[2].podesi(tacke[4], tacke[6]);
         ivice[3].podesi(tacke[5], tacke[7]);
@@ -79,6 +78,17 @@ int main()
         ivice[16].podesi(tacke[19], tacke[22]);
         ivice[17].podesi(tacke[23], tacke[2]);
     }
+
+}
+
+
+int main()
+{
+    sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar");
+    prozor.setFramerateLimit(120);
+
+    inicijalizuj();
+    inicijalizuj1(&prozor);
 
     //deklarisanje i podesavanja vrednosti kugli
     int br_kugli = 16;
@@ -139,7 +149,7 @@ int main()
                         tockic = 0;
                     if (tockic > 100)
                         tockic = 100;
-                    std::cout << tockic << std::endl;
+		if(DEBUG) std::cout << tockic << std::endl;
                 }
             if (event.type == sf::Event::MouseButtonPressed)
             {
@@ -210,11 +220,14 @@ int main()
                 k[i].crtaj();
         
         //isctravanje stapa u koliko su se kugle zaustavile
-        if (krecu_se == 0)
+	if (krecu_se == 0)
         {
             k[0].crtaj_stap(mis, (float)tockic);
-            pravougaonik.setPosition(mis);
-            prozor.draw(pravougaonik);
+	    if(DEBUG)
+	    {
+		pravougaonik.setPosition(mis);
+		prozor.draw(pravougaonik);
+	    }
         }
 
         //prikazivanje frejma
