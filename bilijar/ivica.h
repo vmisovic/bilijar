@@ -1,3 +1,6 @@
+#ifndef IVICA_H
+#define IVICA_H
+
 #include <SFML/Graphics.hpp>
 #include<cmath>
 
@@ -14,3 +17,4 @@ public:
 	void crtaj();
 };
 
+#endif
