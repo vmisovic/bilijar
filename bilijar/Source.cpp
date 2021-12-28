@@ -223,10 +223,13 @@ int main()
                 if (k[i].krece_se())
                     krecu_se = 1;
 
-	    // razdvajanje kugli ako su slucajno ostale slepljene
 	    for (int i = 0; i < br_kugli - 1; i++)
-		    for (int j = i + 1; j < br_kugli; j++)
-		        k[i].razdvoji_kugle(&k[j]);
+	    {
+		    // razdvajanje kugli ako su slucajno ostale slepljene
+		    for (int j = i + 1; j < br_kugli; j++) k[i].razdvoji_kugle(&k[j]);
+		    // razdvajanje kugli od ivica
+		    for (int j = i + 1; j < br_ivica; j++) k[i].razdvoji_kuglu_od_ivice(ivice[j]);
+	    }
         }
 
         if(!brojacfrejma%10)
