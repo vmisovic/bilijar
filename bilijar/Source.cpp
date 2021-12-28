@@ -1,23 +1,29 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "kugla.h"
+using namespace std;
 
 #define DEBUG 0
-using namespace std;
+bool krecu_se = 1;
+bool jednostavno_crtanje = 0;
+bool pauzirano = 0;
+bool osetljivo = 0;
+bool fiksiran_stap = 0;
+int tockic = 50;
+sf::Vector2f mis;//cuva kordinate strelice misa
 
 const int br_tacaka = 24;
 sf::Vector2f tacke[br_tacaka];
+sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
 
 void inicijalizuj_tacke()
 {
-    sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
     pozicija_rupe[1] = sf::Vector2f(400.f, 0.f) + pozicija_stola;
     pozicija_rupe[2] = sf::Vector2f(800.f, 0.f) + pozicija_stola;
     pozicija_rupe[3] = sf::Vector2f(800.f, 400.f) + pozicija_stola;
     pozicija_rupe[4] = sf::Vector2f(400.f, 400.f) + pozicija_stola;
     pozicija_rupe[5] = sf::Vector2f(0.f, 400.f) + pozicija_stola;
-    
 
     //deklarisanje i posesavanja temena ivica
     tacke[0] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[0];
@@ -100,23 +106,36 @@ void inicijalizuj_kugle(sf::RenderWindow* prozor)
 
 }
 
+sf::Color boja_stola(10, 100, 10);
+
+void crtaj_sto(sf::RenderWindow* prozor)
+{
+    //iscrtavanje ivica
+    for (int i = 0; i < br_ivica; i++)
+        ivice[i].crtaj();
+
+    //iscrtavanje kugli
+    if (jednostavno_crtanje)
+        for (int i = 0; i < br_kugli; i++)
+            k[i].crtaj_jednostavno();
+    else
+        for (int i = 0; i < br_kugli; i++)
+            k[i].crtaj();
+
+    //isctravanje stapa u koliko su se kugle zaustavile
+    if (krecu_se == 0)
+        k[0].crtaj_stap(mis, (float)tockic);
+}
+
 int main()
 {
     sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar");
     prozor.setFramerateLimit(120);
-    sf::Color boja_stola(10,100,10);
 
     inicijalizuj_tacke();
     inicijalizuj_ivice(&prozor);
     inicijalizuj_kugle(&prozor);
-    
-    bool krecu_se = 1;
-    bool jednostavno_crtanje = 0;
-    bool pauzirano = 0;
-    bool osetljivo = 0;
-    bool fiksiran_stap = 0;
-    int tockic = 50;
-    sf::Vector2f mis;
+    int brojacfrejma = 0;
 
     while (prozor.isOpen())
     {
@@ -172,13 +191,8 @@ int main()
                     osetljivo = !osetljivo;
             }
             if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
-            {
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
-            }
         }
-
-        //brisanje prethodnog frejma
-        prozor.clear(boja_stola);
 
         if (krecu_se && !pauzirano)
         {
@@ -209,30 +223,23 @@ int main()
                 if (k[i].krece_se() == 1)
                     krecu_se = 1;
 
-	    // razdvajanje kugli ako su slucajno ostale slepljene
-	    for (int i = 0; i < br_kugli - 1; i++)
-		for (int j = i + 1; j < br_kugli; j++)
-		    k[i].razdvoji_kugle(&k[j]);
-
+	        // razdvajanje kugli ako su slucajno ostale slepljene
+	        for (int i = 0; i < br_kugli - 1; i++)
+		        for (int j = i + 1; j < br_kugli; j++)
+		            k[i].razdvoji_kugle(&k[j]);
         }
-        //iscrtavanje ivica
-        for (int i = 0; i < br_ivica; i++)
-            ivice[i].crtaj();
 
-        //iscrtavanje kugli
-        if(jednostavno_crtanje)
-            for (int i = 0; i < br_kugli; i++)
-                k[i].crtaj_jednostavno();
-        else
-            for (int i = 0; i < br_kugli; i++)
-                k[i].crtaj();
-        
-        //isctravanje stapa u koliko su se kugle zaustavile
-	if (krecu_se == 0)
-	    k[0].crtaj_stap(mis, (float)tockic);
+        if(brojacfrejma%10==0)
+        {
+            brojacfrejma = 0;
+            //brisanje prethodnog frejma
+            prozor.clear(boja_stola);
 
-        //prikazivanje frejma
-        prozor.display();
+            crtaj_sto(&prozor);
+
+            //prikazivanje frejma
+            prozor.display();
+        }
     }
     return 0;
 }

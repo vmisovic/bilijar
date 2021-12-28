@@ -49,7 +49,7 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 	rotacija += ugaona_brzina * (1.f / 120.f);
 }
 
-bool kugla::sudar(kugla *druga)
+bool kugla::provera_sudara_kugli(kugla *druga)//vraca 1 u koliko se kugle dodirju, u suprotnom 0
 {
 	if (intenzitet(druga->pozicija - this->pozicija) >= 2 * poluprecnik) return 0;
 	return 1;
@@ -57,7 +57,7 @@ bool kugla::sudar(kugla *druga)
 
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
 {
-	if(!sudar(druga)) return 0;
+	if(!provera_sudara_kugli(druga)) return 0;
 
 	sf::Vector2f d = druga->pozicija - this->pozicija;
 	float cos_u[2];
@@ -109,7 +109,7 @@ bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 
 void kugla::razdvoji_kugle(kugla *druga)
 {
-    if(sudar(druga))
+    if(provera_sudara_kugli(druga))
     {
 		if(pozicija.x>druga->pozicija.x) pozicija=sf::Vector2f(pozicija.x+2,pozicija.y);
 		else pozicija=sf::Vector2f(pozicija.x-2,pozicija.y);
