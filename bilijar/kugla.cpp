@@ -109,12 +109,12 @@ bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 
 void kugla::razdvoji_kugle(kugla *druga)
 {
-    if(!krece_se()&&!druga->krece_se()&&sudar(druga))
+    if(sudar(druga))
     {
-	if(pozicija.x>druga->pozicija.x) pozicija=sf::Vector2f(pozicija.x+2,pozicija.y);
-	else pozicija=sf::Vector2f(pozicija.x-2,pozicija.y);
-	if(pozicija.y>druga->pozicija.y) pozicija=sf::Vector2f(pozicija.x,pozicija.y+2);
-	else pozicija=sf::Vector2f(pozicija.x,pozicija.y-2);
+		if(pozicija.x>druga->pozicija.x) pozicija=sf::Vector2f(pozicija.x+2,pozicija.y);
+		else pozicija=sf::Vector2f(pozicija.x-2,pozicija.y);
+		if(pozicija.y>druga->pozicija.y) pozicija=sf::Vector2f(pozicija.x,pozicija.y+2);
+		else pozicija=sf::Vector2f(pozicija.x,pozicija.y-2);
     }
 }
 
