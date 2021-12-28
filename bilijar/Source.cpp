@@ -123,7 +123,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
             k[i].crtaj();
 
     //isctravanje stapa u koliko su se kugle zaustavile
-    if (krecu_se == 0)
+    if (!krecu_se)
         k[0].crtaj_stap(mis, (float)tockic);
 }
 
@@ -210,9 +210,9 @@ int main()
             for (int i = 0; i < br_kugli; i++)
             {
                 bool udar_o_teme = 0;
-                for (int j = 0; j < br_tacaka || udar_o_teme == 1; j++)
-                    udar_o_teme = k[i].sudar_o_teme(tacke[j]) == 1;//u koliko kugla nije udarila u neko od temena
-                if (udar_o_teme == 0)
+                for (int j = 0; j < br_tacaka || udar_o_teme; j++)
+                    udar_o_teme = k[i].sudar_o_teme(tacke[j]);//u koliko kugla nije udarila u neko od temena
+                if (!udar_o_teme)
                     for (int l = 0; l < br_ivica; l++)
                         k[i].sudar_o_ivicu(ivice[l]);//proveri da li je udarila u neki od zidova
             }
@@ -220,16 +220,16 @@ int main()
             //deo za ponovno ispitivanje da li je sistem u mirovanju
             krecu_se = 0;
             for (int i = 0; i < br_kugli; i++)
-                if (k[i].krece_se() == 1)
+                if (k[i].krece_se())
                     krecu_se = 1;
 
-	        // razdvajanje kugli ako su slucajno ostale slepljene
-	        for (int i = 0; i < br_kugli - 1; i++)
-		        for (int j = i + 1; j < br_kugli; j++)
-		            k[i].razdvoji_kugle(&k[j]);
+	    // razdvajanje kugli ako su slucajno ostale slepljene
+	    for (int i = 0; i < br_kugli - 1; i++)
+		    for (int j = i + 1; j < br_kugli; j++)
+		        k[i].razdvoji_kugle(&k[j]);
         }
 
-        if(brojacfrejma%10==0)
+        if(!brojacfrejma%10)
         {
             brojacfrejma = 0;
             //brisanje prethodnog frejma
