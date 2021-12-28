@@ -49,11 +49,17 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 	rotacija += ugaona_brzina * (1.f / 120.f);
 }
 
+bool kugla::sudar(kugla *druga)
+{
+	if (intenzitet(druga->pozicija - this->pozicija) >= 2 * poluprecnik) return 0;
+	return 1;
+}
+
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
 {
+	if(!sudar(druga)) return 0;
+
 	sf::Vector2f d = druga->pozicija - this->pozicija;
-	if (intenzitet(d) > 2 * poluprecnik)//provera sudara
-		return 0;
 	float cos_u[2];
 	cos_u[0] = cos_uglaIzmedjuVektora(brzina, d);
 	cos_u[1] = cos_uglaIzmedjuVektora(druga->brzina, d);
@@ -67,11 +73,14 @@ bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u k
 	return 1;
 }
 
+int greska_poluprecnik=2;
+float greska_ugao=0.05;
+
 bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o ivicu
 {
-	if (ivica1.razdaljina_od(pozicija) > poluprecnik ||
-		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= 0 ||
-		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= 0)//provera sudara
+	if (ivica1.razdaljina_od(pozicija) >= (poluprecnik + greska_poluprecnik) ||
+		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= (0+greska_ugao) ||
+		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= (0+greska_ugao))//provera sudara
 		return 0;
 	sf::Vector2f normalna, paralelna;
 	float cos_u1 = cos_uglaIzmedjuVektora(brzina, ivica1.pravac);
@@ -84,7 +93,7 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o teme
 {
 	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
-	if (intenzitet(d) > poluprecnik)//provera sudara
+	if (intenzitet(d) >= poluprecnik + greska_poluprecnik)//provera sudara
 		return 0;
 	float cos_u = cos_uglaIzmedjuVektora(brzina, d);
 	normalna = d * (intenzitet(brzina) * cos_u / intenzitet(d));
@@ -96,6 +105,17 @@ bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli
 bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 {
 	return (intenzitet(brzina)!=0);
+}
+
+void kugla::razdvoji_kugle(kugla *druga)
+{
+    if(sudar(druga))
+    {
+		if(pozicija.x>druga->pozicija.x) pozicija=sf::Vector2f(pozicija.x+2,pozicija.y);
+		else pozicija=sf::Vector2f(pozicija.x-2,pozicija.y);
+		if(pozicija.y>druga->pozicija.y) pozicija=sf::Vector2f(pozicija.x,pozicija.y+2);
+		else pozicija=sf::Vector2f(pozicija.x,pozicija.y-2);
+    }
 }
 
 void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)

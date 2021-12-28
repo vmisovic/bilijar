@@ -62,6 +62,8 @@ public:
 	bool sudar_kugli(kugla* druga);
 	bool sudar_o_ivicu(ivica ivica1);
 	bool sudar_o_teme(sf::Vector2f tacka);
+	void razdvoji_kugle(kugla *druga);
+	bool sudar(kugla *druga);
 
 	//funkcije za iscrtavanje
 	void crtaj();

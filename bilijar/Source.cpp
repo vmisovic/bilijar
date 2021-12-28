@@ -59,7 +59,7 @@ void inicijalizuj_ivice(sf::RenderWindow *prozor)
     //deklarisanje i podesavanja ivica preko temena
     for (int i = 0; i < br_ivica; i++) ivice[i].povezi_grafiku(prozor);
     {
-	    ivice[0].podesi(tacke[0], tacke[2]);
+	ivice[0].podesi(tacke[0], tacke[2]);
         ivice[1].podesi(tacke[1], tacke[3]);
         ivice[2].podesi(tacke[4], tacke[6]);
         ivice[3].podesi(tacke[5], tacke[7]);
@@ -196,10 +196,8 @@ int main()
             for (int i = 0; i < br_kugli; i++)
             {
                 bool udar_o_teme = 0;
-		        /*
                 for (int j = 0; j < br_tacaka || udar_o_teme == 1; j++)
                     udar_o_teme = k[i].sudar_o_teme(tacke[j]) == 1;//u koliko kugla nije udarila u neko od temena
-		        */
                 if (udar_o_teme == 0)
                     for (int l = 0; l < br_ivica; l++)
                         k[i].sudar_o_ivicu(ivice[l]);//proveri da li je udarila u neki od zidova
@@ -210,8 +208,13 @@ int main()
             for (int i = 0; i < br_kugli; i++)
                 if (k[i].krece_se() == 1)
                     krecu_se = 1;
-        }
 
+	    // razdvajanje kugli ako su slucajno ostale slepljene
+	    for (int i = 0; i < br_kugli - 1; i++)
+		for (int j = i + 1; j < br_kugli; j++)
+		    k[i].razdvoji_kugle(&k[j]);
+
+        }
         //iscrtavanje ivica
         for (int i = 0; i < br_ivica; i++)
             ivice[i].crtaj();
@@ -226,7 +229,7 @@ int main()
         
         //isctravanje stapa u koliko su se kugle zaustavile
 	if (krecu_se == 0)
-        k[0].crtaj_stap(mis, (float)tockic);
+	    k[0].crtaj_stap(mis, (float)tockic);
 
         //prikazivanje frejma
         prozor.display();
