@@ -8,10 +8,8 @@ kugle imaju masu koja im se moze razlikovati ali su poluprecnici kugli isti, sud
 
 ```
 pacman -S sfml
-git clone https://github.com/vmisovic/bilijar/
 cd bilijar/
-g++ -std=c++14 -O2 -o bilijar.out bilijar/*.cpp -lsfml-graphics -lsfml-window -lsfml-system
-./bilijar.out
+make run
 ```
 
 ## Windows
