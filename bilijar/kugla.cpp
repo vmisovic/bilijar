@@ -76,20 +76,6 @@ bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u k
 int greska_poluprecnik=2;
 float greska_ugao=0.05;
 
-bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o ivicu
-{
-	if (ivica1.razdaljina_od(pozicija) >= (poluprecnik + greska_poluprecnik) ||
-		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= (0+greska_ugao) ||
-		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= (0+greska_ugao))//provera sudara
-		return 0;
-	sf::Vector2f normalna, paralelna;
-	float cos_u1 = cos_uglaIzmedjuVektora(brzina, ivica1.pravac);
-	paralelna =  ivica1.pravac * (intenzitet(brzina) * cos_u1 / intenzitet(ivica1.pravac));
-	normalna = brzina - paralelna;
-	brzina = paralelna - normalna;
-	return 1;
-}
-
 bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o teme
 {
 	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
@@ -100,6 +86,35 @@ bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli
 	paralelna = brzina - normalna;
 	brzina = paralelna - normalna;
 	return 1;
+}
+
+bool kugla::provera_sudara_ivica(ivica ivica1)
+{
+	if (ivica1.razdaljina_od(pozicija) >= (poluprecnik + greska_poluprecnik) ||
+		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= (0+greska_ugao) ||
+		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= (0+greska_ugao))//provera sudara
+		return 0;
+	return 1;
+}
+
+bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o ivicu
+{
+	if(!provera_sudara_ivica(ivica1)) return 0;
+	sf::Vector2f normalna, paralelna;
+	float cos_u1 = cos_uglaIzmedjuVektora(brzina, ivica1.pravac);
+	paralelna =  ivica1.pravac * (intenzitet(brzina) * cos_u1 / intenzitet(ivica1.pravac));
+	normalna = brzina - paralelna;
+	brzina = paralelna - normalna;
+	return 1;
+}
+
+void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
+{
+    // kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
+    if(!krece_se()&&provera_sudara_ivica(ivica1))
+    {
+	pozicija=sf::Vector2f(pozicija.x+4,pozicija.y+4);
+    }
 }
 
 bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
