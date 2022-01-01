@@ -51,8 +51,26 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 
 bool kugla::provera_sudara_kugli(kugla *druga)//vraca 1 u koliko se kugle dodirju, u suprotnom 0
 {
-	if (intenzitet(druga->pozicija - this->pozicija) >= 2 * poluprecnik) return 0;
-	return 1;
+	if (intenzitet(druga->pozicija - this->pozicija) >= 2 * poluprecnik)
+	{
+		//ako se kugle ne dodiruju
+		bio_sudar = 0;//prestaje sudar
+		return 0;//ne izvrsavaj sudar_kugli ponovo
+	}
+	else
+	{
+		//kugle se dodiruju
+		if (bio_sudar)
+		{
+			razdvoji_kugle(druga);
+			return 0;//ne izvrsavaj sudar_kugli ponovo
+		}
+		else
+		{
+			bio_sudar = 1;
+			return 1;//izvrsi sudar_kugli
+		}
+	}
 }
 
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
@@ -80,7 +98,22 @@ bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli
 {
 	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
 	if (intenzitet(d) >= poluprecnik + greska_poluprecnik)//provera sudara
-		return 0;
+	{
+		//ako se kugle ne dodiruju
+		bio_sudar = 0;//prestaje sudar
+		return 0;//ne izvrsavaj sudar_kugli ponovo
+	}
+	else
+	{
+		//kugle se dodiruju
+		if (bio_sudar)
+			return 0;//ne izvrsavaj sudar_kugli ponovo
+		else
+		{
+			bio_sudar = 1;
+			//return 1;//izvrsi sudar_kugli
+		}
+	}
 	float cos_u = cos_uglaIzmedjuVektora(brzina, d);
 	normalna = d * (intenzitet(brzina) * cos_u / intenzitet(d));
 	paralelna = brzina - normalna;
@@ -90,11 +123,28 @@ bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli
 
 bool kugla::provera_sudara_ivica(ivica ivica1)
 {
-	if (ivica1.razdaljina_od(pozicija) >= (poluprecnik + greska_poluprecnik) ||
+	if (bio_sudar ||ivica1.razdaljina_od(pozicija) >= (poluprecnik + greska_poluprecnik) ||
 		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= (0+greska_ugao) ||
 		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= (0+greska_ugao))//provera sudara
-		return 0;
-	return 1;
+	{
+		//ako se kugle ne dodiruju
+		bio_sudar = 0;//prestaje sudar
+		return 0;//ne izvrsavaj sudar_kugli ponovo
+	}
+	else
+	{
+		//kugle se dodiruju
+		if (bio_sudar)
+		{
+			razdvoji_kuglu_od_ivice(ivica1, sf::Vector2f(100.f, 120.f),sf::Vector2f(800.f, 400.f));
+			return 0;//ne izvrsavaj sudar_kugli ponovo
+		}
+		else
+		{
+			bio_sudar = 1;
+			return 1;//izvrsi sudar_kugli
+		}
+	}
 }
 
 bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o ivicu
@@ -108,12 +158,13 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 	return 1;
 }
 
-void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
+void kugla::razdvoji_kuglu_od_ivice(ivica ivica1, sf::Vector2f poz_s, sf::Vector2f dim_s)
 {
     // kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
-    if(!krece_se()&&provera_sudara_ivica(ivica1))
+    if(provera_sudara_ivica(ivica1))
     {
-	pozicija=sf::Vector2f(pozicija.x+4,pozicija.y+4);
+		sf::Vector2f d = poz_s + dim_s/2.f - pozicija;
+		pozicija += d / intenzitet(d) * 4.f;
     }
 }
 
