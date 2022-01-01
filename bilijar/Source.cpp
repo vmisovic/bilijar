@@ -14,16 +14,16 @@ sf::Vector2f mis;//cuva kordinate strelice misa
 
 const int br_tacaka = 24;
 sf::Vector2f tacke[br_tacaka];
-sf::Vector2f pozicija_stola(100.f, 100.f), pozicija_rupe[6];
+sf::Vector2f pozicija_stola(100.f, 120.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6];
 
 void inicijalizuj_tacke()
 {
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
-    pozicija_rupe[1] = sf::Vector2f(400.f, 0.f) + pozicija_stola;
-    pozicija_rupe[2] = sf::Vector2f(800.f, 0.f) + pozicija_stola;
-    pozicija_rupe[3] = sf::Vector2f(800.f, 400.f) + pozicija_stola;
-    pozicija_rupe[4] = sf::Vector2f(400.f, 400.f) + pozicija_stola;
-    pozicija_rupe[5] = sf::Vector2f(0.f, 400.f) + pozicija_stola;
+    pozicija_rupe[1] = sf::Vector2f(dimenzije_stola.x/2.f, 0.f) + pozicija_stola;
+    pozicija_rupe[2] = sf::Vector2f(dimenzije_stola.x, 0.f) + pozicija_stola;
+    pozicija_rupe[3] = dimenzije_stola + pozicija_stola;
+    pozicija_rupe[4] = sf::Vector2f(dimenzije_stola.x/2,dimenzije_stola.y) + pozicija_stola;
+    pozicija_rupe[5] = sf::Vector2f(0.f, dimenzije_stola.y) + pozicija_stola;
 
     //deklarisanje i posesavanja temena ivica
     tacke[0] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[0];
@@ -129,7 +129,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 
 int main()
 {
-    sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar");
+    sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar", sf::Style::Close);
     prozor.setFramerateLimit(120);
 
     inicijalizuj_tacke();
