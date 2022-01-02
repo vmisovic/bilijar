@@ -147,6 +147,8 @@ int main()
                 prozor.close();
             if (event.type == sf::Event::KeyPressed)
             {
+				if (event.key.code == sf::Keyboard::Q || event.key.code == sf::Keyboard::Escape)
+					prozor.close();
                 if (event.key.code == sf::Keyboard::T)
                     jednostavno_crtanje = !jednostavno_crtanje;
                 if (event.key.code == sf::Keyboard::S)
