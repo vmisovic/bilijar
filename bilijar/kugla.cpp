@@ -137,7 +137,7 @@ bool kugla::provera_sudara_ivica(ivica ivica1)
 		//kugle se dodiruju
 		if (bio_sudar)
 		{
-			razdvoji_kuglu_od_ivice(ivica1, sf::Vector2f(100.f, 120.f),sf::Vector2f(800.f, 400.f));
+			razdvoji_kuglu_od_ivice(ivica1);
 			return 0;//ne izvrsavaj sudar_kugli ponovo
 		}
 		else
@@ -159,12 +159,12 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 	return 1;
 }
 
-void kugla::razdvoji_kuglu_od_ivice(ivica ivica1, sf::Vector2f poz_s, sf::Vector2f dim_s)
+void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
 {
     // kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
     if(provera_sudara_ivica(ivica1))
     {
-		sf::Vector2f d = poz_s + dim_s/2.f - pozicija;
+		sf::Vector2f d = pozicija_stola + dimenzije_stola/2.f - pozicija;
 		pozicija += d / intenzitet(d) * 4.f;
     }
 }

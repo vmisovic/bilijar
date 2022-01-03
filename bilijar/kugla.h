@@ -67,7 +67,7 @@ public:
 	bool sudar_o_ivicu(ivica ivica1);
 	bool sudar_o_teme(sf::Vector2f tacka);
 	bool provera_sudara_ivica(ivica ivica1);
-	void razdvoji_kuglu_od_ivice(ivica ivica1,sf::Vector2f poz_s, sf::Vector2f dim_s);
+	void razdvoji_kuglu_od_ivice(ivica ivica1);
 
 	//funkcije za iscrtavanje
 	void crtaj();
