@@ -63,13 +63,16 @@ public:
 
 	//funkcije za tealizacije sudara i pomeranje kugli (menjaju brzine i pozicije kugle usled fizickih zakona)
 	void osvezi();
+	bool provera_bio_sudar(bool uslov);
 	bool provera_sudara_kugli(kugla *druga);
+	bool provera_sudara_ivica(ivica ivica1);
+	bool provera_sudara_o_teme(sf::Vector2f tacka);
 	bool sudar_kugli(kugla* druga);
-	void razdvoji_kugle(kugla *druga);
 	bool sudar_o_ivicu(ivica ivica1);
 	bool sudar_o_teme(sf::Vector2f tacka);
-	bool provera_sudara_ivica(ivica ivica1);
+	void razdvoji_kugle(kugla *druga);
 	void razdvoji_kuglu_od_ivice(ivica ivica1);
+	void razdvoji_kuglu_od_temena(sf::Vector2f tacka);
 
 	//funkcije za iscrtavanje
 	void crtaj();

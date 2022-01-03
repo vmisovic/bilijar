@@ -99,10 +99,10 @@ void inicijalizuj_kugle(sf::RenderWindow* prozor)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
 
     k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
-    k[11].podesi(sf::Vector2f(600.f, 400.f), sf::Vector2f(1000.f, 0.f));
+    k[11].podesi(sf::Vector2f(600.f, 300.f), sf::Vector2f(1000.f, 0.f));
     k[2].podesi(sf::Vector2f(400.f, 320.f), sf::Vector2f(-350.f, -310.f));
     k[3].podesi(sf::Vector2f(500.f, 200.f), sf::Vector2f(500.f, 600.f));
-    k[4].podesi(sf::Vector2f(500.f, 400.f), sf::Vector2f(130.f, -400.f));
+    k[4].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(130.f, -400.f));
 
 }
 
@@ -230,7 +230,9 @@ int main()
 		        // razdvajanje kugli ako su slucajno ostale slepljene
 		        for (int j = i + 1; j < br_kugli; j++) k[i].razdvoji_kugle(&k[j]);
 		        // razdvajanje kugli od ivica
-                for (int j = i + 1; j < br_ivica; j++) k[i].razdvoji_kuglu_od_ivice(ivice[j]);
+                for (int j = 0; j < br_ivica; j++) k[i].razdvoji_kuglu_od_ivice(ivice[j]);
+				// razdvajanje kugli od temena
+				for (int j = 0; j < br_tacaka; j++) k[i].razdvoji_kuglu_od_temena(tacke[j]);
 	        }
         }
 
