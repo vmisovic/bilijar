@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "global.h"
 #include "kugla.h"
 using namespace std;
 

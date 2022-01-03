@@ -1,4 +1,5 @@
 #include "kugla.h"
+#include "global.h"
 
 float intenzitet(sf::Vector2f a)//vraca vrednost intenziteta vektora
 {
