@@ -51,7 +51,7 @@ public:
 		krug.setFillColor(slika.getPixel(128,128));
 		kruzic.setFillColor(slika.getPixel(30, 30));
 	}
-	void podesi(sf::Vector2f p, sf::Vector2f v);
+	void podesi(sf::Vector2f p, sf::Vector2f v) { pozicija = p; brzina = v; }
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
 	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
 	void okreni() { rotacija = sf::Vector2f(3.14f, 3.14f); }
@@ -65,7 +65,7 @@ public:
 	void osvezi();
 	bool provera_bio_sudar(bool uslov);
 	bool provera_sudara_kugli(kugla *druga);
-	bool provera_sudara_ivica(ivica ivica1);
+	bool provera_sudara_o_ivicu(ivica ivica1);
 	bool provera_sudara_o_teme(sf::Vector2f tacka);
 	bool sudar_kugli(kugla* druga);
 	bool sudar_o_ivicu(ivica ivica1);
