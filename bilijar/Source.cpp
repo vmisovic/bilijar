@@ -147,6 +147,8 @@ int main()
                 prozor.close();
             if (event.type == sf::Event::KeyPressed)
             {
+				if (event.key.code == sf::Keyboard::Q || event.key.code == sf::Keyboard::Escape)
+					prozor.close();
                 if (event.key.code == sf::Keyboard::T)
                     jednostavno_crtanje = !jednostavno_crtanje;
                 if (event.key.code == sf::Keyboard::S)
@@ -223,13 +225,13 @@ int main()
                 if (k[i].krece_se())
                     krecu_se = 1;
 
-	    for (int i = 0; i < br_kugli - 1; i++)
-	    {
-		    // razdvajanje kugli ako su slucajno ostale slepljene
-		    for (int j = i + 1; j < br_kugli; j++) k[i].razdvoji_kugle(&k[j]);
-		    // razdvajanje kugli od ivica
-		    for (int j = i + 1; j < br_ivica; j++) k[i].razdvoji_kuglu_od_ivice(ivice[j]);
-	    }
+	        for (int i = 0; i < br_kugli - 1; i++)
+	        {
+		        // razdvajanje kugli ako su slucajno ostale slepljene
+		        for (int j = i + 1; j < br_kugli; j++) k[i].razdvoji_kugle(&k[j]);
+		        // razdvajanje kugli od ivica
+                for (int j = i + 1; j < br_ivica; j++) k[i].razdvoji_kuglu_od_ivice(ivice[j], pozicija_stola, dimenzije_stola);
+	        }
         }
 
         if(!brojacfrejma%10)

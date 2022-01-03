@@ -13,10 +13,11 @@ class kugla
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
     sf::Vector2f rotacija;//x: trenutni ugao s0, y: trenutni ugao t0 odredjene tacke na kugli (tacka referentnog sistema, 0,0 na teksturi)
 	float ugao;//prethodni ugao vektora brzine i X ose (moram da pamtim kada se zaustavi kugla za iscrtavanje)
+	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	
 	//konstante
 	float masa=1;
-	float poluprecnik = 20.f;//za sve kugle isti!
+	float poluprecnik = 16.f;//za sve kugle isti!
 	float trenje = 0.1f;
 
 	//grafika
@@ -32,6 +33,7 @@ public:
 		rotacija = sf::Vector2f(3.14f, 3.14f);//da broj kugle gleda ka ekranu/igracu
 		ugaona_brzina = sf::Vector2f(0.f, 0.f);
 		ugao = 0.f;
+		bio_sudar = 0;
 		//podesavanje za iscrtavanja
 		krug.setRadius(poluprecnik);
 		kruzic.setRadius(poluprecnik * 0.7f);
@@ -65,7 +67,7 @@ public:
 	bool sudar_o_ivicu(ivica ivica1);
 	bool sudar_o_teme(sf::Vector2f tacka);
 	bool provera_sudara_ivica(ivica ivica1);
-	void razdvoji_kuglu_od_ivice(ivica ivica1);
+	void razdvoji_kuglu_od_ivice(ivica ivica1,sf::Vector2f poz_s, sf::Vector2f dim_s);
 
 	//funkcije za iscrtavanje
 	void crtaj();
