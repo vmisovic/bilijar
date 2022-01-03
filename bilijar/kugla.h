@@ -5,6 +5,8 @@
 #include <sstream>
 #include "ivica.h"
 
+extern sf::Vector2f pozicija_stola, dimenzije_stola;
+
 class kugla
 {
 	//promenljive
