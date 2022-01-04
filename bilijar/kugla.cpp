@@ -23,7 +23,7 @@ sf::Vector2f rotiraj(sf::Vector2f a, float alfa)
 
 bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 {
-	return (intenzitet(brzina)!=0);
+	return (intenzitet(brzina) != 0 && u_igri);
 }
 
 void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
@@ -35,23 +35,25 @@ void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
 void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 {
 	float usporenje=0.9;
-
-	//u koliko je udarila u ivicu prozora/ekrana
-	if (pozicija_stola.x +  pozicija.x < 0+ poluprecnik)
-		brzina.x = fabs(brzina.x) * usporenje;
-	if (pozicija_stola.y + pozicija.y < 0 + poluprecnik)
-		brzina.y = fabs(brzina.y) * usporenje;
-	if (pozicija_stola.x + pozicija.x > prozor->getSize().x - poluprecnik)
-		brzina.x = -fabs(brzina.x) * usporenje;
-	if (pozicija_stola.y + pozicija.y > prozor->getSize().y - poluprecnik)
-		brzina.y = -fabs(brzina.y) * usporenje;
-	sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
-	pozicija += (brzina+nova_brzina)/(2.f*120.f);
-	brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
-	if (intenzitet(brzina) != 0)
-		ugao = acosf(cos_uglaIzmedjuVektora(sf::Vector2f(-10.f, 0.f), brzina));
-	ugaona_brzina = brzina / poluprecnik;
-	rotacija += ugaona_brzina * (1.f / 120.f);
+	if (u_igri)
+	{
+		//u koliko je udarila u ivicu prozora/ekrana
+		if (pozicija_stola.x +  pozicija.x < 0+ poluprecnik)
+			brzina.x = fabs(brzina.x) * usporenje;
+		if (pozicija_stola.y + pozicija.y < 0 + poluprecnik)
+			brzina.y = fabs(brzina.y) * usporenje;
+		if (pozicija_stola.x + pozicija.x > prozor->getSize().x - poluprecnik)
+			brzina.x = -fabs(brzina.x) * usporenje;
+		if (pozicija_stola.y + pozicija.y > prozor->getSize().y - poluprecnik)
+			brzina.y = -fabs(brzina.y) * usporenje;
+		sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
+		pozicija += (brzina+nova_brzina)/(2.f*120.f);
+		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
+		if (intenzitet(brzina) != 0)
+			ugao = acosf(cos_uglaIzmedjuVektora(sf::Vector2f(-10.f, 0.f), brzina));
+		ugaona_brzina = brzina / poluprecnik;
+		rotacija += ugaona_brzina * (1.f / 120.f);
+	}
 }
 
 bool kugla::provera_bio_sudar(bool ispunjen_uslov)
@@ -62,21 +64,16 @@ bool kugla::provera_bio_sudar(bool ispunjen_uslov)
 		bio_sudar = 0;//prestaje sudar
 		return 0;//ne izvrsavaj sudar_kugli ponovo
 	}
-	else
-	{
-		//kugle se dodiruju
-		if (bio_sudar)
-			return 0;//ne izvrsavaj sudar_kugli ponovo
-		else
-		{
-			bio_sudar = 1;
-			return 1;//izvrsi sudar_kugli
-		}
-	}
+	//kugle se dodiruju
+	if (bio_sudar)
+		return 0;//ne izvrsavaj sudar_kugli ponovo
+	bio_sudar = 1;
+	return 1;//izvrsi sudar_kugli
 }
 
 bool kugla::provera_sudara_kugli(kugla *druga)
 {
+	if (u_igri == 0 || druga->u_igri == 0) return 0;
 	return provera_bio_sudar(intenzitet(druga->pozicija - this->pozicija) <= 2 * poluprecnik);
 }
 
@@ -85,6 +82,7 @@ float greska_ugao=0.05;
 
 bool kugla::provera_sudara_o_ivicu(ivica ivica1)
 {
+	if (u_igri == 0) return 0;
 	bool uslov = (bio_sudar ||ivica1.razdaljina_od(pozicija) >= (poluprecnik + greska_poluprecnik) ||
 		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= (0+greska_ugao) ||
 		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= (0+greska_ugao));
@@ -93,6 +91,7 @@ bool kugla::provera_sudara_o_ivicu(ivica ivica1)
 
 bool kugla::provera_sudara_o_teme(sf::Vector2f tacka)
 {
+	if (u_igri == 0) return 0;
 	sf::Vector2f d = pozicija - tacka;
 	return provera_bio_sudar(intenzitet(d) <= poluprecnik + greska_poluprecnik);
 }
@@ -168,6 +167,27 @@ void kugla::razdvoji_kuglu_od_temena(sf::Vector2f tacka)
 	}
 }
 
+int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pomera kuglu)
+{
+	sf::Vector2f d;
+	for (int i = 0; i < 6; i++)
+	{
+		d=pozicija_rupe[i] - pozicija;
+		if (intenzitet(d) <= 28.f)
+		{
+			if (intenzitet(pozicija_rupe[i]-pozicija) <= 2.f)
+			{
+				u_igri = 0;
+				brzina = sf::Vector2f(0.f, 0.f);
+				return i;
+			}
+			pozicija+=d/intenzitet(d)*1.5f;
+			brzina*=0.7f;
+			brzina+=d/intenzitet(d)*5.f;
+		}
+	}
+	return -1;
+}
 
 void kugla::crtaj()//iscrtavanje
 {
@@ -209,6 +229,12 @@ void kugla::crtaj()//iscrtavanje
 	prozor->draw(pointmap);
 }
 
+void kugla::crtaj_senku()
+{
+	senka.setPosition(pozicija_stola + pozicija + senka_vektor - sf::Vector2f(poluprecnik, poluprecnik));
+	prozor->draw(senka);
+}
+
 void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 {
 	if (rotacija.x >= 2.f * 3.14f)
@@ -223,8 +249,8 @@ void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 
 	sf::Vertex line[] =
 	{
-		sf::Vertex(pozicija),
-		sf::Vertex(pozicija + brzina * (float)(sin(rotacija.x) * poluprecnik / intenzitet(brzina)))
+		sf::Vertex(pozicija_stola + pozicija),
+		sf::Vertex(pozicija_stola + pozicija + brzina * (float)(sin(rotacija.x) * poluprecnik / intenzitet(brzina)))
 	};
 
 	line[0].color = sf::Color::White;
@@ -245,6 +271,14 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f)),
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f))
 	};
+	sf::Vertex line_senka[] =
+	{
+		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f) + senka_vektor),
+		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f) + senka_vektor)
+	};		
+	line_senka[0].color = sf::Color(0,0,0,100);
+	line_senka[1].color = sf::Color(0,0,0,100);
+	prozor->draw(line_senka, 2, sf::Lines);
 	prozor->draw(line, 2, sf::Lines);
 }
 

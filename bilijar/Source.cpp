@@ -12,9 +12,9 @@ bool fiksiran_stap = 0;
 int tockic = 50;
 sf::Vector2f mis;//cuva kordinate strelice misa
 
-const int br_tacaka = 24;
+const int br_tacaka = 30;
 sf::Vector2f tacke[br_tacaka];
-sf::Vector2f pozicija_stola(100.f, 120.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6];
+sf::Vector2f pozicija_stola(100.f, 120.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6], senka_vektor(5.f, 5.f);
 
 void inicijalizuj_tacke()
 {
@@ -55,6 +55,14 @@ void inicijalizuj_tacke()
     tacke[21] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[5];
     tacke[22] = sf::Vector2f(50.f, -10.f) + pozicija_rupe[5];
 	tacke[23] = sf::Vector2f(10.f, -50.f) + pozicija_rupe[5];
+
+	tacke[24] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[0];
+	tacke[25] = sf::Vector2f(0.f, -28.f) + pozicija_rupe[1];
+	tacke[26] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[2];
+	tacke[27] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[3];
+	tacke[28] = sf::Vector2f(0.f, 28.f) + pozicija_rupe[4];
+	tacke[29] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[5];
+	
 }
 
 const int br_ivica = 24;
@@ -102,7 +110,7 @@ void inicijalizuj_kugle(sf::RenderWindow* prozor)
     //deklarisanje i podesavanja vrednosti kugli
     for (int i = 0; i < br_kugli; i++)
         k[i].povezi_grafiku(prozor, i);
-    for (int i = 2; i < br_kugli; i++)
+    for (int i = 1; i < br_kugli; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 50.f));
 
     k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
@@ -160,8 +168,12 @@ void crtaj_sto(sf::RenderWindow* prozor)
         for (int i = 0; i < br_kugli; i++)
             k[i].crtaj_jednostavno();
     else
+	{
+        for (int i = 0; i < br_kugli; i++)
+            k[i].crtaj_senku();
         for (int i = 0; i < br_kugli; i++)
             k[i].crtaj();
+	}
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se)
         k[0].crtaj_stap(mis, (float)tockic);
@@ -266,15 +278,19 @@ int main()
                 if (k[i].krece_se())
                     krecu_se = 1;
 
+		    // razdvajanje kugli ako su slucajno ostale slepljene
 	        for (int i = 0; i < br_kugli - 1; i++)
-	        {
-		        // razdvajanje kugli ako su slucajno ostale slepljene
 		        for (int j = i + 1; j < br_kugli; j++) k[i].razdvoji_kugle(&k[j]);
-		        // razdvajanje kugli od ivica
-                for (int j = 0; j < br_ivica; j++) k[i].razdvoji_kuglu_od_ivice(ivice[j]);
-				// razdvajanje kugli od temena
+			
+			for (int i = 0; i < br_kugli; i++)
+			{
+		        //razdvajanje kugli od ivica
+				for (int j = 0; j < br_ivica; j++) k[i].razdvoji_kuglu_od_ivice(ivice[j]);
+				//razdvajanje kugli od temena
 				for (int j = 0; j < br_tacaka; j++) k[i].razdvoji_kuglu_od_temena(tacke[j]);
-	        }
+				//rupa f-ja
+				k[i].usla_u_rupu();
+			}
         }
 
         if(!brojacfrejma%10)

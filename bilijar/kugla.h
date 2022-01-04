@@ -5,7 +5,7 @@
 #include <sstream>
 #include "ivica.h"
 
-extern sf::Vector2f pozicija_stola, dimenzije_stola;
+extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
 
 class kugla
 {
@@ -16,6 +16,7 @@ class kugla
     sf::Vector2f rotacija;//x: trenutni ugao s0, y: trenutni ugao t0 odredjene tacke na kugli (tacka referentnog sistema, 0,0 na teksturi)
 	float ugao;//prethodni ugao vektora brzine i X ose (moram da pamtim kada se zaustavi kugla za iscrtavanje)
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
+	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
 	
 	//konstante
 	float masa=1;
@@ -24,7 +25,7 @@ class kugla
 
 	//grafika
 	sf::Image slika;
-	sf::CircleShape krug, kruzic;
+	sf::CircleShape krug, kruzic, senka;
 	sf::RenderWindow* prozor;
 public:
 	//funkcije za podesavanje kugle
@@ -36,9 +37,13 @@ public:
 		ugaona_brzina = sf::Vector2f(0.f, 0.f);
 		ugao = 0.f;
 		bio_sudar = 0;
+		u_igri= 0;
 		//podesavanje za iscrtavanja
 		krug.setRadius(poluprecnik);
 		kruzic.setRadius(poluprecnik * 0.7f);
+		senka.setRadius(poluprecnik);
+		senka.setFillColor(sf::Color(0,0,0,100));
+
 	}
 	void povezi_grafiku(sf::RenderWindow* prozor1, int br)
 	{ 
@@ -51,17 +56,18 @@ public:
 		krug.setFillColor(slika.getPixel(128,128));
 		kruzic.setFillColor(slika.getPixel(30, 30));
 	}
-	void podesi(sf::Vector2f p, sf::Vector2f v) { pozicija = p; brzina = v; }
+	void podesi(sf::Vector2f p, sf::Vector2f v) { pozicija = p; brzina = v; u_igri = 1; }
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
-	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
+	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; u_igri = 1; }
 	void okreni() { rotacija = sf::Vector2f(3.14f, 3.14f); }
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina);
 
 	//funkcije za vracanje parametara kugle
 	sf::Vector2f getPosition() { return pozicija; }
 	bool krece_se();
+	bool aktivna() { return u_igri; }
 
-	//funkcije za tealizacije sudara i pomeranje kugli (menjaju brzine i pozicije kugle usled fizickih zakona)
+	//funkcije za realizacije sudara i pomeranje kugli (menjaju brzine i pozicije kugle usled fizickih zakona)
 	void osvezi();
 	bool provera_bio_sudar(bool uslov);
 	bool provera_sudara_kugli(kugla *druga);
@@ -73,9 +79,11 @@ public:
 	void razdvoji_kugle(kugla *druga);
 	void razdvoji_kuglu_od_ivice(ivica ivica1);
 	void razdvoji_kuglu_od_temena(sf::Vector2f tacka);
+	int usla_u_rupu();
 
 	//funkcije za iscrtavanje
 	void crtaj();
+	void crtaj_senku();
 	void crtaj_jednostavno();
 	void crtaj_stap(sf::Vector2f poz_mis, float jacina);
 };
