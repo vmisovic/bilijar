@@ -19,45 +19,45 @@ sf::Vector2f pozicija_stola(100.f, 120.f), dimenzije_stola(800.f, 400.f), pozici
 void inicijalizuj_tacke()
 {
     pozicija_rupe[0] = sf::Vector2f(0.f, 0.f);
-    pozicija_rupe[1] = sf::Vector2f(dimenzije_stola.x/2.f, 0.f);
+    pozicija_rupe[1] = sf::Vector2f(dimenzije_stola.x/2.f, -10.f);
     pozicija_rupe[2] = sf::Vector2f(dimenzije_stola.x, 0.f);
     pozicija_rupe[3] = dimenzije_stola;
-    pozicija_rupe[4] = sf::Vector2f(dimenzije_stola.x/2,dimenzije_stola.y);
+    pozicija_rupe[4] = sf::Vector2f(dimenzije_stola.x/2,dimenzije_stola.y + 10.f);
     pozicija_rupe[5] = sf::Vector2f(0.f, dimenzije_stola.y);
 
     //deklarisanje i posesavanja temena ivica
     tacke[0] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[0];
     tacke[1] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[0];
-    tacke[2] = sf::Vector2f(0.f, 40.f) + pozicija_rupe[0];
-    tacke[3] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[0];
+    tacke[2] = sf::Vector2f(10.f, 50.f) + pozicija_rupe[0];
+    tacke[3] = sf::Vector2f(50.f, 10.f) + pozicija_rupe[0];
 
-    tacke[4] = sf::Vector2f(-28.f, -20.f) + pozicija_rupe[1];
-    tacke[5] = sf::Vector2f(28.f, -20.f) + pozicija_rupe[1];
-    tacke[6] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[1];
-    tacke[7] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[1];
+    tacke[4] = sf::Vector2f(-25.f, -10.f) + pozicija_rupe[1];
+    tacke[5] = sf::Vector2f(25.f, -10.f) + pozicija_rupe[1];
+    tacke[6] = sf::Vector2f(-45.f, 20.f) + pozicija_rupe[1];
+    tacke[7] = sf::Vector2f(45.f, 20.f) + pozicija_rupe[1];
 
     tacke[8] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[2];
     tacke[9] = sf::Vector2f(20.f, 20.f) + pozicija_rupe[2];
-    tacke[11] = sf::Vector2f(0.f, 40.f) + pozicija_rupe[2];
-    tacke[10] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[2];
+    tacke[11] = sf::Vector2f(-10.f, 50.f) + pozicija_rupe[2];
+    tacke[10] = sf::Vector2f(-50.f, 10.f) + pozicija_rupe[2];
 
     tacke[12] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[3];
     tacke[13] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[3];
-    tacke[14] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[3];
-    tacke[15] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[3];
+    tacke[14] = sf::Vector2f(-10.f, -50.f) + pozicija_rupe[3];
+    tacke[15] = sf::Vector2f(-50.f, -10.f) + pozicija_rupe[3];
 
-    tacke[16] = sf::Vector2f(28.f, 20.f) + pozicija_rupe[4];
-    tacke[17] = sf::Vector2f(-28.f, 20.f) + pozicija_rupe[4];
-    tacke[18] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[4];
-    tacke[19] = sf::Vector2f(-40.f, 0.f) + pozicija_rupe[4];
+    tacke[16] = sf::Vector2f(25.f, 10.f) + pozicija_rupe[4];
+    tacke[17] = sf::Vector2f(-25.f, 10.f) + pozicija_rupe[4];
+    tacke[18] = sf::Vector2f(45.f, -20.f) + pozicija_rupe[4];
+    tacke[19] = sf::Vector2f(-45.f, -20.f) + pozicija_rupe[4];
 
     tacke[20] = sf::Vector2f(20.f, 20.f) + pozicija_rupe[5];
     tacke[21] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[5];
-    tacke[22] = sf::Vector2f(40.f, 0.f) + pozicija_rupe[5];
-    tacke[23] = sf::Vector2f(0.f, -40.f) + pozicija_rupe[5];
+    tacke[22] = sf::Vector2f(50.f, -10.f) + pozicija_rupe[5];
+	tacke[23] = sf::Vector2f(10.f, -50.f) + pozicija_rupe[5];
 }
 
-const int br_ivica = 18;
+const int br_ivica = 24;
 ivica ivice[br_ivica];
 
 void inicijalizuj_ivice(sf::RenderWindow *prozor)
@@ -65,7 +65,7 @@ void inicijalizuj_ivice(sf::RenderWindow *prozor)
     //deklarisanje i podesavanja ivica preko temena
     for (int i = 0; i < br_ivica; i++) ivice[i].povezi_grafiku(prozor);
     {
-	ivice[0].podesi(tacke[0], tacke[2]);
+		ivice[0].podesi(tacke[0], tacke[2]);
         ivice[1].podesi(tacke[1], tacke[3]);
         ivice[2].podesi(tacke[4], tacke[6]);
         ivice[3].podesi(tacke[5], tacke[7]);
@@ -83,6 +83,13 @@ void inicijalizuj_ivice(sf::RenderWindow *prozor)
         ivice[15].podesi(tacke[15], tacke[18]);
         ivice[16].podesi(tacke[19], tacke[22]);
         ivice[17].podesi(tacke[23], tacke[2]);
+
+		ivice[18].podesi(tacke[1],tacke[4]);
+		ivice[19].podesi(tacke[5],tacke[8]);
+		ivice[20].podesi(tacke[9],tacke[12]);
+		ivice[21].podesi(tacke[13],tacke[16]);
+		ivice[22].podesi(tacke[17],tacke[20]);
+		ivice[23].podesi(tacke[21],tacke[0]);
     }
 
 }
@@ -96,7 +103,7 @@ void inicijalizuj_kugle(sf::RenderWindow* prozor)
     for (int i = 0; i < br_kugli; i++)
         k[i].povezi_grafiku(prozor, i);
     for (int i = 2; i < br_kugli; i++)
-        k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 30.f));
+        k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 50.f));
 
     k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
     k[11].podesi(sf::Vector2f(600.f, 300.f), sf::Vector2f(1000.f, 0.f));
@@ -107,9 +114,43 @@ void inicijalizuj_kugle(sf::RenderWindow* prozor)
 }
 
 sf::Color boja_stola(10, 100, 10);
+sf::Color boja_okvira(100, 50, 10);
+sf::RectangleShape sto, okvir;
+sf::CircleShape rupa[6];
+
+void inicijalizuj_grafiku()
+{
+	okvir.setPosition(pozicija_stola - sf::Vector2f(50.f,50.f));
+	okvir.setSize(dimenzije_stola + sf::Vector2f(100.f,100.f));
+	okvir.setFillColor(boja_okvira);
+	okvir.setOutlineColor(sf::Color::White);
+	okvir.setOutlineThickness(5.f);
+
+	sto.setPosition(pozicija_stola - sf::Vector2f(20.f,20.f));
+	sto.setSize(dimenzije_stola + sf::Vector2f(40.f,40.f));
+	sto.setFillColor(boja_stola);
+
+	for (int i=0; i<6;i++)
+	{
+		if(i!=1&&i!=4)
+			rupa[i].setRadius(20.f*sqrt(2));
+		else
+			rupa[i].setRadius(27.f);
+		rupa[i].setPosition(pozicija_stola + pozicija_rupe[i] - sf::Vector2f(rupa[i].getRadius(),rupa[i].getRadius()));
+		rupa[i].setFillColor(sf::Color::Black);
+		rupa[i].setOutlineThickness(2.f);
+		rupa[i].setOutlineColor(sf::Color(65,65,65));
+	}
+}
 
 void crtaj_sto(sf::RenderWindow* prozor)
 {
+	//iscrtavanje okvira i podloge stola
+	prozor->draw(okvir);
+	prozor->draw(sto);
+	//iscrtavanje rupa
+	for (int i=0; i<6;i++)
+		prozor->draw(rupa[i]);
     //iscrtavanje ivica
     for (int i = 0; i < br_ivica; i++)
         ivice[i].crtaj();
@@ -121,8 +162,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
     else
         for (int i = 0; i < br_kugli; i++)
             k[i].crtaj();
-
-    //isctravanje stapa u koliko su se kugle zaustavile
+	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se)
         k[0].crtaj_stap(mis, (float)tockic);
 }
@@ -135,6 +175,7 @@ int main()
     inicijalizuj_tacke();
     inicijalizuj_ivice(&prozor);
     inicijalizuj_kugle(&prozor);
+	inicijalizuj_grafiku();
     int brojacfrejma = 0;
 
     while (prozor.isOpen())
@@ -240,7 +281,7 @@ int main()
         {
             brojacfrejma = 0;
             //brisanje prethodnog frejma
-            prozor.clear(boja_stola);
+            prozor.clear();
 
             crtaj_sto(&prozor);
 
