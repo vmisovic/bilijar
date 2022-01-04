@@ -23,8 +23,8 @@ void ivica::crtaj()
 {
 	sf::Vertex line[] =
 	{
-		sf::Vertex(tacka1),
-		sf::Vertex(tacka2)
+		sf::Vertex(pozicija_stola + tacka1),
+		sf::Vertex(pozicija_stola + tacka2)
 	};
 
 	prozor->draw(line, 2, sf::Lines);

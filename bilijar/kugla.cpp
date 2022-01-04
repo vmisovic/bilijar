@@ -85,15 +85,15 @@ float greska_ugao=0.05;
 
 bool kugla::provera_sudara_o_ivicu(ivica ivica1)
 {
-	bool uslov = (bio_sudar ||ivica1.razdaljina_od(pozicija_stola + pozicija) >= (poluprecnik + greska_poluprecnik) ||
-		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija_stola + pozicija - ivica1.tacka1) <= (0+greska_ugao) ||
-		cos_uglaIzmedjuVektora(pozicija_stola + pozicija - ivica1.tacka2, -ivica1.pravac) <= (0+greska_ugao));
+	bool uslov = (bio_sudar ||ivica1.razdaljina_od(pozicija) >= (poluprecnik + greska_poluprecnik) ||
+		cos_uglaIzmedjuVektora(ivica1.pravac, pozicija - ivica1.tacka1) <= (0+greska_ugao) ||
+		cos_uglaIzmedjuVektora(pozicija - ivica1.tacka2, -ivica1.pravac) <= (0+greska_ugao));
 	return provera_bio_sudar(!uslov);
 }
 
 bool kugla::provera_sudara_o_teme(sf::Vector2f tacka)
 {
-	sf::Vector2f d = pozicija_stola + pozicija - tacka;
+	sf::Vector2f d = pozicija - tacka;
 	return provera_bio_sudar(intenzitet(d) <= poluprecnik + greska_poluprecnik);
 }
 
@@ -128,7 +128,7 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 
 bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o teme
 {
-	sf::Vector2f d = pozicija_stola + pozicija - tacka, normalna, paralelna;
+	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
 	if (!provera_sudara_o_teme(tacka))//provera sudara
 		return 0;	
 	float cos_u = cos_uglaIzmedjuVektora(brzina, d);
@@ -143,7 +143,7 @@ void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
     // kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
     if(provera_sudara_o_ivicu(ivica1))
     {
-		sf::Vector2f d = pozicija_stola + dimenzije_stola/2.f - pozicija;
+		sf::Vector2f d = dimenzije_stola/2.f - pozicija;
 		pozicija += d / intenzitet(d) * 4.f;
     }
 }
@@ -163,7 +163,7 @@ void kugla::razdvoji_kuglu_od_temena(sf::Vector2f tacka)
 {
 	if(provera_sudara_o_teme(tacka))
 	{
-		sf::Vector2f d = pozicija_stola + pozicija - tacka;
+		sf::Vector2f d = pozicija - tacka;
 		pozicija+=d/intenzitet(d)*4.f;
 	}
 }

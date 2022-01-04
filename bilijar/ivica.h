@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
+extern sf::Vector2f pozicija_stola, dimenzije_stola;
+
 class ivica
 {
 public:

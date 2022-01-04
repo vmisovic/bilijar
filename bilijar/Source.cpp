@@ -18,12 +18,12 @@ sf::Vector2f pozicija_stola(100.f, 120.f), dimenzije_stola(800.f, 400.f), pozici
 
 void inicijalizuj_tacke()
 {
-    pozicija_rupe[0] = sf::Vector2f(0.f, 0.f) + pozicija_stola;
-    pozicija_rupe[1] = sf::Vector2f(dimenzije_stola.x/2.f, 0.f) + pozicija_stola;
-    pozicija_rupe[2] = sf::Vector2f(dimenzije_stola.x, 0.f) + pozicija_stola;
-    pozicija_rupe[3] = dimenzije_stola + pozicija_stola;
-    pozicija_rupe[4] = sf::Vector2f(dimenzije_stola.x/2,dimenzije_stola.y) + pozicija_stola;
-    pozicija_rupe[5] = sf::Vector2f(0.f, dimenzije_stola.y) + pozicija_stola;
+    pozicija_rupe[0] = sf::Vector2f(0.f, 0.f);
+    pozicija_rupe[1] = sf::Vector2f(dimenzije_stola.x/2.f, 0.f);
+    pozicija_rupe[2] = sf::Vector2f(dimenzije_stola.x, 0.f);
+    pozicija_rupe[3] = dimenzije_stola;
+    pozicija_rupe[4] = sf::Vector2f(dimenzije_stola.x/2,dimenzije_stola.y);
+    pozicija_rupe[5] = sf::Vector2f(0.f, dimenzije_stola.y);
 
     //deklarisanje i posesavanja temena ivica
     tacke[0] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[0];
