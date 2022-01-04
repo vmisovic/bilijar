@@ -1,4 +1,4 @@
-# Simulacija interagovanja kugli
+# Simulacija bilijara
 ![screenshot](screenshots/bilijar-skrinsot.png)
 ## Linux
 

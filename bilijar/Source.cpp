@@ -109,8 +109,11 @@ void inicijalizuj_kugle(sf::RenderWindow* prozor)
 {
     //deklarisanje i podesavanja vrednosti kugli
     for (int i = 0; i < br_kugli; i++)
+	{
         k[i].povezi_grafiku(prozor, i);
-    for (int i = 1; i < br_kugli; i++)
+		k[i].ubaci_u_igru();
+	}
+	for (int i = 1; i < br_kugli; i++)
         k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 50.f));
 
     k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
@@ -175,7 +178,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
             k[i].crtaj();
 	}
 	//isctravanje stapa u koliko su se kugle zaustavile
-    if (!krecu_se)
+    if (!krecu_se && k[0].aktivna())
         k[0].crtaj_stap(mis, (float)tockic);
 }
 
@@ -215,7 +218,7 @@ int main()
                     for (int i = 0; i < br_kugli; i++)
                         k[i].okreni();
             }
-            if (event.type == sf::Event::MouseWheelScrolled && !krecu_se)
+            if (event.type == sf::Event::MouseWheelScrolled && !krecu_se && k[0].aktivna())
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
                 {
                     if (osetljivo)
@@ -230,24 +233,40 @@ int main()
                 }
             if (event.type == sf::Event::MouseButtonPressed)
             {
-                if (event.mouseButton.button == sf::Mouse::Right)
+                if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && k[0].aktivna())
                 {
                     mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
                     fiksiran_stap = !fiksiran_stap;
                 }
-                if (event.mouseButton.button == sf::Mouse::Left && !krecu_se)
+                if (event.mouseButton.button == sf::Mouse::Left && !krecu_se && k[0].aktivna())
                 {
                     k[0].udarac_stapa(mis, (float)tockic);
                     krecu_se = 1;
                     fiksiran_stap = 0;
                     tockic = 50;
                 }
+				if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && !k[0].aktivna())
+                {
+                    mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
+					k[0].dodeli_poziciju(mis - pozicija_stola);
+					//bool ok = 1;
+					//for (int i = 1; i < br_kugli; i++)
+						//if (k[0].provera_sudara_kugli(&k[i]) == 1)
+							//ok = 0;
+					//if(ok)
+						k[0].ubaci_u_igru();
+                }
                 if (event.mouseButton.button == sf::Mouse::Middle)
                     osetljivo = !osetljivo;
             }
             if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
-        }
+            if (event.type == sf::Event::MouseMoved && !k[0].aktivna())
+			{
+                mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
+				k[0].dodeli_poziciju(mis - pozicija_stola);
+			}
+		}
 
         if (krecu_se && !pauzirano)
         {
