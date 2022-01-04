@@ -74,7 +74,7 @@ bool kugla::provera_bio_sudar(bool ispunjen_uslov)
 bool kugla::provera_sudara_kugli(kugla *druga)
 {
 	if (u_igri == 0 || druga->u_igri == 0) return 0;
-	return provera_bio_sudar(intenzitet(druga->pozicija - this->pozicija) <= 2 * poluprecnik);
+	return provera_bio_sudar(intenzitet(druga->pozicija - this->pozicija) < 2.f * poluprecnik);
 }
 
 int greska_poluprecnik=2;

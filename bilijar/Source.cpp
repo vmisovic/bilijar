@@ -99,7 +99,6 @@ void inicijalizuj_ivice(sf::RenderWindow *prozor)
 		ivice[22].podesi(tacke[17],tacke[20]);
 		ivice[23].podesi(tacke[21],tacke[0]);
     }
-
 }
 
 const int br_kugli = 16;
@@ -112,16 +111,18 @@ void inicijalizuj_kugle(sf::RenderWindow* prozor)
 	{
         k[i].povezi_grafiku(prozor, i);
 		k[i].ubaci_u_igru();
+		k[i].dodeli_brzinu(sf::Vector2f(0.f,0.f));
 	}
-	for (int i = 1; i < br_kugli; i++)
-        k[i].dodeli_poziciju(sf::Vector2f(30.f + 45.f * i, 50.f));
+    k[0].dodeli_poziciju(sf::Vector2f(dimenzije_stola.x/4, dimenzije_stola.y/2));
 
-    k[0].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(0.f, 0.f));
-    k[11].podesi(sf::Vector2f(600.f, 300.f), sf::Vector2f(1000.f, 0.f));
-    k[2].podesi(sf::Vector2f(400.f, 320.f), sf::Vector2f(-350.f, -310.f));
-    k[3].podesi(sf::Vector2f(500.f, 200.f), sf::Vector2f(500.f, 600.f));
-    k[4].podesi(sf::Vector2f(500.f, 300.f), sf::Vector2f(130.f, -400.f));
-
+	int br = 1;
+	for (int i = 1; i < 6; i++)
+		for (int j = 0; j < i; j++)
+		{
+			k[br].dodeli_poziciju(sf::Vector2f(dimenzije_stola.x*0.65f+i*k[0].getPoluprecnik()*sqrt(3),
+						dimenzije_stola.y/2.f+(i-1)*k[0].getPoluprecnik()-j*2.f*k[0].getPoluprecnik()));
+			br++;
+		}
 }
 
 sf::Color boja_stola(10, 100, 10);
@@ -207,7 +208,13 @@ int main()
 					prozor.close();
                 if (event.key.code == sf::Keyboard::T)
                     jednostavno_crtanje = !jednostavno_crtanje;
-                if (event.key.code == sf::Keyboard::S)
+                if (event.key.code == sf::Keyboard::A)
+				{
+                    inicijalizuj_kugle(&prozor);
+                    for (int i = 0; i < br_kugli; i++)
+						k[i].okreni();
+				}
+				if (event.key.code == sf::Keyboard::S)
                     for (int i = 0; i < br_kugli; i++)
                         k[i].dodeli_brzinu(sf::Vector2f(0.f, 0.f));
                 if (event.key.code == sf::Keyboard::P)

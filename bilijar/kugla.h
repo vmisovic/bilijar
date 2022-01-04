@@ -65,6 +65,7 @@ public:
 
 	//funkcije za vracanje parametara kugle
 	sf::Vector2f getPosition() { return pozicija; }
+	float getPoluprecnik() { return poluprecnik; }
 	bool krece_se();
 	bool aktivna() { return u_igri; }
 
