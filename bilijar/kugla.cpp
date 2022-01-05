@@ -29,7 +29,9 @@ bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
-	brzina = (pravac_stapa) / intenzitet(pravac_stapa) * (jacina+20) * 15.f;
+	if (intenzitet(pravac_stapa) == 0)
+		pravac_stapa = sf::Vector2f(1.f,1.f);
+	brzina = (pravac_stapa) / intenzitet(pravac_stapa) * (jacina+10) * 25.f;
 }
 
 void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
@@ -74,7 +76,7 @@ bool kugla::provera_bio_sudar(bool ispunjen_uslov)
 bool kugla::provera_sudara_kugli(kugla *druga)
 {
 	if (u_igri == 0 || druga->u_igri == 0) return 0;
-	return provera_bio_sudar(intenzitet(druga->pozicija - this->pozicija) <= 2 * poluprecnik);
+	return provera_bio_sudar(intenzitet(druga->pozicija - this->pozicija) < 2.f * poluprecnik);
 }
 
 int greska_poluprecnik=2;
@@ -177,6 +179,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		{
 			if (intenzitet(pozicija_rupe[i]-pozicija) <= 2.f)
 			{
+				dodeli_poziciju(sf::Vector2f(100.f,-50.f));
 				u_igri = 0;
 				brzina = sf::Vector2f(0.f, 0.f);
 				return i;
@@ -184,6 +187,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 			pozicija+=d/intenzitet(d)*1.5f;
 			brzina*=0.7f;
 			brzina+=d/intenzitet(d)*5.f;
+			return -2;
 		}
 	}
 	return -1;
@@ -266,6 +270,8 @@ void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
+	if (intenzitet(pravac_stapa) == 0)
+		pravac_stapa = sf::Vector2f(1.f,1.f);
 	sf::Vertex line[] =
 	{
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f)),

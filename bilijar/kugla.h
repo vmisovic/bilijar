@@ -56,14 +56,16 @@ public:
 		krug.setFillColor(slika.getPixel(128,128));
 		kruzic.setFillColor(slika.getPixel(30, 30));
 	}
-	void podesi(sf::Vector2f p, sf::Vector2f v) { pozicija = p; brzina = v; u_igri = 1; }
+	void podesi(sf::Vector2f p, sf::Vector2f v) { pozicija = p; brzina = v; }
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
-	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; u_igri = 1; }
+	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
+	void ubaci_u_igru() { u_igri = 1; }
 	void okreni() { rotacija = sf::Vector2f(3.14f, 3.14f); }
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina);
 
 	//funkcije za vracanje parametara kugle
 	sf::Vector2f getPosition() { return pozicija; }
+	float getPoluprecnik() { return poluprecnik; }
 	bool krece_se();
 	bool aktivna() { return u_igri; }
 
