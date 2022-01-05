@@ -30,6 +30,7 @@ class kugla
 	sf::CircleShape krug, kruzic, senka;
 	sf::RenderWindow* prozor;
 public:
+    static int pozicija_nakon_rupe;
 	//funkcije za podesavanje kugle
 	kugla()
 	{
