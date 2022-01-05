@@ -302,6 +302,7 @@ int main()
                     inicijalizuj_kugle();
                     for (int i = 0; i < br_kugli; i++)
 						k[i].okreni();
+                        kugla::pozicija_nakon_rupe=0;
 				}
 				if (event.key.code == sf::Keyboard::S)
                     for (int i = 0; i < br_kugli; i++)
@@ -351,7 +352,7 @@ int main()
 			{
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
 				k[0].dodeli_poziciju(mis - pozicija_stola);
-				k[0].highlight(!slobodno_mesto(mis - pozicija_stola));		
+				k[0].highlight(!slobodno_mesto(mis - pozicija_stola));
 			}
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
@@ -373,7 +374,7 @@ int main()
 					k[0].dodeli_poziciju(mis - pozicija_stola);
 					k[0].highlight(!slobodno_mesto(mis - pozicija_stola));
 					if (slobodno_mesto(mis - pozicija_stola))
-						k[0].ubaci_u_igru();
+						k[0].ubaci_u_igru(),kugla::pozicija_nakon_rupe--;
                 }
                 if (event.mouseButton.button == sf::Mouse::Middle)
 					osetljivo = !osetljivo;
