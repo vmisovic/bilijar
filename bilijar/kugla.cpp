@@ -37,7 +37,7 @@ void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
 void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 {
 	float usporenje=0.9;
-	if (u_igri)
+	if (u_igri && !animacija)
 	{
 		//u koliko je udarila u ivicu prozora/ekrana
 		if (pozicija_stola.x +  pozicija.x < 0+ poluprecnik)
@@ -177,16 +177,16 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		d=pozicija_rupe[i] - pozicija;
 		if (intenzitet(d) <= 28.f)
 		{
-			if (intenzitet(pozicija_rupe[i]-pozicija) <= 2.f)
+			if (intenzitet(pozicija_rupe[i]-pozicija) <= 5.f)
 			{
 				dodeli_poziciju(sf::Vector2f(100.f,-50.f));
 				u_igri = 0;
+				animacija = 0;
 				brzina = sf::Vector2f(0.f, 0.f);
 				return i;
 			}
-			pozicija+=d/intenzitet(d)*1.5f;
-			brzina*=0.7f;
-			brzina+=d/intenzitet(d)*5.f;
+			pozicija += d * 0.5f;
+			animacija = 1;
 			return -2;
 		}
 	}
@@ -265,6 +265,29 @@ void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 		line[1].color = sf::Color::Black;
 	}
 	prozor->draw(line, 2, sf::Lines);
+}
+
+void kugla::crtaj_precrtano()
+{
+	if (oznacena)
+	{
+		sf::CircleShape maska;
+		maska.setRadius(poluprecnik);
+		maska.setFillColor(sf::Color(255,0,0,150));
+		maska.setOutlineColor(sf::Color::Red);
+		maska.setOutlineThickness(3.f);
+		maska.setPosition(pozicija_stola + pozicija - sf::Vector2f(poluprecnik, poluprecnik));
+		sf::VertexArray crta(sf::Quads,4); 
+		for (int i = 0; i < 4; i++)
+			crta[i].color = sf::Color::Red;	
+		crta[0].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik-2.f,poluprecnik);
+		crta[1].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik,poluprecnik+2.f);
+		crta[2].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik+2.f,-poluprecnik);
+		crta[3].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik,-poluprecnik-2.f);
+	
+		prozor->draw(crta);
+		prozor->draw(maska);
+	}
 }
 
 void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)

@@ -17,7 +17,9 @@ class kugla
 	float ugao;//prethodni ugao vektora brzine i X ose (moram da pamtim kada se zaustavi kugla za iscrtavanje)
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
-	
+	bool oznacena;//1 kako bi se iscrtavalo precrtan znak
+	bool animacija;
+
 	//konstante
 	float masa=1;
 	float poluprecnik = 16.f;//za sve kugle isti!
@@ -37,7 +39,9 @@ public:
 		ugaona_brzina = sf::Vector2f(0.f, 0.f);
 		ugao = 0.f;
 		bio_sudar = 0;
-		u_igri= 0;
+		u_igri = 0;
+		oznacena = 0;
+		animacija = 0;
 		//podesavanje za iscrtavanja
 		krug.setRadius(poluprecnik);
 		kruzic.setRadius(poluprecnik * 0.7f);
@@ -62,6 +66,7 @@ public:
 	void ubaci_u_igru() { u_igri = 1; }
 	void okreni() { rotacija = sf::Vector2f(3.14f, 3.14f); }
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina);
+	void highlight(bool b) { oznacena = b; }
 
 	//funkcije za vracanje parametara kugle
 	sf::Vector2f getPosition() { return pozicija; }
@@ -87,6 +92,7 @@ public:
 	void crtaj();
 	void crtaj_senku();
 	void crtaj_jednostavno();
+	void crtaj_precrtano();
 	void crtaj_stap(sf::Vector2f poz_mis, float jacina);
 };
 
