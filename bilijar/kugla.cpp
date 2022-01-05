@@ -29,6 +29,8 @@ bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
+	if (intenzitet(pravac_stapa) == 0)
+		pravac_stapa = sf::Vector2f(1.f,1.f);
 	brzina = (pravac_stapa) / intenzitet(pravac_stapa) * (jacina+10) * 25.f;
 }
 
@@ -268,6 +270,8 @@ void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
+	if (intenzitet(pravac_stapa) == 0)
+		pravac_stapa = sf::Vector2f(1.f,1.f);
 	sf::Vertex line[] =
 	{
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f)),

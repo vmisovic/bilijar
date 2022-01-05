@@ -121,22 +121,31 @@ void inicijalizuj_kugle()
 		}
 }
 
-sf::Color boja_stola(10, 100, 10), boja_stola1(10, 120, 10), boja_oko_rupa(65,65,65), boja_okvira(100, 50, 10), boja_senke(0,0,0,100);
+sf::Color boja_stola(10, 100, 10), boja_stola1(10, 130, 10), boja_oko_rupa(75,75,75), boja_okvira(100, 50, 10), boja_senke(0,0,0,100);
 sf::RectangleShape sto, okvir, oko_rupa[6];
 sf::CircleShape rupa[6];
 sf::VertexArray u_okvir[6];
+
+void update_boja()
+{
+	okvir.setFillColor(boja_okvira);
+	sto.setFillColor(boja_stola);
+	for (int i = 0; i < 6; i++)
+		oko_rupa[i].setFillColor(boja_oko_rupa);
+	for (int i = 0; i < 6; i++)
+		for (int j = 0; j < 4; j++)
+			u_okvir[i][j].color = boja_stola1;
+}
 
 void inicijalizuj_grafiku(sf::RenderWindow *prozor)
 {
 	okvir.setPosition(pozicija_stola - sf::Vector2f(50.f,50.f));
 	okvir.setSize(dimenzije_stola + sf::Vector2f(100.f,100.f));
-	okvir.setFillColor(boja_okvira);
 	okvir.setOutlineColor(sf::Color::White);
 	okvir.setOutlineThickness(5.f);
 
 	sto.setPosition(pozicija_stola - sf::Vector2f(20.f,20.f));
 	sto.setSize(dimenzije_stola + sf::Vector2f(40.f,40.f));
-	sto.setFillColor(boja_stola);
 	sto.setOutlineColor(sf::Color::Black);
 	sto.setOutlineThickness(5.f);
 
@@ -154,7 +163,6 @@ void inicijalizuj_grafiku(sf::RenderWindow *prozor)
 		}
 		rupa[i].setPosition(pozicija_stola + pozicija_rupe[i] - sf::Vector2f(rupa[i].getRadius(),rupa[i].getRadius()));
 		rupa[i].setFillColor(sf::Color::Black);
-		oko_rupa[i].setFillColor(boja_oko_rupa);
 	}
 	oko_rupa[0].setPosition(pozicija_stola + pozicija_rupe[0] - sf::Vector2f(60.f, 60.f));
 	oko_rupa[1].setPosition(pozicija_stola + pozicija_rupe[1] - sf::Vector2f(40.f, 50.f));
@@ -167,7 +175,6 @@ void inicijalizuj_grafiku(sf::RenderWindow *prozor)
 	{
 		u_okvir[i].setPrimitiveType(sf::Quads);
 		u_okvir[i].resize(4);
-		for (int j = 0; j < 4; j++) u_okvir[i][j].color = boja_stola1;
 	}
 	u_okvir[0][0].position=tacke[1]+pozicija_stola;
 	u_okvir[0][1].position=tacke[3]+pozicija_stola;
@@ -252,10 +259,10 @@ void crtaj_sto(sf::RenderWindow* prozor)
 
     //iscrtavanje kugli
     if (jednostavno_crtanje)
-        for (int i = 0; i < br_kugli; i++)
+       for (int i = 0; i < br_kugli; i++)
             k[i].crtaj_jednostavno();
     else
-       for (int i = 0; i < br_kugli; i++)
+       for (int i = br_kugli - 1; i >= 0; i--)
             k[i].crtaj();
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se && k[0].aktivna())
@@ -271,6 +278,7 @@ int main()
     inicijalizuj_ivice();
     inicijalizuj_kugle();
 	inicijalizuj_grafiku(&prozor);
+	update_boja();
     int brojacfrejma = 0;
 
     while (prozor.isOpen())
@@ -302,7 +310,25 @@ int main()
                     osetljivo = !osetljivo;
                 if (event.key.code == sf::Keyboard::R)
                     for (int i = 0; i < br_kugli; i++)
-                        k[i].okreni();
+						k[i].okreni();
+                if (event.key.code == sf::Keyboard::Z)
+				{
+					//zelena kombinacija
+					boja_stola = sf::Color(10,100,10);
+					boja_stola1 = sf::Color(10,130,10);
+					boja_okvira = sf::Color(100,50,10);
+					boja_oko_rupa = sf::Color(75,75,75);
+					update_boja();
+				}
+				if (event.key.code == sf::Keyboard::B)
+				{
+					//plava kombinacija
+					boja_stola = sf::Color(30,70,170);
+					boja_stola1 = sf::Color(70,100,180);
+					boja_okvira = sf::Color(100,50,30);
+					boja_oko_rupa = sf::Color(80,100,100);
+					update_boja();
+				}
             }
             if (event.type == sf::Event::MouseWheelScrolled && !krecu_se && k[0].aktivna())
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
@@ -317,9 +343,17 @@ int main()
                         tockic = 100;
 		            if(DEBUG) std::cout << tockic << std::endl;
                 }
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && k[0].aktivna())
+            if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
+                mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
+            if (event.type == sf::Event::MouseMoved && !k[0].aktivna())
+			{
+                mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
+				k[0].dodeli_poziciju(mis - pozicija_stola);
+						
+			}
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && k[0].aktivna())
                 {
                     mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
                     fiksiran_stap = !fiksiran_stap;
@@ -334,20 +368,13 @@ int main()
 				if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && !k[0].aktivna())
                 {
                     mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
+					k[0].dodeli_poziciju(mis - pozicija_stola);
 					if (slobodno_mesto(mis - pozicija_stola))
 						k[0].ubaci_u_igru();
                 }
                 if (event.mouseButton.button == sf::Mouse::Middle)
-                    osetljivo = !osetljivo;
+					osetljivo = !osetljivo;
             }
-            if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
-                mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
-            if (event.type == sf::Event::MouseMoved && !k[0].aktivna())
-			{
-                mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
-				k[0].dodeli_poziciju(mis - pozicija_stola);
-						
-			}
 		}
 
         if (krecu_se && !pauzirano)
