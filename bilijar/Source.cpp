@@ -121,8 +121,8 @@ void inicijalizuj_kugle()
 		}
 }
 
-sf::Color boja_stola(10, 100, 10), boja_stola1(10, 120, 10), boja_okvira(100, 50, 10), boja_senke(0,0,0,100);
-sf::RectangleShape sto, okvir;
+sf::Color boja_stola(10, 100, 10), boja_stola1(10, 120, 10), boja_oko_rupa(65,65,65), boja_okvira(100, 50, 10), boja_senke(0,0,0,100);
+sf::RectangleShape sto, okvir, oko_rupa[6];
 sf::CircleShape rupa[6];
 sf::VertexArray u_okvir[6];
 
@@ -137,18 +137,31 @@ void inicijalizuj_grafiku(sf::RenderWindow *prozor)
 	sto.setPosition(pozicija_stola - sf::Vector2f(20.f,20.f));
 	sto.setSize(dimenzije_stola + sf::Vector2f(40.f,40.f));
 	sto.setFillColor(boja_stola);
+	sto.setOutlineColor(sf::Color::Black);
+	sto.setOutlineThickness(5.f);
 
 	for (int i=0; i<6;i++)
 	{
 		if(i!=1&&i!=4)
+		{
 			rupa[i].setRadius(20.f*sqrt(2));
+			oko_rupa[i].setSize(sf::Vector2f(80.f, 80.f));
+		}
 		else
+		{
 			rupa[i].setRadius(27.f);
+			oko_rupa[i].setSize(sf::Vector2f(80.f, 40.f));
+		}
 		rupa[i].setPosition(pozicija_stola + pozicija_rupe[i] - sf::Vector2f(rupa[i].getRadius(),rupa[i].getRadius()));
 		rupa[i].setFillColor(sf::Color::Black);
-		rupa[i].setOutlineThickness(2.f);
-		rupa[i].setOutlineColor(sf::Color(65,65,65));
+		oko_rupa[i].setFillColor(boja_oko_rupa);
 	}
+	oko_rupa[0].setPosition(pozicija_stola + pozicija_rupe[0] - sf::Vector2f(60.f, 60.f));
+	oko_rupa[1].setPosition(pozicija_stola + pozicija_rupe[1] - sf::Vector2f(40.f, 50.f));
+	oko_rupa[2].setPosition(pozicija_stola + pozicija_rupe[2] - sf::Vector2f(20.f, 60.f));
+	oko_rupa[3].setPosition(pozicija_stola + pozicija_rupe[3] - sf::Vector2f(20.f, 20.f));
+	oko_rupa[4].setPosition(pozicija_stola + pozicija_rupe[4] - sf::Vector2f(40.f, -10.f));
+	oko_rupa[5].setPosition(pozicija_stola + pozicija_rupe[5] - sf::Vector2f(60.f, 20.f));
 	
 	for (int i = 0; i < 6; i++)
 	{
@@ -186,9 +199,30 @@ void inicijalizuj_grafiku(sf::RenderWindow *prozor)
 	u_okvir[5][2].position=tacke[2]+pozicija_stola;
 	u_okvir[5][3].position=tacke[0]+pozicija_stola;
 
-
 	for (int i = 0; i < br_kugli; i++) k[i].povezi_grafiku(prozor, i);
     for (int i = 0; i < br_ivica; i++) ivice[i].povezi_grafiku(prozor);
+}
+
+bool slobodno_mesto(sf::Vector2f uneta_poz)//vraca 1 u koliko se na uneta_poz moze postaviti kugla
+{
+	kugla kp;
+	kp.dodeli_poziciju(uneta_poz);
+	kp.ubaci_u_igru();
+	bool ok_kugle = 1, ok_ivice = 1, ok_tacke = 1, ok_rupa = 1, ok_sto = 1;
+	for (int i = 0; i < br_kugli; i++)
+		if (kp.provera_sudara_kugli(&k[i]) == 1)
+			ok_kugle = 0;
+	for (int i = 0; i < br_ivica; i++)
+		if (kp.provera_sudara_o_ivicu(ivice[i]))
+				ok_ivice = 0;
+	for (int i = 0; i < br_tacaka; i++)
+		if (kp.provera_sudara_o_teme(tacke[i]) == 1)
+			ok_tacke = 0;
+	if (kp.usla_u_rupu() != -1)
+		ok_rupa = 0;
+	if (uneta_poz.x < (-20.f) || uneta_poz.y < (-20.f) || uneta_poz.x > dimenzije_stola.x + 20.f || uneta_poz.y > dimenzije_stola.y + 20.f)
+		ok_sto = 0;
+	return (ok_kugle && ok_ivice && ok_tacke && ok_rupa && ok_sto); 
 }
 
 void crtaj_sto(sf::RenderWindow* prozor)
@@ -196,15 +230,23 @@ void crtaj_sto(sf::RenderWindow* prozor)
 	//iscrtavanje okvira i podloge stola
 	prozor->draw(okvir);
 	prozor->draw(sto);
+	//iscrtavanje senki
+    if (!jednostavno_crtanje)
+	{
+        for (int i = 0; i < br_kugli; i++)
+            k[i].crtaj_senku();//senke kugli
+		for (int i = 0; i < br_ivica; i++)
+			ivice[i].crtaj_senku();//senke ivica
+	}
 	//iscrtavanje rupa
 	for (int i=0; i<6;i++)
+	{
+		prozor->draw(oko_rupa[i]);
 		prozor->draw(rupa[i]);
-    //iscrtavanje senki ivica
-    for (int i = 0; i < br_ivica; i++)
-		ivice[i].crtaj_senku();
+	}
 	for (int i = 0; i < 6; i++)
 		prozor->draw(u_okvir[i]);
-    //iscrtavanje ivica
+	//iscrtavanje ivica
 	for (int i = 0; i < br_ivica; i++)
         ivice[i].crtaj();
 
@@ -213,12 +255,8 @@ void crtaj_sto(sf::RenderWindow* prozor)
         for (int i = 0; i < br_kugli; i++)
             k[i].crtaj_jednostavno();
     else
-	{
-        for (int i = 0; i < br_kugli; i++)
-            k[i].crtaj_senku();
-        for (int i = 0; i < br_kugli; i++)
+       for (int i = 0; i < br_kugli; i++)
             k[i].crtaj();
-	}
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se && k[0].aktivna())
         k[0].crtaj_stap(mis, (float)tockic);
@@ -296,12 +334,7 @@ int main()
 				if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && !k[0].aktivna())
                 {
                     mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
-					k[0].dodeli_poziciju(mis - pozicija_stola);
-					//bool ok = 1;
-					//for (int i = 1; i < br_kugli; i++)
-						//if (k[0].provera_sudara_kugli(&k[i]) == 1)
-							//ok = 0;
-					//if(ok)
+					if (slobodno_mesto(mis - pozicija_stola))
 						k[0].ubaci_u_igru();
                 }
                 if (event.mouseButton.button == sf::Mouse::Middle)
@@ -313,6 +346,7 @@ int main()
 			{
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
 				k[0].dodeli_poziciju(mis - pozicija_stola);
+						
 			}
 		}
 

@@ -177,6 +177,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		{
 			if (intenzitet(pozicija_rupe[i]-pozicija) <= 2.f)
 			{
+				dodeli_poziciju(sf::Vector2f(100.f,-50.f));
 				u_igri = 0;
 				brzina = sf::Vector2f(0.f, 0.f);
 				return i;
@@ -184,6 +185,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 			pozicija+=d/intenzitet(d)*1.5f;
 			brzina*=0.7f;
 			brzina+=d/intenzitet(d)*5.f;
+			return -2;
 		}
 	}
 	return -1;
