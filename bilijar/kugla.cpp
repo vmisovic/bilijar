@@ -29,7 +29,7 @@ bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
-	brzina = (pravac_stapa) / intenzitet(pravac_stapa) * (jacina+20) * 15.f;
+	brzina = (pravac_stapa) / intenzitet(pravac_stapa) * (jacina+10) * 25.f;
 }
 
 void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene

@@ -29,3 +29,15 @@ void ivica::crtaj()
 
 	prozor->draw(line, 2, sf::Lines);
 }
+
+void ivica::crtaj_senku()
+{
+	sf::VertexArray u_okvir(sf::Quads, 4);
+	u_okvir[0].position=pozicija_stola + tacka1;
+	u_okvir[1].position=pozicija_stola + tacka2;
+	u_okvir[2].position=pozicija_stola + tacka2 + senka_vektor;
+	u_okvir[3].position=pozicija_stola + tacka1 + senka_vektor;
+	for (int i=0;i<4;i++) u_okvir[i].color=boja_senke;
+
+	prozor->draw(u_okvir);
+}
