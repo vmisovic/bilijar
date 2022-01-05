@@ -290,7 +290,24 @@ void kugla::crtaj_precrtano()
 	}
 }
 
-void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
+void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina)
+{
+	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis, normala;
+	pravac_stapa /= intenzitet(pravac_stapa);
+	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
+	if (intenzitet(pravac_stapa) == 0)
+		pravac_stapa = sf::Vector2f(1.f,1.f);
+	sf::VertexArray oblik(sf::Quads, 4);
+	oblik[0].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) + normala * 2.f;
+	oblik[1].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;
+	oblik[2].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 200.f) - normala * 3.f;
+	oblik[3].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 200.f) + normala * 3.f;
+	for (int i=0;i<4;i++) oblik[i].color=sf::Color::White;
+
+	prozor->draw(oblik); 
+}
+
+void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis,float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
 	if (intenzitet(pravac_stapa) == 0)
@@ -300,14 +317,6 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f)),
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f))
 	};
-	sf::Vertex line_senka[] =
-	{
-		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f) + senka_vektor),
-		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f) + senka_vektor)
-	};		
-	line_senka[0].color = sf::Color(0,0,0,100);
-	line_senka[1].color = sf::Color(0,0,0,100);
-	prozor->draw(line_senka, 2, sf::Lines);
 	prozor->draw(line, 2, sf::Lines);
 }
 

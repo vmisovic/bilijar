@@ -94,6 +94,7 @@ public:
 	void crtaj_jednostavno();
 	void crtaj_precrtano();
 	void crtaj_stap(sf::Vector2f poz_mis, float jacina);
+	void crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina);
 };
 
 #endif
