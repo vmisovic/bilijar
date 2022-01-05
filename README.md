@@ -19,6 +19,10 @@
  * `T` ukljucuje/iskljucuje jednostavno crtanje
  * `O` ukljucuje/iskljucuje osetljivost stapa za precizno bitanje jacine udarca
 
+**Seme boja:**
+ * `Z` zelena
+ * `B` plava
+
 ## Linux
 
 Program koristi graficku biblioteku SFML v2.5+. Za Arch linux mozete je preuzeti komandom:
