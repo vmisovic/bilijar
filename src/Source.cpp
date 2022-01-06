@@ -121,7 +121,8 @@ void inicijalizuj_kugle()
 		}
 }
 
-sf::Color boja_stola(10, 100, 10), boja_stola1(10, 130, 10), boja_oko_rupa(75,75,75), boja_okvira(100, 50, 10), boja_senke(0,0,0,100);
+sf::Color boja_stola(10,100,10), boja_stola1(10,130,10), boja_oko_rupa(75,75,75), boja_okvira(100,50,10);
+sf::Color boja_senke(0,0,0,100), boja_stapa(230,150,60);
 sf::RectangleShape sto, okvir, oko_rupa[6];
 sf::CircleShape rupa[6];
 sf::VertexArray u_okvir[6];
@@ -268,7 +269,15 @@ void crtaj_sto(sf::RenderWindow* prozor)
 		k[i].crtaj_precrtano();
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se && k[0].aktivna())
-        k[0].crtaj_stap(mis, (float)tockic);
+	{
+		if (!jednostavno_crtanje)
+		{
+			k[0].crtaj_senku_stapa(mis, (float)tockic);
+	        k[0].crtaj_stap(mis, (float)tockic);
+		}
+		else 
+			k[0].crtaj_stap_jednostavno(mis, (float)tockic);
+	}
 }
 
 int main()

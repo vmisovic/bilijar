@@ -6,6 +6,7 @@
 #include "ivica.h"
 
 extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
+extern sf::Color boja_stapa, boja_senke;
 
 class kugla
 {
@@ -95,6 +96,7 @@ public:
 	void crtaj_jednostavno();
 	void crtaj_precrtano();
 	void crtaj_stap(sf::Vector2f poz_mis, float jacina);
+	void crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina);
 	void crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina);
 };
 
