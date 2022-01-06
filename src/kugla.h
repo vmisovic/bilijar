@@ -6,6 +6,7 @@
 #include "ivica.h"
 
 extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
+extern sf::Color boja_stapa, boja_senke;
 
 class kugla
 {

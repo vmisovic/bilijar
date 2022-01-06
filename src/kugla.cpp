@@ -304,7 +304,8 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina)
 	oblik[1].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;
 	oblik[2].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 300.f) - normala * 4.f;
 	oblik[3].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 300.f) + normala * 4.f;
-	for (int i=0;i<4;i++) oblik[i].color=sf::Color::White;
+	for (int i=0;i<2;i++) oblik[i].color=boja_stapa;
+	for (int i=2;i<4;i++) oblik[i].color=sf::Color::Black;
 
 	prozor->draw(oblik); 
 }
@@ -326,7 +327,7 @@ void kugla::crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina)
 	prozor->draw(senka); 
 }
 
-void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis,float jacina)
+void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
 	if (intenzitet(pravac_stapa) == 0)
