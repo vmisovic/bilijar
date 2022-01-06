@@ -32,12 +32,12 @@ void ivica::crtaj()
 
 void ivica::crtaj_senku()
 {
-	sf::VertexArray u_okvir(sf::Quads, 4);
-	u_okvir[0].position=pozicija_stola + tacka1;
-	u_okvir[1].position=pozicija_stola + tacka2;
-	u_okvir[2].position=pozicija_stola + tacka2 + senka_vektor;
-	u_okvir[3].position=pozicija_stola + tacka1 + senka_vektor;
-	for (int i=0;i<4;i++) u_okvir[i].color=boja_senke;
+	sf::VertexArray senka(sf::Quads, 4);
+	senka[0].position=pozicija_stola + tacka1;
+	senka[1].position=pozicija_stola + tacka2;
+	senka[2].position=pozicija_stola + tacka2 + senka_vektor;
+	senka[3].position=pozicija_stola + tacka1 + senka_vektor;
+	for (int i=0;i<4;i++) senka[i].color=boja_senke;
 
-	prozor->draw(u_okvir);
+	prozor->draw(senka);
 }

@@ -1,5 +1,6 @@
 #include "kugla.h"
 
+int kugla::pozicija_nakon_rupe=0;
 float intenzitet(sf::Vector2f a)//vraca vrednost intenziteta vektora
 {
 	return sqrt(a.x * a.x + a.y * a.y);
@@ -37,7 +38,7 @@ void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
 void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 {
 	float usporenje=0.9;
-	if (u_igri)
+	if (u_igri && !animacija)
 	{
 		//u koliko je udarila u ivicu prozora/ekrana
 		if (pozicija_stola.x +  pozicija.x < 0+ poluprecnik)
@@ -177,16 +178,17 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		d=pozicija_rupe[i] - pozicija;
 		if (intenzitet(d) <= 28.f)
 		{
-			if (intenzitet(pozicija_rupe[i]-pozicija) <= 2.f)
+			if (intenzitet(pozicija_rupe[i]-pozicija) <= 5.f)
 			{
-				dodeli_poziciju(sf::Vector2f(100.f,-50.f));
+				dodeli_poziciju(sf::Vector2f(100.f+(pozicija_nakon_rupe++)*40,-100.f));
+                okreni();
 				u_igri = 0;
+				animacija = 0;
 				brzina = sf::Vector2f(0.f, 0.f);
 				return i;
 			}
-			pozicija+=d/intenzitet(d)*1.5f;
-			brzina*=0.7f;
-			brzina+=d/intenzitet(d)*5.f;
+			pozicija += d * 0.5f;
+			animacija = 1;
 			return -2;
 		}
 	}
@@ -267,7 +269,47 @@ void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 	prozor->draw(line, 2, sf::Lines);
 }
 
-void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
+void kugla::crtaj_precrtano()
+{
+	if (oznacena)
+	{
+		sf::CircleShape maska;
+		maska.setRadius(poluprecnik);
+		maska.setFillColor(sf::Color(255,0,0,150));
+		maska.setOutlineColor(sf::Color::Red);
+		maska.setOutlineThickness(3.f);
+		maska.setPosition(pozicija_stola + pozicija - sf::Vector2f(poluprecnik, poluprecnik));
+		sf::VertexArray crta(sf::Quads,4); 
+		for (int i = 0; i < 4; i++)
+			crta[i].color = sf::Color::Red;	
+		crta[0].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik-2.f,poluprecnik);
+		crta[1].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik,poluprecnik+2.f);
+		crta[2].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik+2.f,-poluprecnik);
+		crta[3].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik,-poluprecnik-2.f);
+	
+		prozor->draw(crta);
+		prozor->draw(maska);
+	}
+}
+
+void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina)
+{
+	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis, normala;
+	pravac_stapa /= intenzitet(pravac_stapa);
+	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
+	if (intenzitet(pravac_stapa) == 0)
+		pravac_stapa = sf::Vector2f(1.f,1.f);
+	sf::VertexArray oblik(sf::Quads, 4);
+	oblik[0].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) + normala * 2.f;
+	oblik[1].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;
+	oblik[2].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 200.f) - normala * 3.f;
+	oblik[3].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 200.f) + normala * 3.f;
+	for (int i=0;i<4;i++) oblik[i].color=sf::Color::White;
+
+	prozor->draw(oblik); 
+}
+
+void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis,float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
 	if (intenzitet(pravac_stapa) == 0)
@@ -277,14 +319,5 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis,float jacina)
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f)),
 		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f))
 	};
-	sf::Vertex line_senka[] =
-	{
-		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f) + senka_vektor),
-		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f) + senka_vektor)
-	};		
-	line_senka[0].color = sf::Color(0,0,0,100);
-	line_senka[1].color = sf::Color(0,0,0,100);
-	prozor->draw(line_senka, 2, sf::Lines);
 	prozor->draw(line, 2, sf::Lines);
 }
-

@@ -14,7 +14,7 @@ sf::Vector2f mis;//cuva kordinate strelice misa
 
 const int br_tacaka = 30;
 sf::Vector2f tacke[br_tacaka];
-sf::Vector2f pozicija_stola(100.f, 120.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6], senka_vektor(5.f, 5.f);
+sf::Vector2f pozicija_stola(200.f, 250.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6], senka_vektor(5.f, 5.f);
 
 void inicijalizuj_tacke()
 {
@@ -264,6 +264,8 @@ void crtaj_sto(sf::RenderWindow* prozor)
     else
        for (int i = br_kugli - 1; i >= 0; i--)
             k[i].crtaj();
+    for (int i = 0; i < br_kugli; i++)
+		k[i].crtaj_precrtano();
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se && k[0].aktivna())
         k[0].crtaj_stap(mis, (float)tockic);
@@ -271,7 +273,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 
 int main()
 {
-    sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar", sf::Style::Close);
+	sf::RenderWindow prozor(sf::VideoMode(1200,900), "Bilijar", sf::Style::Close);
     prozor.setFramerateLimit(120);
 
     inicijalizuj_tacke();
@@ -300,6 +302,7 @@ int main()
                     inicijalizuj_kugle();
                     for (int i = 0; i < br_kugli; i++)
 						k[i].okreni();
+                        kugla::pozicija_nakon_rupe=0;
 				}
 				if (event.key.code == sf::Keyboard::S)
                     for (int i = 0; i < br_kugli; i++)
@@ -349,7 +352,7 @@ int main()
 			{
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
 				k[0].dodeli_poziciju(mis - pozicija_stola);
-						
+				k[0].highlight(!slobodno_mesto(mis - pozicija_stola));
 			}
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
@@ -369,8 +372,9 @@ int main()
                 {
                     mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
 					k[0].dodeli_poziciju(mis - pozicija_stola);
+					k[0].highlight(!slobodno_mesto(mis - pozicija_stola));
 					if (slobodno_mesto(mis - pozicija_stola))
-						k[0].ubaci_u_igru();
+						k[0].ubaci_u_igru(),kugla::pozicija_nakon_rupe--;
                 }
                 if (event.mouseButton.button == sf::Mouse::Middle)
 					osetljivo = !osetljivo;
