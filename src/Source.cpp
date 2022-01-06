@@ -14,7 +14,7 @@ sf::Vector2f mis;//cuva kordinate strelice misa
 
 const int br_tacaka = 30;
 sf::Vector2f tacke[br_tacaka];
-sf::Vector2f pozicija_stola(100.f, 120.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6], senka_vektor(5.f, 5.f);
+sf::Vector2f pozicija_stola(200.f, 250.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6], senka_vektor(5.f, 5.f);
 
 void inicijalizuj_tacke()
 {
@@ -273,7 +273,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 
 int main()
 {
-	sf::RenderWindow prozor(sf::VideoMode(1000,600), "Bilijar", sf::Style::Close);
+	sf::RenderWindow prozor(sf::VideoMode(1200,900), "Bilijar", sf::Style::Close);
     prozor.setFramerateLimit(120);
 
     inicijalizuj_tacke();

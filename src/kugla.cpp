@@ -180,7 +180,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		{
 			if (intenzitet(pozicija_rupe[i]-pozicija) <= 5.f)
 			{
-				dodeli_poziciju(sf::Vector2f(100.f+(pozicija_nakon_rupe++)*40,-50.f));
+				dodeli_poziciju(sf::Vector2f(100.f+(pozicija_nakon_rupe++)*40,-100.f));
                 okreni();
 				u_igri = 0;
 				animacija = 0;
