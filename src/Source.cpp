@@ -6,6 +6,7 @@ using namespace std;
 #define DEBUG 0
 bool krecu_se = 1;
 bool jednostavno_crtanje = 0;
+bool pomocne_linije = 0;
 bool pauzirano = 0;
 bool osetljivo = 0;
 bool fiksiran_stap = 0;
@@ -217,7 +218,7 @@ bool slobodno_mesto(sf::Vector2f uneta_poz)//vraca 1 u koliko se na uneta_poz mo
 	kp.dodeli_poziciju(uneta_poz);
 	kp.ubaci_u_igru();
 	bool ok_kugle = 1, ok_ivice = 1, ok_tacke = 1, ok_rupa = 1, ok_sto = 1;
-	for (int i = 0; i < br_kugli; i++)
+	for (int i = 1; i < br_kugli; i++)
 		if (kp.provera_sudara_kugli(&k[i]) == 1)
 			ok_kugle = 0;
 	for (int i = 0; i < br_ivica; i++)
@@ -231,6 +232,50 @@ bool slobodno_mesto(sf::Vector2f uneta_poz)//vraca 1 u koliko se na uneta_poz mo
 	if (uneta_poz.x < (-20.f) || uneta_poz.y < (-20.f) || uneta_poz.x > dimenzije_stola.x + 20.f || uneta_poz.y > dimenzije_stola.y + 20.f)
 		ok_sto = 0;
 	return (ok_kugle && ok_ivice && ok_tacke && ok_rupa && ok_sto); 
+}
+
+void crtaj_pomocne_linije(sf::Vector2f poz_mis, sf::RenderWindow *prozor)
+{
+	sf::Vector2f d = pozicija_stola + k[0].getPosition() - poz_mis;
+	d /= intenzitet(d);
+	sf::Vector2f poz_provere = k[0].getPosition();
+	while (slobodno_mesto(poz_provere))
+		poz_provere += d * 1.f;
+
+	sf::Vertex linija_pravca[] =
+	{
+		sf::Vertex(pozicija_stola + k[0].getPosition()),
+		sf::Vertex(pozicija_stola + poz_provere)
+	};
+	sf::CircleShape krug_sudara;
+	prozor->draw(linija_pravca, 2, sf::Lines);
+	
+	krug_sudara.setRadius(k[0].getPoluprecnik());
+	krug_sudara.setPosition(pozicija_stola + poz_provere - sf::Vector2f(k[0].getPoluprecnik(),k[0].getPoluprecnik()));
+	krug_sudara.setFillColor(sf::Color::Transparent);
+	krug_sudara.setOutlineThickness(1.f);
+	prozor->draw(krug_sudara);
+
+	/*kugla u_mestu_sudara;
+	u_mestu_sudara.podesi(poz_provere, pozicija_stola);
+	u_mestu_sudara.aktivna();
+	for (int i = 1; i < br_kugli; i++)
+	if (k[0].provera_sudara_kugli(&u_mestu_sudara))
+	{
+	krug_sudara.setFillColor(sf::Color::Blue);
+	sf::Vertex linija_odbijanja1[] =
+	{
+		sf::Vertex(pozicija_rupe[0] + k[0].getPosition()),
+		sf::Vertex(pozicija_rupe[3] + poz_provere)
+	};
+	sf::Vertex linija_odbijanja2[] =
+	{
+		sf::Vertex(pozicija_stola + k[0].getPosition()),
+		sf::Vertex(pozicija_stola + poz_provere)
+	};
+	prozor->draw(linija_odbijanja1, 2, sf::Lines);
+	prozor->draw(linija_odbijanja2, 2, sf::Lines);
+	}*/
 }
 
 void crtaj_sto(sf::RenderWindow* prozor)
@@ -247,7 +292,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 			ivice[i].crtaj_senku();//senke ivica
 	}
 	//iscrtavanje rupa
-	for (int i=0; i<6;i++)
+	for (int i=0; i < 6; i++)
 	{
 		prozor->draw(oko_rupa[i]);
 		prozor->draw(rupa[i]);
@@ -260,13 +305,15 @@ void crtaj_sto(sf::RenderWindow* prozor)
 
     //iscrtavanje kugli
     if (jednostavno_crtanje)
-       for (int i = 0; i < br_kugli; i++)
+       for (int i = 1; i < br_kugli; i++)
             k[i].crtaj_jednostavno();
     else
-       for (int i = br_kugli - 1; i >= 0; i--)
+       for (int i = 1; i < br_kugli; i++)
             k[i].crtaj();
-    for (int i = 0; i < br_kugli; i++)
+	//crtanje znaka u koliko su oznacene
+    for (int i = 1; i < br_kugli; i++)
 		k[i].crtaj_precrtano();
+	
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se && k[0].aktivna())
 	{
@@ -277,7 +324,17 @@ void crtaj_sto(sf::RenderWindow* prozor)
 		}
 		else 
 			k[0].crtaj_stap_jednostavno(mis, (float)tockic);
+
+		if (pomocne_linije)
+			crtaj_pomocne_linije(mis, prozor);
 	}
+
+	//crtanje bele na kraju
+	if (jednostavno_crtanje)
+		k[0].crtaj_jednostavno();
+	else 
+		k[0].crtaj();
+	k[0].crtaj_precrtano();
 }
 
 int main()
@@ -306,7 +363,9 @@ int main()
 					prozor.close();
                 if (event.key.code == sf::Keyboard::T)
                     jednostavno_crtanje = !jednostavno_crtanje;
-                if (event.key.code == sf::Keyboard::A)
+                if (event.key.code == sf::Keyboard::L)
+                    pomocne_linije = !pomocne_linije;
+				if (event.key.code == sf::Keyboard::A)
 				{
                     inicijalizuj_kugle();
                     for (int i = 0; i < br_kugli; i++)
@@ -323,7 +382,7 @@ int main()
                 if (event.key.code == sf::Keyboard::R)
                     for (int i = 0; i < br_kugli; i++)
 						k[i].okreni();
-                if (event.key.code == sf::Keyboard::Z)
+                if (event.key.code == sf::Keyboard::G)
 				{
 					//zelena kombinacija
 					boja_stola = sf::Color(10,100,10);

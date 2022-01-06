@@ -13,6 +13,7 @@
 
  * `Q` ili `ESC` izlazi iz programa
  * `P` pauzira igru
+ * `L` ukljucuje/iskljucuje pomocne linije
  * `R` rotira kugle ka igracu
  * `S` zaustavlja kugle u trenutku
  * `A` vraca kugle u pocetnu poziciju
@@ -20,7 +21,7 @@
  * `O` ukljucuje/iskljucuje osetljivost stapa za precizno bitanje jacine udarca
 
 **Seme boja:**
- * `Z` zelena
+ * `G` zelena
  * `B` plava
 
 ## Linux

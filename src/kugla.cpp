@@ -1,6 +1,7 @@
 #include "kugla.h"
 
-int kugla::pozicija_nakon_rupe=0;
+int kugla::pozicija_nakon_rupe = 0;
+
 float intenzitet(sf::Vector2f a)//vraca vrednost intenziteta vektora
 {
 	return sqrt(a.x * a.x + a.y * a.y);
@@ -295,10 +296,10 @@ void kugla::crtaj_precrtano()
 void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis, normala;
-	pravac_stapa /= intenzitet(pravac_stapa);
-	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
 	if (intenzitet(pravac_stapa) == 0)
 		pravac_stapa = sf::Vector2f(1.f,1.f);
+	pravac_stapa /= intenzitet(pravac_stapa);
+	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
 	sf::VertexArray oblik(sf::Quads, 4), trougao(sf::Triangles, 3);
 	oblik[0].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) + normala * 2.f;
 	oblik[1].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;
@@ -322,8 +323,8 @@ void kugla::crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina)
 	pravac_stapa /= intenzitet(pravac_stapa);
 	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
 	sf::VertexArray senka(sf::Quads, 4);
-	senka[0].position=pozicija_stola + pozicija + senka_vektor * 2.f - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) + normala * 2.f;
-	senka[1].position=pozicija_stola + pozicija + senka_vektor * 2.f - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;
+	senka[0].position=pozicija_stola + pozicija + senka_vektor - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) + normala * 2.f;
+	senka[1].position=pozicija_stola + pozicija + senka_vektor - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;
 	senka[2].position=pozicija_stola + pozicija + senka_vektor * 2.f - pravac_stapa * (jacina/2.f + poluprecnik + 300.f) - normala * 4.f;
 	senka[3].position=pozicija_stola + pozicija + senka_vektor * 2.f - pravac_stapa * (jacina/2.f + poluprecnik + 300.f) + normala * 4.f;
 	for (int i=0;i<4;i++) senka[i].color=boja_senke;

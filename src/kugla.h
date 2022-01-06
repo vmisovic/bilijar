@@ -8,6 +8,9 @@
 extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
 extern sf::Color boja_stapa, boja_senke;
 
+float intenzitet(sf::Vector2f a);
+float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v);
+
 class kugla
 {
 	//promenljive
@@ -22,7 +25,7 @@ class kugla
 	bool animacija;
 
 	//konstante
-	float masa=1;
+	float masa = 1;
 	float poluprecnik = 16.f;//za sve kugle isti!
 	float trenje = 0.1f;
 
