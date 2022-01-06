@@ -268,7 +268,10 @@ void crtaj_sto(sf::RenderWindow* prozor)
 		k[i].crtaj_precrtano();
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se && k[0].aktivna())
+	{
+		k[0].crtaj_senku_stapa(mis, (float)tockic);
         k[0].crtaj_stap(mis, (float)tockic);
+	}
 }
 
 int main()
