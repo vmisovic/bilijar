@@ -1,0 +1,44 @@
+name: BuildExe
+
+on:
+  push:
+    branches: [ wind0ws ]
+
+jobs:
+  buildwin:
+    name: "BuildWin"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: GitCheckout
+        uses: actions/checkout@v2
+        with:
+          ref: wind0ws
+
+      - name: Instalacija
+        run: sudo apt install g++-mingw-w64-x86-64
+        
+      - name: MingwVerzija
+        run: x86_64-w64-mingw32-g++ -v
+
+      - name: Compile
+        run: x86_64-w64-mingw32-g++ -DSFML_STATIC -std=c++14 -O2 -o bilijar.exe src/*.cpp -I sfml/include -L sfml/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lwinmm -lgdi32 -static-libstdc++ -static-libgcc
+        
+  buildlinux:
+    name: "BuildLinux"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: GitCheckout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Instalacija
+        run: sudo apt install libsfml-dev
+
+      - name: GppVerzija
+        run: g++ -v
+
+      - name: Compile
+        run: |
+          cd src
+          make
