@@ -22,7 +22,7 @@ $(BUILD_DIR)/%.o: %.cpp
 $(BINARY): $(SOURCE_FILES)
 	$(MKDIR) $(BUILD_DIR)
 	$(MAKE) $(OBJECT_FILES)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJECT_FILES) -o $@
+	$(CXX) $(CXXFLAGS) $(OBJECT_FILES) -o $@ $(LDFLAGS)
 
 run: $(BINARY)
 	./$(BINARY)
