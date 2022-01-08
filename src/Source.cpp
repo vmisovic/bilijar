@@ -237,10 +237,20 @@ bool slobodno_mesto(sf::Vector2f uneta_poz)//vraca 1 u koliko se na uneta_poz mo
 void crtaj_pomocne_linije(sf::Vector2f poz_mis, sf::RenderWindow *prozor)
 {
 	sf::Vector2f d = pozicija_stola + k[0].getPosition() - poz_mis;
+	if (intenzitet(d) == 0)
+		d=sf::Vector2f(1.f, 1.f);
 	d /= intenzitet(d);
 	sf::Vector2f poz_provere = k[0].getPosition();
-	while (slobodno_mesto(poz_provere))
-		poz_provere += d * 1.f;
+	float pomeraj = k[0].getPoluprecnik();
+	while (pomeraj > 2)
+	{
+		while (slobodno_mesto(poz_provere))
+			poz_provere += d * pomeraj;
+		pomeraj /= 2;
+		while (!slobodno_mesto(poz_provere))
+			poz_provere -= d * pomeraj;
+		pomeraj /= 2;
+	}
 
 	sf::Vertex linija_pravca[] =
 	{
@@ -464,12 +474,12 @@ int main()
             //provera kontakta kugle i zida i realizacija sudara
             for (int i = 0; i < br_kugli; i++)
             {
-                bool udar_o_teme = 0;
-                for (int j = 0; j < br_tacaka || udar_o_teme; j++)
-                    udar_o_teme = k[i].sudar_o_teme(tacke[j]);//u koliko kugla nije udarila u neko od temena
-                if (!udar_o_teme)
-                    for (int l = 0; l < br_ivica; l++)
-                        k[i].sudar_o_ivicu(ivice[l]);//proveri da li je udarila u neki od zidova
+                bool udar_o_ivicu = 0;
+                for (int j = 0; j < br_ivica || udar_o_ivicu; j++)
+                    udar_o_ivicu = k[i].sudar_o_ivicu(ivice[j]);
+                if (!udar_o_ivicu)//u koliko kugla nije udarila u neko od ivica
+                    for (int l = 0; l < br_tacaka; l++)
+                        k[i].sudar_o_teme(tacke[l]);//proveri da li je udarila u neko teme
             }
 
             //deo za ponovno ispitivanje da li je sistem u mirovanju

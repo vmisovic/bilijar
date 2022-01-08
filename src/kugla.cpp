@@ -103,6 +103,13 @@ bool kugla::provera_sudara_o_teme(sf::Vector2f tacka)
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
 {
 	if(!provera_sudara_kugli(druga)) return 0;
+	
+	sf::Vector2f pv1=brzina/intenzitet(brzina), pv2=druga->brzina/intenzitet(druga->brzina);
+	while(provera_sudara_kugli(druga))
+	{
+		pozicija -= pv1;
+		druga->pozicija-=pv2;	
+	}
 
 	sf::Vector2f d = druga->pozicija - this->pozicija;
 	float cos_u[2];
@@ -121,6 +128,9 @@ bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u k
 bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o ivicu
 {
 	if(!provera_sudara_o_ivicu(ivica1)) return 0;
+	sf::Vector2f pv=brzina/intenzitet(brzina);
+	while(provera_sudara_o_ivicu(ivica1))
+		pozicija-=pv;
 	sf::Vector2f normalna, paralelna;
 	float cos_u1 = cos_uglaIzmedjuVektora(brzina, ivica1.pravac);
 	paralelna =  ivica1.pravac * (intenzitet(brzina) * cos_u1 / intenzitet(ivica1.pravac));
@@ -132,8 +142,10 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o teme
 {
 	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
-	if (!provera_sudara_o_teme(tacka))//provera sudara
-		return 0;	
+	if (!provera_sudara_o_teme(tacka)) return 0;	
+	sf::Vector2f pv=brzina/intenzitet(brzina);
+	while(provera_sudara_o_teme(tacka))
+		pozicija-=pv;
 	float cos_u = cos_uglaIzmedjuVektora(brzina, d);
 	normalna = d * (intenzitet(brzina) * cos_u / intenzitet(d));
 	paralelna = brzina - normalna;
