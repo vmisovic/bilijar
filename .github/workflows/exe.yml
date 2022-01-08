@@ -16,7 +16,7 @@ jobs:
           ref: master
 
       - name: Instalacija
-        run: sudo apt install g++-mingw-w64-x86-64 unzip
+        run: sudo apt install g++-mingw-w64-x86-64
         
       - name: MingwVerzija
         run: x86_64-w64-mingw32-g++ -v

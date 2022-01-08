@@ -24,20 +24,42 @@
  * `G` zelena
  * `B` plava
 
-## Linux
+## Kako preuzeti program
 
-Program koristi graficku biblioteku SFML v2.5+. Za Arch linux mozete je preuzeti komandom:
+Preporuceno je manuelno kompajlovati program na GNU/Linux-u, ali ne i na Windowsu.
+
+Zbog toga, postoje vec kompajlovane verzije koje se mogu naci na sledecoj [stranici](https://github.com/vmisovic/bilijar/releases).
+
+## Kompajlovanje
+
+### Linux
+
+##### SFML
+Program koristi graficku biblioteku SFML v2.5.1+.
+Za distrubucije bazirane na Arch Linux-u mozete je preuzeti komandom:
 ```
-pacman -S sfml
+sudo pacman -S sfml
 ```
+dok je za distrubucije bazirane na Debianu mozete preuzeti komandom
+```
+sudo apt install libsfml-dev
+```
+##### Kompajlovanje i pokretanje
+
 Da bi ste kompajlovali program:
 ```
-cd bilijar/
+cd src
 make run
 ```
 
-## Windows
+### Windows
+_Komajlujete na w*nd0wsu na sopstvenu odgovornost_
 
+##### SFML
+Na Windowsu mozete skinuti SFML biblioteku na sledecem linuku [v2.5.1](https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip).
+
+##### Kompajlovanje
 ```
-g++ -std=c++14 -O2 -o bilijar.exe bilijar\*.cpp -I sfml\include -L sfml\lib -lsfml-graphics -lsfml-window -lsfml-system
+cd src
+g++ -std=c++14 -O2 -o bilijar.exe *.cpp -I sfml\include -L sfml\lib -lsfml-graphics -lsfml-window -lsfml-system
 ```
