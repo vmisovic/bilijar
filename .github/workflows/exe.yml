@@ -1,12 +1,13 @@
-name: BuildExe
+name: Release
 
 on:
   push:
-    branches: [ wind0ws ]
+    tags:
+      - "v*"
 
 jobs:
   buildwin:
-    name: "BuildWin"
+    name: BuildWin
     runs-on: "ubuntu-latest"
     steps:
       - name: GitCheckout
@@ -21,10 +22,26 @@ jobs:
         run: x86_64-w64-mingw32-g++ -v
 
       - name: Compile
-        run: x86_64-w64-mingw32-g++ -DSFML_STATIC -std=c++14 -O2 -o bilijar.exe src/*.cpp -I sfml/include -L sfml/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lwinmm -lgdi32 -static-libstdc++ -static-libgcc
+        run: |
+          x86_64-w64-mingw32-g++ -DSFML_STATIC -std=c++14 -O2 -o bilijar.exe src/*.cpp -I sfml/include -L sfml/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lwinmm -lgdi32 -static-libstdc++ -static-libgcc
+
+      - name: Archive
+        run: |
+          mv bilijar.exe src
+          cd src
+          tar -czf bilijar-wind0ws-x86_64.tar.gz bilijar.exe resources
+          zip -r bilijar-wind0ws-x86_64.zip bilijar.exe resources
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            src/bilijar-wind0ws-x86_64.tar.gz
+            src/bilijar-wind0ws-x86_64.zip
         
   buildlinux:
-    name: "BuildLinux"
+    name: BuildLinux
     runs-on: "ubuntu-latest"
     steps:
       - name: GitCheckout
@@ -42,3 +59,17 @@ jobs:
         run: |
           cd src
           make
+
+      - name: Archive
+        run: |
+          cd src
+          tar -czf bilijar-linux-x86_64.tar.gz bilijar.out resources
+          zip -r bilijar-linux-x86_64.zip bilijar.out resources
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            src/bilijar-linux-x86_64.tar.gz
+            src/bilijar-linux-x86_64.zip
