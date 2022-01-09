@@ -70,7 +70,7 @@ public:
 	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
 	void ubaci_u_igru() { u_igri = 1; }
 	void okreni() { rotacija = sf::Vector2f(3.14f, 3.14f); }
-	void udarac_stapa(sf::Vector2f poz_mis, float jacina);
+	void udarac_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke);
 	void highlight(bool b) { oznacena = b; }
 
 	//funkcije za vracanje parametara kugle
@@ -98,9 +98,9 @@ public:
 	void crtaj_senku();
 	void crtaj_jednostavno();
 	void crtaj_precrtano();
-	void crtaj_stap(sf::Vector2f poz_mis, float jacina);
-	void crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina);
-	void crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina);
+	void crtaj_stap(sf::Vector2f poz_mis, float jacina, bool naopacke);
+	void crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke);
+	void crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina, bool naopacke);
 };
 
 #endif

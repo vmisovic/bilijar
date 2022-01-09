@@ -7,6 +7,7 @@ using namespace std;
 bool krecu_se = 1;
 bool jednostavno_crtanje = 0;
 bool pomocne_linije = 0;
+bool mis_cilja_naopacke = 0;
 bool pauzirano = 0;
 bool osetljivo = 0;
 bool fiksiran_stap = 0;
@@ -237,9 +238,9 @@ bool slobodno_mesto(sf::Vector2f uneta_poz)//vraca 1 u koliko se na uneta_poz mo
 void crtaj_pomocne_linije(sf::Vector2f poz_mis, sf::RenderWindow *prozor)
 {
 	sf::Vector2f d = pozicija_stola + k[0].getPosition() - poz_mis;
-	if (intenzitet(d) == 0)
-		d=sf::Vector2f(1.f, 1.f);
+	if (intenzitet(d) == 0) d = sf::Vector2f(1.f, 1.f);
 	d /= intenzitet(d);
+	if (mis_cilja_naopacke) d *= (-1.f);
 	sf::Vector2f poz_provere = k[0].getPosition();
 	float pomeraj = k[0].getPoluprecnik();
 	while (pomeraj > 2)
@@ -329,11 +330,11 @@ void crtaj_sto(sf::RenderWindow* prozor)
 	{
 		if (!jednostavno_crtanje)
 		{
-			k[0].crtaj_senku_stapa(mis, (float)tockic);
-	        k[0].crtaj_stap(mis, (float)tockic);
+			k[0].crtaj_senku_stapa(mis, (float)tockic, mis_cilja_naopacke);
+	        k[0].crtaj_stap(mis, (float)tockic, mis_cilja_naopacke);
 		}
 		else 
-			k[0].crtaj_stap_jednostavno(mis, (float)tockic);
+			k[0].crtaj_stap_jednostavno(mis, (float)tockic, mis_cilja_naopacke);
 
 		if (pomocne_linije)
 			crtaj_pomocne_linije(mis, prozor);
@@ -375,6 +376,8 @@ int main()
                     jednostavno_crtanje = !jednostavno_crtanje;
                 if (event.key.code == sf::Keyboard::L)
                     pomocne_linije = !pomocne_linije;
+                if (event.key.code == sf::Keyboard::N)
+                    mis_cilja_naopacke = !mis_cilja_naopacke;
 				if (event.key.code == sf::Keyboard::A)
 				{
                     inicijalizuj_kugle();
@@ -441,7 +444,7 @@ int main()
                 }
                 if (event.mouseButton.button == sf::Mouse::Left && !krecu_se && k[0].aktivna())
                 {
-                    k[0].udarac_stapa(mis, (float)tockic);
+                    k[0].udarac_stapa(mis, (float)tockic, mis_cilja_naopacke);
                     krecu_se = 1;
                     fiksiran_stap = 0;
                     tockic = 40;

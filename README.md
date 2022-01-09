@@ -17,6 +17,7 @@
  * `R` rotira kugle ka igracu
  * `S` zaustavlja kugle u trenutku
  * `A` vraca kugle u pocetnu poziciju
+ * `N` ciljanje naopacke (namesta putanju/namesta stap)
  * `T` ukljucuje/iskljucuje jednostavno crtanje
  * `O` ukljucuje/iskljucuje osetljivost stapa za precizno bitanje jacine udarca
 

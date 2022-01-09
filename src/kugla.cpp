@@ -28,11 +28,12 @@ bool kugla::krece_se()//vraca vrednost 1 ako se kugla krece, u suprotnom 0
 	return (intenzitet(brzina) != 0 && u_igri);
 }
 
-void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina)
+void kugla::udarac_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
 	if (intenzitet(pravac_stapa) == 0)
 		pravac_stapa = sf::Vector2f(1.f,1.f);
+	if (naopacke) pravac_stapa *= (-1.f);
 	brzina = (pravac_stapa) / intenzitet(pravac_stapa) * (jacina+10) * 25.f;
 }
 
@@ -305,11 +306,11 @@ void kugla::crtaj_precrtano()
 	}
 }
 
-void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina)
+void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina, bool naopacke)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis, normala;
-	if (intenzitet(pravac_stapa) == 0)
-		pravac_stapa = sf::Vector2f(1.f,1.f);
+	if (intenzitet(pravac_stapa) == 0) pravac_stapa = sf::Vector2f(1.f,1.f);
+	if (naopacke) pravac_stapa *= (-1.f);
 	pravac_stapa /= intenzitet(pravac_stapa);
 	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
 	sf::VertexArray oblik(sf::Quads, 4), trougao(sf::Triangles, 3);
@@ -327,11 +328,11 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina)
 	prozor->draw(trougao);
 }
 
-void kugla::crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina)
+void kugla::crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis, normala;
-	if (intenzitet(pravac_stapa) == 0)
-		pravac_stapa = sf::Vector2f(1.f,1.f);
+	if (intenzitet(pravac_stapa) == 0) pravac_stapa = sf::Vector2f(1.f,1.f);
+	if (naopacke) pravac_stapa *= (-1.f);
 	pravac_stapa /= intenzitet(pravac_stapa);
 	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
 	sf::VertexArray senka(sf::Quads, 4);
@@ -344,7 +345,7 @@ void kugla::crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina)
 	prozor->draw(senka); 
 }
 
-void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina)
+void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina, bool naopacke)
 {
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
 	if (intenzitet(pravac_stapa) == 0)
