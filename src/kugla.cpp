@@ -54,10 +54,31 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
 		pozicija += (brzina+nova_brzina)/(2.f*120.f);
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
-		if (intenzitet(brzina) != 0)
-			ugao = acosf(cos_uglaIzmedjuVektora(sf::Vector2f(-10.f, 0.f), brzina));
 		ugaona_brzina = brzina / poluprecnik;
-		rotacija += ugaona_brzina * (1.f / 120.f);
+		
+		gama=0.01;
+		alfa=0.001;
+		beta=0.005;
+		float cosa=cosf(alfa),sina=sinf(alfa);
+		float cosb=cosf(beta),sinb=sinf(beta);
+		float cosg=cosf(gama),sing=sinf(gama);
+		float m2[3][3], m1[3][3]={
+			{cosg*cosa-cosb*sina*sing,	cosg*sina+cosb*cosa*sing,	sing*sinb},
+			{-sing*cosa-cosb*sina*cosg,	-sing*sina+cosb*cosa*cosg,	cosg*sinb},
+			{sinb*sina,					-sinb*cosa,					cosb	 }};
+		for (int i=0;i<3;i++)
+			for (int j=0;j<3;j++)
+				m2[i][j]=m[i][j];
+		for(int i=0; i<3; i++)
+			for(int j=0; j<3; j++)
+			{
+				float sum =0;
+				for(int k=0; k<3; k++)
+				{
+					sum += (m1[i][k] * m2[k][j]);
+				}
+				m[i][j] = sum;
+			}
 	}
 }
 
@@ -211,21 +232,10 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 
 void kugla::crtaj()//iscrtavanje
 {
-	//rotacija.x pripada skupu od 0 do 2pi
-	if (rotacija.x > 2.f * 3.14f)
-		rotacija.x -= 2.f * 3.14f;
-	if (rotacija.x < 0)
-		rotacija.x += 2.f * 3.14f;
-	//rotacija.y pripada skupu od 0 do pi 
-	if (rotacija.y > 3.14f)
-		rotacija.y -= 3.14f;
-	if (rotacija.y < 0)
-		rotacija.y += 3.14f;
-
 	//deklarisanje i podesavanje niza piksela (pozicija i boja)
 	sf::VertexArray pointmap(sf::Points, (int)(4*poluprecnik*poluprecnik));
-	float d, sin_s, sin_t,s,t;
 	int kx, ky;
+	float s,t,d,x1,y1,z1,cos_s,sin_s;
 	for (int x = -(int)poluprecnik; x < (int)poluprecnik; x++)
 		for (int y = -(int)poluprecnik; y < (int)poluprecnik; y++)
 		{
@@ -234,20 +244,26 @@ void kugla::crtaj()//iscrtavanje
 			{
 				int rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
 				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), 0.f) + pozicija + pozicija_stola;
-
-				sin_s = (float)x / poluprecnik;
-				sin_t = (float)y / poluprecnik;
-				s = asinf(sin_s) + 3.14f / 2.f + rotacija.x;
-				t = asinf(sin_t) + 3.14f / 2.f + rotacija.y;
-
-				kx = (int)((s / 2.f / 3.14f) * slika.getSize().x) % slika.getSize().x;
-				ky = (int)((t /3.14f) * slika.getSize().y) % slika.getSize().y;
+				
+				float z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
+				x1=m[0][0]*x+m[0][1]*y+m[0][2]*z;
+				y1=m[1][0]*x+m[1][1]*y+m[1][2]*z;
+				z1=m[2][0]*x+m[2][1]*y+m[2][2]*z;
+				t=acosf(z1/poluprecnik);
+				if(x1>0) s=atanf(y1/x1);
+				if(x1<0) s=atanf(y1/x1)+PI;
+				if(x1==0)s=PI/2.f;
+				s=PI*2.f-s;
+				kx = (int)((s / 2.f / PI) * slika.getSize().x) % slika.getSize().x;
+				ky = (int)((t /PI) * slika.getSize().y) % slika.getSize().y;
 				pointmap[rd_br].color = slika.getPixel(kx,ky);
 			}
 		}
 	//iscrtavanje na prozor/ekran
 	prozor->draw(pointmap);
 }
+
+
 
 void kugla::crtaj_senku()
 {
@@ -257,30 +273,10 @@ void kugla::crtaj_senku()
 
 void kugla::crtaj_jednostavno()//jednostavno iscrtavanje
 {
-	if (rotacija.x >= 2.f * 3.14f)
-		rotacija.x -= 2.f * 3.14f;
-	if (rotacija.x < 0)
-		rotacija.x += 2.f * 3.14f;
-
 	krug.setPosition(pozicija_stola.x + pozicija.x - poluprecnik, pozicija_stola.y + pozicija.y - poluprecnik);
 	prozor->draw(krug);
 	kruzic.setPosition(pozicija_stola.x + pozicija.x - kruzic.getRadius(), pozicija_stola.y + pozicija.y - kruzic.getRadius());
 	prozor->draw(kruzic);
-
-	sf::Vertex line[] =
-	{
-		sf::Vertex(pozicija_stola + pozicija),
-		sf::Vertex(pozicija_stola + pozicija + brzina * (float)(sin(rotacija.x) * poluprecnik / intenzitet(brzina)))
-	};
-
-	line[0].color = sf::Color::White;
-	line[1].color = sf::Color::White;
-	if (rotacija.x > 1.57f && rotacija.x < 3.14f * 2 - 1.5f)
-	{
-		line[0].color = sf::Color::Black;
-		line[1].color = sf::Color::Black;
-	}
-	prozor->draw(line, 2, sf::Lines);
 }
 
 void kugla::crtaj_precrtano()
@@ -312,7 +308,7 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina, bool naopacke)
 	if (intenzitet(pravac_stapa) == 0) pravac_stapa = sf::Vector2f(1.f,1.f);
 	if (naopacke) pravac_stapa *= (-1.f);
 	pravac_stapa /= intenzitet(pravac_stapa);
-	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
+	normala = rotiraj(pravac_stapa, PI / 2.f);
 	sf::VertexArray oblik(sf::Quads, 4), trougao(sf::Triangles, 3);
 	oblik[0].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) + normala * 2.f;
 	oblik[1].position=pozicija_stola + pozicija - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;
@@ -334,7 +330,7 @@ void kugla::crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke)
 	if (intenzitet(pravac_stapa) == 0) pravac_stapa = sf::Vector2f(1.f,1.f);
 	if (naopacke) pravac_stapa *= (-1.f);
 	pravac_stapa /= intenzitet(pravac_stapa);
-	normala = rotiraj(pravac_stapa, 3.14f / 2.f);
+	normala = rotiraj(pravac_stapa, PI / 2.f);
 	sf::VertexArray senka(sf::Quads, 4);
 	senka[0].position=pozicija_stola + pozicija + senka_vektor - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) + normala * 2.f;
 	senka[1].position=pozicija_stola + pozicija + senka_vektor - pravac_stapa * (jacina/2.f + poluprecnik + 5.f) - normala * 2.f;

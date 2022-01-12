@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include "ivica.h"
+#define PI 3.14159265359
 
 extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
 extern sf::Color boja_stapa, boja_senke;
@@ -17,8 +18,8 @@ class kugla
 	sf::Vector2f brzina;//vektor brzine sa vrednostima x i y
 	sf::Vector2f ugaona_brzina;//vektori ugaone brzine normalne na z i x osu
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
-    sf::Vector2f rotacija;//x: trenutni ugao s0, y: trenutni ugao t0 odredjene tacke na kugli (tacka referentnog sistema, 0,0 na teksturi)
-	float ugao;//prethodni ugao vektora brzine i X ose (moram da pamtim kada se zaustavi kugla za iscrtavanje)
+	float alfa, beta, gama;
+	float m[3][3]={{1,0,0},{0,1,0},{0,0,1}};
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
 	bool oznacena;//1 kako bi se iscrtavalo precrtan znak
@@ -40,9 +41,8 @@ public:
 	{
 		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
 		pozicija = sf::Vector2f(200.f, 200.f);
-		rotacija = sf::Vector2f(3.14f, 3.14f);//da broj kugle gleda ka ekranu/igracu
+		alfa = 0; beta = 0; gama = 0;
 		ugaona_brzina = sf::Vector2f(0.f, 0.f);
-		ugao = 0.f;
 		bio_sudar = 0;
 		u_igri = 0;
 		oznacena = 0;
@@ -69,7 +69,7 @@ public:
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
 	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
 	void ubaci_u_igru() { u_igri = 1; }
-	void okreni() { rotacija = sf::Vector2f(3.14f, 3.14f); }
+	void okreni() { /*m={{1,0,0},{0,1,0},{0,0,1}};*/ }
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke);
 	void highlight(bool b) { oznacena = b; }
 
