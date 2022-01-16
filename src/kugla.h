@@ -9,6 +9,8 @@
 
 extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
 extern sf::Color boja_stapa, boja_senke;
+extern int pozicija_nakon_rupe;
+
 
 float intenzitet(sf::Vector2f a);
 float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v);
@@ -27,6 +29,7 @@ class kugla
 	bool animacija;
 
 	//konstante
+    int red_br;
 	float masa = 1;
 	float poluprecnik = 16.f;//za sve kugle isti!
 	float trenje = 0.1f;
@@ -35,15 +38,12 @@ class kugla
 	sf::Image slika;
 	sf::CircleShape krug, kruzic, senka;
 	sf::RenderWindow* prozor;
-
 	sf::VertexArray pointmap;
+
 public:
-    static int pozicija_nakon_rupe;
 	//funkcije za podesavanje kugle
 	kugla()
 	{
-        pointmap = sf::VertexArray(sf::Points,(int)(4*poluprecnik*poluprecnik));
-
         float** memorija_matrix=new float*[VELICINA_MATRICE];
         for(int i=0;i<VELICINA_MATRICE;i++) memorija_matrix[i] = new float[VELICINA_MATRICE];
         matrix.mat=memorija_matrix;
@@ -58,6 +58,7 @@ public:
         for(int i=0;i<VELICINA_MATRICE;i++) memorija_xyz[i] = new float[VELICINA_MATRICE];
         xyz.mat=memorija_xyz;
 
+        red_br=0;
 		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
 		pozicija = sf::Vector2f(200.f, 200.f);
 		alfa = 0; beta = 0; gama = 0;
@@ -71,10 +72,11 @@ public:
 		kruzic.setRadius(poluprecnik * 0.7f);
 		senka.setRadius(poluprecnik);
 		senka.setFillColor(sf::Color(0,0,0,100));
-
+        pointmap = sf::VertexArray(sf::Points,(int)(4*poluprecnik*poluprecnik));
 	}
 	void povezi_grafiku(sf::RenderWindow* prozor1, int br)
-	{ 
+	{
+        red_br=br;
 		this->prozor = prozor1;
 		std::stringstream naziv;
 		naziv << "resources/kugla";
@@ -88,7 +90,20 @@ public:
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
 	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
 	void ubaci_u_igru() { u_igri = 1; }
-	void okreni() { /*m={{1,0,0},{0,1,0},{0,0,1}};*/ }
+	void okreni() {
+        matrix.mat[0][0]=1;
+        matrix.mat[0][1]=0;
+        matrix.mat[0][2]=0;
+
+        matrix.mat[1][0]=0;
+        matrix.mat[1][1]=1;
+        matrix.mat[1][2]=0;
+
+        matrix.mat[2][0]=0;
+        matrix.mat[2][1]=0;
+        matrix.mat[2][2]=1;
+
+    }
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke);
 	void highlight(bool b) { oznacena = b; }
 

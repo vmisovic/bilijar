@@ -15,6 +15,9 @@ bool fiksiran_stap = 0;
 int tockic = 40;
 sf::Vector2f mis;//cuva kordinate strelice misa
 
+int pozicija_nakon_rupe=0;
+
+
 float** memorija_nova;
 
 const int br_tacaka = 30;
@@ -235,7 +238,7 @@ bool slobodno_mesto(sf::Vector2f uneta_poz)//vraca 1 u koliko se na uneta_poz mo
 		ok_rupa = 0;
 	if (uneta_poz.x < (-20.f) || uneta_poz.y < (-20.f) || uneta_poz.x > dimenzije_stola.x + 20.f || uneta_poz.y > dimenzije_stola.y + 20.f)
 		ok_sto = 0;
-	return (ok_kugle && ok_ivice && ok_tacke && ok_rupa && ok_sto); 
+	return (ok_kugle && ok_ivice && ok_tacke && ok_rupa && ok_sto);
 }
 
 void crtaj_pomocne_linije(sf::Vector2f poz_mis, sf::RenderWindow *prozor)
@@ -336,7 +339,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 			k[0].crtaj_senku_stapa(mis, (float)tockic, mis_cilja_naopacke);
 	        k[0].crtaj_stap(mis, (float)tockic, mis_cilja_naopacke);
 		}
-		else 
+		else
 			k[0].crtaj_stap_jednostavno(mis, (float)tockic, mis_cilja_naopacke);
 
 		if (pomocne_linije)
@@ -346,7 +349,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 	//crtanje bele na kraju
 	if (jednostavno_crtanje)
 		k[0].crtaj_jednostavno();
-	else 
+	else
 		k[0].crtaj();
 	k[0].crtaj_precrtano();
 }
@@ -387,7 +390,7 @@ int main()
                     inicijalizuj_kugle();
                     for (int i = 0; i < br_kugli; i++)
 						k[i].okreni();
-                        kugla::pozicija_nakon_rupe=0;
+                    pozicija_nakon_rupe=0;
 				}
 				if (event.key.code == sf::Keyboard::S)
                     for (int i = 0; i < br_kugli; i++)
@@ -458,8 +461,7 @@ int main()
                     mis = sf::Vector2f((float)event.mouseButton.x, (float)event.mouseButton.y);
 					k[0].dodeli_poziciju(mis - pozicija_stola);
 					k[0].highlight(!slobodno_mesto(mis - pozicija_stola));
-					if (slobodno_mesto(mis - pozicija_stola))
-						k[0].ubaci_u_igru(),kugla::pozicija_nakon_rupe--;
+					if (slobodno_mesto(mis - pozicija_stola)) k[0].ubaci_u_igru();
                 }
                 if (event.mouseButton.button == sf::Mouse::Middle)
 					osetljivo = !osetljivo;

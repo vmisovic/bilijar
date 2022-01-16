@@ -1,7 +1,5 @@
 #include "kugla.h"
 
-int kugla::pozicija_nakon_rupe = 0;
-
 float intenzitet(sf::Vector2f a)//vraca vrednost intenziteta vektora
 {
 	return sqrt(a.x * a.x + a.y * a.y);
@@ -212,7 +210,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		{
 			if (intenzitet(pozicija_rupe[i]-pozicija) <= 5.f)
 			{
-				dodeli_poziciju(sf::Vector2f(100.f+(pozicija_nakon_rupe++)*40,-100.f));
+				if(red_br!=0) dodeli_poziciju(sf::Vector2f(100.f+(pozicija_nakon_rupe++)*40,-100.f));
                 okreni();
 				u_igri = 0;
 				animacija = 0;
@@ -297,9 +295,9 @@ void kugla::crtaj_precrtano()
 		maska.setOutlineColor(sf::Color::Red);
 		maska.setOutlineThickness(3.f);
 		maska.setPosition(pozicija_stola + pozicija - sf::Vector2f(poluprecnik, poluprecnik));
-		sf::VertexArray crta(sf::Quads,4); 
+		sf::VertexArray crta(sf::Quads,4);
 		for (int i = 0; i < 4; i++)
-			crta[i].color = sf::Color::Red;	
+			crta[i].color = sf::Color::Red;
 		crta[0].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik-2.f,poluprecnik);
 		crta[1].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik,poluprecnik+2.f);
 		crta[2].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik+2.f,-poluprecnik);
@@ -328,7 +326,7 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina, bool naopacke)
 	for (int i=0;i<2;i++) oblik[i].color=boja_stapa;
 	for (int i=2;i<4;i++) oblik[i].color=sf::Color::White;
 	for (int i=0;i<3;i++) trougao[i].color=sf::Color::Black;
-	prozor->draw(oblik); 
+	prozor->draw(oblik);
 	prozor->draw(trougao);
 }
 
@@ -346,7 +344,7 @@ void kugla::crtaj_senku_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke)
 	senka[3].position=pozicija_stola + pozicija + senka_vektor * 2.f - pravac_stapa * (jacina/2.f + poluprecnik + 300.f) + normala * 4.f;
 	for (int i=0;i<4;i++) senka[i].color=boja_senke;
 
-	prozor->draw(senka); 
+	prozor->draw(senka);
 }
 
 void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina, bool naopacke)
