@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "kugla.h"
+#include "matrica.h"
 using namespace std;
 
 #define DEBUG 0
@@ -13,6 +14,8 @@ bool osetljivo = 0;
 bool fiksiran_stap = 0;
 int tockic = 40;
 sf::Vector2f mis;//cuva kordinate strelice misa
+
+float** memorija_nova;
 
 const int br_tacaka = 30;
 sf::Vector2f tacke[br_tacaka];
@@ -353,6 +356,7 @@ int main()
 	sf::RenderWindow prozor(sf::VideoMode(1200,900), "Bilijar", sf::Style::Close);
     prozor.setFramerateLimit(120);
 
+    memorija_nova=inicijalizuj_memoriju();
     inicijalizuj_tacke();
     inicijalizuj_ivice();
     inicijalizuj_kugle();

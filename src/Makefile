@@ -7,7 +7,7 @@ CXXFLAGS=-std=c++14 -O2
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 
 BUILD_DIR=build
-SOURCE_FILES=Source.cpp kugla.cpp ivica.cpp
+SOURCE_FILES=Source.cpp kugla.cpp ivica.cpp matrica.cpp
 OBJECT_FILES=$(patsubst %,$(BUILD_DIR)/%,$(patsubst %.cpp,%.o,$(SOURCE_FILES)))
 
 BINARY=bilijar.out

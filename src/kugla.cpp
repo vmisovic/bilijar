@@ -62,23 +62,24 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		float cosa=cosf(alfa),sina=sinf(alfa);
 		float cosb=cosf(beta),sinb=sinf(beta);
 		float cosg=cosf(gama),sing=sinf(gama);
-		float m2[3][3], m1[3][3]={
+		float m1[3][3]={
 			{cosg*cosa-cosb*sina*sing,	cosg*sina+cosb*cosa*sing,	sing*sinb},
 			{-sing*cosa-cosb*sina*cosg,	-sing*sina+cosb*cosa*cosg,	cosg*sinb},
 			{sinb*sina,					-sinb*cosa,					cosb	 }};
-		for (int i=0;i<3;i++)
-			for (int j=0;j<3;j++)
-				m2[i][j]=m[i][j];
-		for(int i=0; i<3; i++)
-			for(int j=0; j<3; j++)
-			{
-				float sum =0;
-				for(int k=0; k<3; k++)
-				{
-					sum += (m1[i][k] * m2[k][j]);
-				}
-				m[i][j] = sum;
-			}
+
+        xyz.kolona=3;
+        xyz.red=3;
+        xyz.mat[0][0]=cosg*cosa-cosb*sina*sing;
+        xyz.mat[0][1]=cosg*sina+cosb*cosa*sing;
+        xyz.mat[0][2]=sing*sinb;
+        xyz.mat[1][0]=-sing*cosa-cosb*sina*cosg;
+        xyz.mat[1][1]=-sing*sina+cosb*cosa*cosg;
+        xyz.mat[1][2]=cosg*sinb;
+        xyz.mat[2][0]=sinb*sina;
+        xyz.mat[2][1]=-sinb*cosa;
+        xyz.mat[2][2]=cosb;
+
+        matrix=xyz*matrix;
 	}
 }
 
@@ -246,9 +247,24 @@ void kugla::crtaj()//iscrtavanje
 				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), 0.f) + pozicija + pozicija_stola;
 				
 				float z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
-				x1=m[0][0]*x+m[0][1]*y+m[0][2]*z;
-				y1=m[1][0]*x+m[1][1]*y+m[1][2]*z;
-				z1=m[2][0]*x+m[2][1]*y+m[2][2]*z;
+
+//                float a[1][3]={{(float)x,(float)y,(float)z}};
+//                float* ab[1]={a[0]};
+//                float** abc=ab;
+//                xyz.dodeli(1,3,abc);
+
+                xyz.kolona=1;
+                xyz.red=3;
+                xyz.mat[0][0]=x;
+                xyz.mat[1][0]=y;
+                xyz.mat[2][0]=z;
+
+                xyz=matrix*xyz;
+
+                x1=xyz.mat[0][0];
+                y1=xyz.mat[1][0];
+                z1=xyz.mat[2][0];
+
 				t=acosf(z1/poluprecnik);
 				if(x1>0) s=atanf(y1/x1);
 				if(x1<0) s=atanf(y1/x1)+PI;

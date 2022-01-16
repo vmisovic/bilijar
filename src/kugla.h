@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include "ivica.h"
+#include "matrica.h"
 #define PI 3.14159265359
 
 extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
@@ -20,6 +21,7 @@ class kugla
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
 	float alfa, beta, gama;
 	float m[3][3]={{1,0,0},{0,1,0},{0,0,1}};
+    matrica matrix,xyz;
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
 	bool oznacena;//1 kako bi se iscrtavalo precrtan znak
@@ -39,6 +41,17 @@ public:
 	//funkcije za podesavanje kugle
 	kugla()
 	{
+        float** memorija_matrix=new float*[VELICINA_MATRICE];
+        for(int i=0;i<VELICINA_MATRICE;i++) memorija_matrix[i] = new float[VELICINA_MATRICE];
+        matrix.mat=memorija_matrix;
+        matrix.mat[0][0]=1;
+        matrix.mat[1][1]=1;
+        matrix.mat[2][2]=1;
+
+        float** memorija_xyz=new float*[VELICINA_MATRICE];
+        for(int i=0;i<VELICINA_MATRICE;i++) memorija_xyz[i] = new float[VELICINA_MATRICE];
+        xyz.mat=memorija_xyz;
+
 		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
 		pozicija = sf::Vector2f(200.f, 200.f);
 		alfa = 0; beta = 0; gama = 0;
