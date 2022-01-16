@@ -56,16 +56,12 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
 		ugaona_brzina = brzina / poluprecnik;
 		
-		gama=0.01;
-		alfa=0.001;
-		beta=0.005;
+		gama=0.01f;
+		alfa=0.001f;
+		beta=0.005f;
 		float cosa=cosf(alfa),sina=sinf(alfa);
 		float cosb=cosf(beta),sinb=sinf(beta);
 		float cosg=cosf(gama),sing=sinf(gama);
-		float m1[3][3]={
-			{cosg*cosa-cosb*sina*sing,	cosg*sina+cosb*cosa*sing,	sing*sinb},
-			{-sing*cosa-cosb*sina*cosg,	-sing*sina+cosb*cosa*cosg,	cosg*sinb},
-			{sinb*sina,					-sinb*cosa,					cosb	 }};
 
         xyz.kolona=3;
         xyz.red=3;
@@ -105,7 +101,7 @@ bool kugla::provera_sudara_kugli(kugla *druga)
 }
 
 int greska_poluprecnik=2;
-float greska_ugao=0.05;
+float greska_ugao=0.05f;
 
 bool kugla::provera_sudara_o_ivicu(ivica ivica1)
 {
@@ -234,24 +230,18 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 void kugla::crtaj()//iscrtavanje
 {
 	//deklarisanje i podesavanje niza piksela (pozicija i boja)
-	sf::VertexArray pointmap(sf::Points, (int)(4*poluprecnik*poluprecnik));
-	int kx, ky;
-	float s,t,d,x1,y1,z1,cos_s,sin_s;
-	for (int x = -(int)poluprecnik; x < (int)poluprecnik; x++)
-		for (int y = -(int)poluprecnik; y < (int)poluprecnik; y++)
+	int kx,ky,rd_br,x,y,r=poluprecnik;
+	float s=0,t,d,x1=1,y1=1,z1=1,z;
+	for (x = -r; x < r; x++)
+		for (y = -r; y < r; y++)
 		{
 			d = (float)sqrt(x * x + y * y);
 			if (poluprecnik >= d)
 			{
-				int rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
+				rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
 				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), 0.f) + pozicija + pozicija_stola;
 				
-				float z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
-
-//                float a[1][3]={{(float)x,(float)y,(float)z}};
-//                float* ab[1]={a[0]};
-//                float** abc=ab;
-//                xyz.dodeli(1,3,abc);
+				z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
 
                 xyz.kolona=1;
                 xyz.red=3;
@@ -266,10 +256,12 @@ void kugla::crtaj()//iscrtavanje
                 z1=xyz.mat[2][0];
 
 				t=acosf(z1/poluprecnik);
+
 				if(x1>0) s=atanf(y1/x1);
 				if(x1<0) s=atanf(y1/x1)+PI;
-				if(x1==0)s=PI/2.f;
+				if(x1==0) s=PI/2.f;
 				s=PI*2.f-s;
+
 				kx = (int)((s / 2.f / PI) * slika.getSize().x) % slika.getSize().x;
 				ky = (int)((t /PI) * slika.getSize().y) % slika.getSize().y;
 				pointmap[rd_br].color = slika.getPixel(kx,ky);

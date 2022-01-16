@@ -20,7 +20,6 @@ class kugla
 	sf::Vector2f ugaona_brzina;//vektori ugaone brzine normalne na z i x osu
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
 	float alfa, beta, gama;
-	float m[3][3]={{1,0,0},{0,1,0},{0,0,1}};
     matrica matrix,xyz;
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
@@ -36,14 +35,21 @@ class kugla
 	sf::Image slika;
 	sf::CircleShape krug, kruzic, senka;
 	sf::RenderWindow* prozor;
+
+	sf::VertexArray pointmap;
 public:
     static int pozicija_nakon_rupe;
 	//funkcije za podesavanje kugle
 	kugla()
 	{
+        pointmap = sf::VertexArray(sf::Points,(int)(4*poluprecnik*poluprecnik));
+
         float** memorija_matrix=new float*[VELICINA_MATRICE];
         for(int i=0;i<VELICINA_MATRICE;i++) memorija_matrix[i] = new float[VELICINA_MATRICE];
         matrix.mat=memorija_matrix;
+
+        matrix.kolona=3;
+        matrix.red=3;
         matrix.mat[0][0]=1;
         matrix.mat[1][1]=1;
         matrix.mat[2][2]=1;

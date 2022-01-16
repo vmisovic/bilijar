@@ -3,7 +3,8 @@ MKDIR=mkdir -p
 RM=rm -rf
 GDB=gdb
 
-CXXFLAGS=-std=c++14 -O2
+
+CXXFLAGS=-std=c++14 -O2 -Wall
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 
 BUILD_DIR=build
