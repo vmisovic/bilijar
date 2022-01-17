@@ -61,19 +61,17 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		float cosb=cosf(beta),sinb=sinf(beta);
 		float cosg=cosf(gama),sing=sinf(gama);
 
-        xyz.kolona=3;
-        xyz.red=3;
-        xyz.mat[0][0]=cosg*cosa-cosb*sina*sing;
-        xyz.mat[0][1]=cosg*sina+cosb*cosa*sing;
-        xyz.mat[0][2]=sing*sinb;
-        xyz.mat[1][0]=-sing*cosa-cosb*sina*cosg;
-        xyz.mat[1][1]=-sing*sina+cosb*cosa*cosg;
-        xyz.mat[1][2]=cosg*sinb;
-        xyz.mat[2][0]=sinb*sina;
-        xyz.mat[2][1]=-sinb*cosa;
-        xyz.mat[2][2]=cosb;
+        mat_drotacije.mat[0][0]=cosg*cosa-cosb*sina*sing;
+        mat_drotacije.mat[0][1]=cosg*sina+cosb*cosa*sing;
+        mat_drotacije.mat[0][2]=sing*sinb;
+        mat_drotacije.mat[1][0]=-sing*cosa-cosb*sina*cosg;
+        mat_drotacije.mat[1][1]=-sing*sina+cosb*cosa*cosg;
+        mat_drotacije.mat[1][2]=cosg*sinb;
+        mat_drotacije.mat[2][0]=sinb*sina;
+        mat_drotacije.mat[2][1]=-sinb*cosa;
+        mat_drotacije.mat[2][2]=cosb;
 
-        matrix=xyz*matrix;
+        mat_rotacije=mat_drotacije*mat_rotacije;
 	}
 }
 
@@ -241,13 +239,11 @@ void kugla::crtaj()//iscrtavanje
 				
 				z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
 
-                xyz.kolona=1;
-                xyz.red=3;
                 xyz.mat[0][0]=x;
                 xyz.mat[1][0]=y;
                 xyz.mat[2][0]=z;
 
-                xyz=matrix*xyz;
+                xyz=mat_rotacije*xyz;
 
                 x1=xyz.mat[0][0];
                 y1=xyz.mat[1][0];

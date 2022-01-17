@@ -22,7 +22,7 @@ class kugla
 	sf::Vector2f ugaona_brzina;//vektori ugaone brzine normalne na z i x osu
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
 	float alfa, beta, gama;
-    matrica matrix,xyz;
+    matrica mat_rotacije, mat_drotacije, xyz;
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
 	bool oznacena;//1 kako bi se iscrtavalo precrtan znak
@@ -44,17 +44,24 @@ public:
 	//funkcije za podesavanje kugle
 	kugla()
 	{
-        float** memorija_matrix=new float*[VELICINA_MATRICE];
-        for(int i=0;i<VELICINA_MATRICE;i++) memorija_matrix[i] = new float[VELICINA_MATRICE];
-        matrix.mat=memorija_matrix;
+        float** memorija_mat_rotacije=new float*[VELICINA_MATRICE];
+        for(int i=0;i<VELICINA_MATRICE;i++) memorija_mat_rotacije[i] = new float[VELICINA_MATRICE];
+        mat_rotacije.mat=memorija_mat_rotacije;
 
-        matrix.kolona=3;
-        matrix.red=3;
-        matrix.mat[0][0]=1;
-        matrix.mat[1][1]=1;
-        matrix.mat[2][2]=1;
+        mat_rotacije.kolona=3;
+        mat_rotacije.red=3;
+        mat_rotacije.mat[0][0]=1;
+        mat_rotacije.mat[1][1]=1;
+        mat_rotacije.mat[2][2]=1;
 
-        float** memorija_xyz=new float*[VELICINA_MATRICE];
+        float** memorija_mat_drotacije=new float*[VELICINA_MATRICE];
+        for(int i=0;i<VELICINA_MATRICE;i++) memorija_mat_drotacije[i] = new float[VELICINA_MATRICE];
+        mat_drotacije.mat=memorija_mat_drotacije;
+
+        mat_drotacije.kolona=3;
+        mat_drotacije.red=3;
+
+		float** memorija_xyz=new float*[VELICINA_MATRICE];
         for(int i=0;i<VELICINA_MATRICE;i++) memorija_xyz[i] = new float[VELICINA_MATRICE];
         xyz.mat=memorija_xyz;
 
@@ -90,19 +97,21 @@ public:
 	void dodeli_brzinu(sf::Vector2f v) { brzina = v; }
 	void dodeli_poziciju(sf::Vector2f p) { pozicija = p; }
 	void ubaci_u_igru() { u_igri = 1; }
-	void okreni() {
-        matrix.mat[0][0]=1;
-        matrix.mat[0][1]=0;
-        matrix.mat[0][2]=0;
+	void okreni() 
+	{
+		float ugao,c,s;
+		ugao=PI/2.f; c=cosf(ugao); s=sinf(ugao);
+		mat_rotacije.mat[0][0]=1;
+		mat_rotacije.mat[0][1]=0;
+        mat_rotacije.mat[0][2]=0;
 
-        matrix.mat[1][0]=0;
-        matrix.mat[1][1]=1;
-        matrix.mat[1][2]=0;
+        mat_rotacije.mat[1][0]=0;
+        mat_rotacije.mat[1][1]=c;
+        mat_rotacije.mat[1][2]=s;
 
-        matrix.mat[2][0]=0;
-        matrix.mat[2][1]=0;
-        matrix.mat[2][2]=1;
-
+        mat_rotacije.mat[2][0]=0;
+        mat_rotacije.mat[2][1]=-s;
+        mat_rotacije.mat[2][2]=c;
     }
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke);
 	void highlight(bool b) { oznacena = b; }

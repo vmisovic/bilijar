@@ -116,6 +116,7 @@ void inicijalizuj_kugle()
 	{
 		k[i].ubaci_u_igru();
 		k[i].dodeli_brzinu(sf::Vector2f(0.f,0.f));
+		k[i].okreni();
 	}
     k[0].dodeli_poziciju(sf::Vector2f(dimenzije_stola.x/4, dimenzije_stola.y/2));
 
