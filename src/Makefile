@@ -8,22 +8,24 @@ CXXFLAGS=-std=c++14 -O2 -Wall
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 
 BUILD_DIR=build
-SOURCE_FILES=Source.cpp kugla.cpp ivica.cpp matrica.cpp
-OBJECT_FILES=$(patsubst %,$(BUILD_DIR)/%,$(patsubst %.cpp,%.o,$(SOURCE_FILES)))
+OBJECTS=Source.o kugla.o ivica.o matrica.o
+OBJECT_FILES=$(patsubst %,$(BUILD_DIR)/%,$(OBJECTS))
 
 BINARY=bilijar.out
 
 .PHONY: all run debug clean
 
-all: $(BINARY)
+all: compile
 
 $(BUILD_DIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $^ -o $@
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
-$(BINARY): $(SOURCE_FILES)
-	$(MKDIR) $(BUILD_DIR)
-	$(MAKE) $(OBJECT_FILES)
+$(BINARY): $(OBJECT_FILES)
 	$(CXX) $(CXXFLAGS) $(OBJECT_FILES) -o $@ $(LDFLAGS)
+
+compile:
+	$(MKDIR) $(BUILD_DIR)
+	$(MAKE) $(BINARY)
 
 run: $(BINARY)
 	./$(BINARY)
@@ -33,3 +35,5 @@ debug: $(BINARY)
 
 clean:
 	$(RM) $(BUILD_DIR) $(BINARY)
+
+-include $(OBJECT_FILES:.o=.d)
