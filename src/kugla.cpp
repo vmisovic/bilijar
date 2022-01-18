@@ -112,7 +112,7 @@ bool kugla::provera_sudara_o_teme(sf::Vector2f tacka)
 {
 	if (u_igri == 0) return 0;
 	sf::Vector2f d = pozicija - tacka;
-	return provera_bio_sudar(intenzitet(d) <= poluprecnik + greska_poluprecnik);
+	return provera_bio_sudar(intenzitet(d) < poluprecnik + greska_poluprecnik);
 }
 
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
@@ -182,10 +182,10 @@ void kugla::razdvoji_kugle(kugla *druga)
 {
 	if(provera_sudara_kugli(druga))
     {
-		if(pozicija.x>druga->pozicija.x) pozicija=sf::Vector2f(pozicija.x+2,pozicija.y);
-		else pozicija=sf::Vector2f(pozicija.x-2,pozicija.y);
-		if(pozicija.y>druga->pozicija.y) pozicija=sf::Vector2f(pozicija.x,pozicija.y+2);
-		else pozicija=sf::Vector2f(pozicija.x,pozicija.y-2);
+		sf::Vector2f d = druga->pozicija-pozicija;
+		d *= (poluprecnik*2.f/intenzitet(d)-1.f);
+		druga->pozicija += d*0.5f;
+		pozicija -= d*0.5f;
     }
 }
 
@@ -193,8 +193,8 @@ void kugla::razdvoji_kuglu_od_temena(sf::Vector2f tacka)
 {
 	if(provera_sudara_o_teme(tacka))
 	{
-		sf::Vector2f d = pozicija - tacka;
-		pozicija+=d/intenzitet(d)*4.f;
+		sf::Vector2f d = tacka - pozicija;
+		pozicija += d*(poluprecnik/intenzitet(d)-1.f);
 	}
 }
 

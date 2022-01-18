@@ -437,7 +437,7 @@ int main()
                 }
             if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
-            if (event.type == sf::Event::MouseMoved && !k[0].aktivna())
+            if (event.type == sf::Event::MouseMoved && !krecu_se && !k[0].aktivna())
 			{
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
 				k[0].dodeli_poziciju(mis - pozicija_stola);
