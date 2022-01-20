@@ -27,7 +27,7 @@ compile:
 	$(MKDIR) $(BUILD_DIR)
 	$(MAKE) $(BINARY)
 
-run: $(BINARY)
+run: compile
 	./$(BINARY)
 
 debug: $(BINARY)

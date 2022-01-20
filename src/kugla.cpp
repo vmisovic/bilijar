@@ -53,25 +53,27 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		pozicija += (brzina+nova_brzina)/(2.f*120.f);
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
 		ugaona_brzina = brzina / poluprecnik;
-		
-		gama=0.01f;
-		alfa=0.001f;
-		beta=0.005f;
-		float cosa=cosf(alfa),sina=sinf(alfa);
-		float cosb=cosf(beta),sinb=sinf(beta);
-		float cosg=cosf(gama),sing=sinf(gama);
 
-        mat_drotacije.mat[0][0]=cosg*cosa-cosb*sina*sing;
-        mat_drotacije.mat[0][1]=cosg*sina+cosb*cosa*sing;
-        mat_drotacije.mat[0][2]=sing*sinb;
-        mat_drotacije.mat[1][0]=-sing*cosa-cosb*sina*cosg;
-        mat_drotacije.mat[1][1]=-sing*sina+cosb*cosa*cosg;
-        mat_drotacije.mat[1][2]=cosg*sinb;
-        mat_drotacije.mat[2][0]=sinb*sina;
-        mat_drotacije.mat[2][1]=-sinb*cosa;
-        mat_drotacije.mat[2][2]=cosb;
+		if(intenzitet(brzina)!=0.f)
+		{	
+			sf::Vector2f osa=rotiraj(brzina, PI/2.f);
+			osa/=intenzitet(osa);
+			float ugao,ux=osa.x,uy=osa.y,uz=0;
+			ugao=intenzitet((brzina+nova_brzina)/(2.f*120.f))/poluprecnik;
+			float c=cosf(ugao),s=sinf(ugao);
 
-        mat_rotacije=mat_drotacije*mat_rotacije;
+		    mat_drotacije.mat[0][0]=c+ux*ux*(1.f-c);
+			mat_drotacije.mat[0][1]=ux*uy*(1.f-c)-uz*s;
+		    mat_drotacije.mat[0][2]=ux*uz*(1.f-c)+uy*s;
+			mat_drotacije.mat[1][0]=uy*ux*(1.f-c)+uz*s;
+			mat_drotacije.mat[1][1]=c+uy*uy*(1.f-c);
+			mat_drotacije.mat[1][2]=uy*uz*(1.f-c)-ux*s;
+			mat_drotacije.mat[2][0]=uz*ux*(1.f-c)-uy*s;
+			mat_drotacije.mat[2][1]=uz*uy*(1.f-c)+ux*s;
+			mat_drotacije.mat[2][2]=c+uz*uz*(1.f-c);
+
+			mat_rotacije=mat_rotacije*mat_drotacije;
+		}
 	}
 }
 

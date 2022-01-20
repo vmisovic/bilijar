@@ -21,8 +21,7 @@ class kugla
 	sf::Vector2f brzina;//vektor brzine sa vrednostima x i y
 	sf::Vector2f ugaona_brzina;//vektori ugaone brzine normalne na z i x osu
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
-	float alfa, beta, gama;
-    matrica mat_rotacije, mat_drotacije, xyz;
+	matrica mat_rotacije, mat_drotacije, xyz;
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
 	bool oznacena;//1 kako bi se iscrtavalo precrtan znak
@@ -68,7 +67,6 @@ public:
         red_br=0;
 		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
 		pozicija = sf::Vector2f(200.f, 200.f);
-		alfa = 0; beta = 0; gama = 0;
 		ugaona_brzina = sf::Vector2f(0.f, 0.f);
 		bio_sudar = 0;
 		u_igri = 0;
