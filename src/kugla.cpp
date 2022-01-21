@@ -175,8 +175,9 @@ void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
     // kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
     if(provera_sudara_o_ivicu(ivica1))
     {
-		sf::Vector2f d = dimenzije_stola/2.f - pozicija;
-		pozicija += d / intenzitet(d) * 4.f;
+		sf::Vector2f d = rotiraj(ivica1.getPravac(),-PI/2.f);
+        d/=intenzitet(d);
+		pozicija += d*(poluprecnik-ivica1.razdaljina_od(pozicija)+2.5f);
     }
 }
 

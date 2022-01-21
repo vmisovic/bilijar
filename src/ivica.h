@@ -16,8 +16,9 @@ public:
 
 	void povezi_grafiku(sf::RenderWindow* prozor1) { this->prozor = prozor1; }
 	void podesi(sf::Vector2f t1,sf::Vector2f t2);
-	float razdaljina_od(sf::Vector2f A);
-	void crtaj();
+    float razdaljina_od(sf::Vector2f A);
+    sf::Vector2f getPravac() { return pravac; }
+    void crtaj();
 	void crtaj_senku();
 };
 
