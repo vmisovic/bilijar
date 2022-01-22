@@ -15,7 +15,8 @@ bool fiksiran_stap = 0;
 int tockic = 40;
 sf::Vector2f mis;//cuva kordinate strelice misa
 
-int pozicija_nakon_rupe=0;
+int br_ubacenih_kugli=0;
+int prethodni_br_ubacenih_kugli=0;
 
 
 float** memorija_nova;
@@ -379,7 +380,7 @@ int main()
                     inicijalizuj_kugle();
                     for (int i = 0; i < br_kugli; i++)
 						k[i].okreni();
-                    pozicija_nakon_rupe=0;
+                    br_ubacenih_kugli=0;
 				}
 				if (event.key.code == sf::Keyboard::S)
                     for (int i = 0; i < br_kugli; i++)
@@ -409,6 +410,12 @@ int main()
 					boja_oko_rupa = sf::Color(80,100,100);
 					update_boja();
 				}
+                if (event.key.code == sf::Keyboard::U)
+                {
+                    for (int i = 0; i < br_kugli; i++)
+						k[i].vrati();
+                    br_ubacenih_kugli=prethodni_br_ubacenih_kugli;
+                }
             }
             if (event.type == sf::Event::MouseWheelScrolled && !krecu_se && k[0].aktivna())
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
@@ -444,6 +451,8 @@ int main()
                     krecu_se = 1;
                     fiksiran_stap = 0;
                     tockic = 40;
+                    prethodni_br_ubacenih_kugli=br_ubacenih_kugli;
+                    for (int i = 0; i < br_kugli; i++) k[i].sacuvaj_poziciju(); 
                 }
 				if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && !k[0].aktivna())
                 {

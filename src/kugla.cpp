@@ -52,7 +52,6 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
 		pozicija += (brzina+nova_brzina)/(2.f*120.f);
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
-		ugaona_brzina = brzina / poluprecnik;
 
 		if(intenzitet(brzina)!=0.f)
 		{	
@@ -211,7 +210,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		{
 			if (intenzitet(pozicija_rupe[i]-pozicija) <= 5.f)
 			{
-				if(red_br!=0) dodeli_poziciju(sf::Vector2f(100.f+(pozicija_nakon_rupe++)*40,-100.f));
+				if(red_br!=0) dodeli_poziciju(sf::Vector2f(100.f+(br_ubacenih_kugli++)*40,-100.f));
                 okreni();
 				u_igri = 0;
 				animacija = 0;

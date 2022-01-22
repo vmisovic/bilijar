@@ -9,7 +9,7 @@
 
 extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vektor;
 extern sf::Color boja_stapa, boja_senke;
-extern int pozicija_nakon_rupe;
+extern int br_ubacenih_kugli;
 
 
 float intenzitet(sf::Vector2f a);
@@ -19,11 +19,12 @@ class kugla
 {
 	//promenljive
 	sf::Vector2f brzina;//vektor brzine sa vrednostima x i y
-	sf::Vector2f ugaona_brzina;//vektori ugaone brzine normalne na z i x osu
 	sf::Vector2f pozicija;//kordinate centra kugle x i y
+	sf::Vector2f prethodna_pozicija;//kordinate centra kugle x i y
 	matrica mat_rotacije, mat_drotacije, xyz;
 	bool bio_sudar;//1 u koliko je prethodni frejm bio sudar, da se ne bi ponovno pozivale sudar_... funkcije
 	bool u_igri;//1 u koliko je kugla na stolu tj. u igri je, u koliko je upala u rupu 0
+	bool bila_u_igri;//1 u koliko je prethodni udarac kogla bila u igri
 	bool oznacena;//1 kako bi se iscrtavalo precrtan znak
 	bool animacija;
 
@@ -67,7 +68,7 @@ public:
         red_br=0;
 		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
 		pozicija = sf::Vector2f(200.f, 200.f);
-		ugaona_brzina = sf::Vector2f(0.f, 0.f);
+		prethodna_pozicija = pozicija;
 		bio_sudar = 0;
 		u_igri = 0;
 		oznacena = 0;
@@ -113,6 +114,8 @@ public:
     }
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke);
 	void highlight(bool b) { oznacena = b; }
+    void sacuvaj_poziciju() { prethodna_pozicija = pozicija; bila_u_igri = u_igri; }
+    void vrati() { pozicija = prethodna_pozicija; u_igri = bila_u_igri; brzina=sf::Vector2f(0.f,0.f); }
 
 	//funkcije za vracanje parametara kugle
 	sf::Vector2f getPosition() { return pozicija; }
