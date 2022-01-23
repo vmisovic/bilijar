@@ -1,33 +1,34 @@
 # Simulacija bilijara
-![screenshot](screenshots/bilijar-skrinsot2.png)
+![screenshot](screenshots/bilijar-skrinsot.png)
 ## Kako koristiti program
 **Kada su kugle zaustavljene:**
- 1. Pomeranjem misa namestate stap
- 2. Tockicem misa birate jacinu udarca
- 3. Desni klik fiksira stap
+ 1. Pomeranjem miša nameštate štap
+ 2. Točkićem miša birate jačinu udarca
+ 3. Desni klik fiksira štap
  4. Levi klik udara belu kuglu
 
-**U koliko se kugla ubaci u rupu vracanje na sto se vrsi pomocu misa. Kada postavite misa na zeljeno mesto pritisnite desni klik.**
+**U koliko se bela kugla ubaci u rupu vraćanje na sto se vrši pomoću miša. Kada postavite miš na željeno mesto pritisnite desni klik.**
 
-**Precice na tastaturi:**
+**Prečice na tastaturi:**
 
  * `Q` ili `ESC` izlazi iz programa
  * `P` pauzira igru
- * `L` ukljucuje/iskljucuje pomocne linije
- * `R` rotira kugle ka igracu
- * `S` zaustavlja kugle u trenutku
- * `A` vraca kugle u pocetnu poziciju
- * `N` ciljanje naopacke (namesta putanju/namesta stap)
- * `T` ukljucuje/iskljucuje jednostavno crtanje
- * `O` ukljucuje/iskljucuje osetljivost stapa za precizno bitanje jacine udarca
+ * `U` vraća poziciju pre poslednjeg udarca
+ * `L` uključuje/isključuje pomoćne linije
+ * `R` rotira kugle ka igraču
+ * `S` zaustavlja kugle koje su u pokretu
+ * `A` vraća kugle u početnu poziciju
+ * `N` ciljanje naopacke (namešta putanju/namesta štap)
+ * `T` uključuje/isključuje jednostavno crtanje
+ * `O` uključuje/isključuje osetljivost štapa za precizno biranje jačine udarca
 
-**Seme boja:**
+**Šeme boja:**
  * `G` zelena
  * `B` plava
 
 ## Kako preuzeti program
 
-Preporuceno je manuelno kompajlovati program na GNU/Linux-u, ali ne i na Windowsu.
+Preporučeno je manuelno kompajlovati program na GNU/Linux-u, ali ne i na Windowsu.
 
 Zbog toga, postoje vec kompajlovane verzije koje se mogu naci na sledecoj [stranici](https://github.com/vmisovic/bilijar/releases).
 
@@ -36,12 +37,12 @@ Zbog toga, postoje vec kompajlovane verzije koje se mogu naci na sledecoj [stran
 ### Linux
 
 ##### SFML
-Program koristi graficku biblioteku SFML v2.5.1+.
-Za distrubucije bazirane na Arch Linux-u mozete je preuzeti komandom:
+Program koristi grafičku biblioteku SFML v2.5.1+.
+Za distribucije bazirane na Arch Linux-u možete je preuzeti komandom:
 ```
 sudo pacman -S sfml
 ```
-dok je za distrubucije bazirane na Debianu mozete preuzeti komandom
+dok je za distribucije bazirane na Debianu možete preuzeti komandom
 ```
 sudo apt install libsfml-dev
 ```
@@ -57,7 +58,7 @@ make run
 _Komajlujete na w*nd0wsu na sopstvenu odgovornost_
 
 ##### SFML
-Na Windowsu mozete skinuti SFML biblioteku na sledecem linuku [v2.5.1](https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip).
+Na Windowsu možete skinuti SFML biblioteku na sledećem linuku [v2.5.1](https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip).
 
 ##### Kompajlovanje
 ```

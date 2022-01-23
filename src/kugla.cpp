@@ -52,26 +52,27 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
 		pozicija += (brzina+nova_brzina)/(2.f*120.f);
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
-		ugaona_brzina = brzina / poluprecnik;
-		
-		gama=0.01f;
-		alfa=0.001f;
-		beta=0.005f;
-		float cosa=cosf(alfa),sina=sinf(alfa);
-		float cosb=cosf(beta),sinb=sinf(beta);
-		float cosg=cosf(gama),sing=sinf(gama);
 
-        mat_drotacije.mat[0][0]=cosg*cosa-cosb*sina*sing;
-        mat_drotacije.mat[0][1]=cosg*sina+cosb*cosa*sing;
-        mat_drotacije.mat[0][2]=sing*sinb;
-        mat_drotacije.mat[1][0]=-sing*cosa-cosb*sina*cosg;
-        mat_drotacije.mat[1][1]=-sing*sina+cosb*cosa*cosg;
-        mat_drotacije.mat[1][2]=cosg*sinb;
-        mat_drotacije.mat[2][0]=sinb*sina;
-        mat_drotacije.mat[2][1]=-sinb*cosa;
-        mat_drotacije.mat[2][2]=cosb;
+		if(intenzitet(brzina)!=0.f)
+		{	
+			sf::Vector2f osa=rotiraj(brzina, PI/2.f);
+			osa/=intenzitet(osa);
+			float ugao,ux=osa.x,uy=osa.y,uz=0;
+			ugao=intenzitet((brzina+nova_brzina)/(2.f*120.f))/poluprecnik;
+			float c=cosf(ugao),s=sinf(ugao);
 
-        mat_rotacije=mat_drotacije*mat_rotacije;
+		    mat_drotacije.mat[0][0]=c+ux*ux*(1.f-c);
+			mat_drotacije.mat[0][1]=ux*uy*(1.f-c)-uz*s;
+		    mat_drotacije.mat[0][2]=ux*uz*(1.f-c)+uy*s;
+			mat_drotacije.mat[1][0]=uy*ux*(1.f-c)+uz*s;
+			mat_drotacije.mat[1][1]=c+uy*uy*(1.f-c);
+			mat_drotacije.mat[1][2]=uy*uz*(1.f-c)-ux*s;
+			mat_drotacije.mat[2][0]=uz*ux*(1.f-c)-uy*s;
+			mat_drotacije.mat[2][1]=uz*uy*(1.f-c)+ux*s;
+			mat_drotacije.mat[2][2]=c+uz*uz*(1.f-c);
+
+			mat_rotacije=mat_rotacije*mat_drotacije;
+		}
 	}
 }
 
@@ -112,7 +113,7 @@ bool kugla::provera_sudara_o_teme(sf::Vector2f tacka)
 {
 	if (u_igri == 0) return 0;
 	sf::Vector2f d = pozicija - tacka;
-	return provera_bio_sudar(intenzitet(d) <= poluprecnik + greska_poluprecnik);
+	return provera_bio_sudar(intenzitet(d) < poluprecnik + greska_poluprecnik);
 }
 
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
@@ -173,8 +174,9 @@ void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
     // kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
     if(provera_sudara_o_ivicu(ivica1))
     {
-		sf::Vector2f d = dimenzije_stola/2.f - pozicija;
-		pozicija += d / intenzitet(d) * 4.f;
+		sf::Vector2f d = rotiraj(ivica1.getPravac(),-PI/2.f);
+        d/=intenzitet(d);
+		pozicija += d*(poluprecnik-ivica1.razdaljina_od(pozicija)+2.5f);
     }
 }
 
@@ -182,10 +184,10 @@ void kugla::razdvoji_kugle(kugla *druga)
 {
 	if(provera_sudara_kugli(druga))
     {
-		if(pozicija.x>druga->pozicija.x) pozicija=sf::Vector2f(pozicija.x+2,pozicija.y);
-		else pozicija=sf::Vector2f(pozicija.x-2,pozicija.y);
-		if(pozicija.y>druga->pozicija.y) pozicija=sf::Vector2f(pozicija.x,pozicija.y+2);
-		else pozicija=sf::Vector2f(pozicija.x,pozicija.y-2);
+		sf::Vector2f d = druga->pozicija-pozicija;
+		d *= (poluprecnik*2.f/intenzitet(d)-1.f);
+		druga->pozicija += d*0.5f;
+		pozicija -= d*0.5f;
     }
 }
 
@@ -193,8 +195,8 @@ void kugla::razdvoji_kuglu_od_temena(sf::Vector2f tacka)
 {
 	if(provera_sudara_o_teme(tacka))
 	{
-		sf::Vector2f d = pozicija - tacka;
-		pozicija+=d/intenzitet(d)*4.f;
+		sf::Vector2f d = tacka - pozicija;
+		pozicija += d*(poluprecnik/intenzitet(d)-1.f);
 	}
 }
 
@@ -208,7 +210,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 		{
 			if (intenzitet(pozicija_rupe[i]-pozicija) <= 5.f)
 			{
-				if(red_br!=0) dodeli_poziciju(sf::Vector2f(100.f+(pozicija_nakon_rupe++)*40,-100.f));
+				if(red_br!=0) dodeli_poziciju(sf::Vector2f(100.f+(br_ubacenih_kugli++)*40,-100.f));
                 okreni();
 				u_igri = 0;
 				animacija = 0;

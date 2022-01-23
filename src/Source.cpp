@@ -15,12 +15,13 @@ bool fiksiran_stap = 0;
 int tockic = 40;
 sf::Vector2f mis;//cuva kordinate strelice misa
 
-int pozicija_nakon_rupe=0;
+int br_ubacenih_kugli=0;
+int prethodni_br_ubacenih_kugli=0;
 
 
 float** memorija_nova;
 
-const int br_tacaka = 30;
+const int br_tacaka = 24;
 sf::Vector2f tacke[br_tacaka];
 sf::Vector2f pozicija_stola(200.f, 250.f), dimenzije_stola(800.f, 400.f), pozicija_rupe[6], senka_vektor(5.f, 5.f);
 
@@ -46,8 +47,8 @@ void inicijalizuj_tacke()
 
     tacke[8] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[2];
     tacke[9] = sf::Vector2f(20.f, 20.f) + pozicija_rupe[2];
-    tacke[11] = sf::Vector2f(-10.f, 50.f) + pozicija_rupe[2];
     tacke[10] = sf::Vector2f(-50.f, 10.f) + pozicija_rupe[2];
+    tacke[11] = sf::Vector2f(-10.f, 50.f) + pozicija_rupe[2];
 
     tacke[12] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[3];
     tacke[13] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[3];
@@ -63,14 +64,6 @@ void inicijalizuj_tacke()
     tacke[21] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[5];
     tacke[22] = sf::Vector2f(50.f, -10.f) + pozicija_rupe[5];
 	tacke[23] = sf::Vector2f(10.f, -50.f) + pozicija_rupe[5];
-
-	tacke[24] = sf::Vector2f(-20.f, -20.f) + pozicija_rupe[0];
-	tacke[25] = sf::Vector2f(0.f, -28.f) + pozicija_rupe[1];
-	tacke[26] = sf::Vector2f(20.f, -20.f) + pozicija_rupe[2];
-	tacke[27] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[3];
-	tacke[28] = sf::Vector2f(0.f, 28.f) + pozicija_rupe[4];
-	tacke[29] = sf::Vector2f(-20.f, 20.f) + pozicija_rupe[5];
-	
 }
 
 const int br_ivica = 24;
@@ -79,24 +72,24 @@ ivica ivice[br_ivica];
 void inicijalizuj_ivice()
 {
     //deklarisanje i podesavanja ivica preko temena
-	ivice[0].podesi(tacke[0], tacke[2]);
-    ivice[1].podesi(tacke[1], tacke[3]);
-    ivice[2].podesi(tacke[4], tacke[6]);
+    ivice[0].podesi(tacke[1], tacke[3]);
+    ivice[1].podesi(tacke[3], tacke[6]);
+    ivice[2].podesi(tacke[6], tacke[4]);
     ivice[3].podesi(tacke[5], tacke[7]);
-    ivice[4].podesi(tacke[8], tacke[10]);
-    ivice[5].podesi(tacke[9], tacke[11]);
-    ivice[6].podesi(tacke[12], tacke[14]);
-    ivice[7].podesi(tacke[13], tacke[15]);
-    ivice[8].podesi(tacke[16], tacke[18]);
-    ivice[9].podesi(tacke[17], tacke[19]);
-    ivice[10].podesi(tacke[20], tacke[22]);
-    ivice[11].podesi(tacke[21], tacke[23]);
-    ivice[12].podesi(tacke[3], tacke[6]);
-    ivice[13].podesi(tacke[7], tacke[10]);
-    ivice[14].podesi(tacke[11], tacke[14]);
-    ivice[15].podesi(tacke[15], tacke[18]);
-    ivice[16].podesi(tacke[19], tacke[22]);
-    ivice[17].podesi(tacke[23], tacke[2]);
+    ivice[4].podesi(tacke[7], tacke[10]);
+    ivice[5].podesi(tacke[10], tacke[8]);
+    ivice[6].podesi(tacke[9], tacke[11]);
+    ivice[7].podesi(tacke[11], tacke[14]);
+    ivice[8].podesi(tacke[14], tacke[12]);
+    ivice[9].podesi(tacke[13], tacke[15]);
+    ivice[10].podesi(tacke[15], tacke[18]);
+    ivice[11].podesi(tacke[18], tacke[16]);
+    ivice[12].podesi(tacke[17], tacke[19]);
+    ivice[13].podesi(tacke[19], tacke[22]);
+    ivice[14].podesi(tacke[22], tacke[20]);
+    ivice[15].podesi(tacke[21], tacke[23]);
+    ivice[16].podesi(tacke[23], tacke[2]);
+    ivice[17].podesi(tacke[0], tacke[2]);
 
 	ivice[18].podesi(tacke[1],tacke[4]);
 	ivice[19].podesi(tacke[5],tacke[8]);
@@ -274,26 +267,22 @@ void crtaj_pomocne_linije(sf::Vector2f poz_mis, sf::RenderWindow *prozor)
 	krug_sudara.setOutlineThickness(1.f);
 	prozor->draw(krug_sudara);
 
-	/*kugla u_mestu_sudara;
-	u_mestu_sudara.podesi(poz_provere, pozicija_stola);
-	u_mestu_sudara.aktivna();
-	for (int i = 1; i < br_kugli; i++)
-	if (k[0].provera_sudara_kugli(&u_mestu_sudara))
-	{
-	krug_sudara.setFillColor(sf::Color::Blue);
-	sf::Vertex linija_odbijanja1[] =
-	{
-		sf::Vertex(pozicija_rupe[0] + k[0].getPosition()),
-		sf::Vertex(pozicija_rupe[3] + poz_provere)
-	};
-	sf::Vertex linija_odbijanja2[] =
-	{
-		sf::Vertex(pozicija_stola + k[0].getPosition()),
-		sf::Vertex(pozicija_stola + poz_provere)
-	};
-	prozor->draw(linija_odbijanja1, 2, sf::Lines);
-	prozor->draw(linija_odbijanja2, 2, sf::Lines);
-	}*/
+    /*for(int i=1;i<br_kugli;i++)
+        if(intenzitet(poz_provere-k[i].getPosition())<=2.f*k[0].getPoluprecnik())
+        {
+            sf::Vertex linija_odbijanja1[] =
+	        {
+		        sf::Vertex(pozicija_stola + k[0].getPosition()),
+    	        sf::Vertex(pozicija_rupe[3] + poz_provere)
+	        };
+            sf::Vertex linija_odbijanja2[] =
+	        {
+		        sf::Vertex(pozicija_stola + k[0].getPosition()),
+                sf::Vertex(pozicija_stola + poz_provere)
+	        };
+	        prozor->draw(linija_odbijanja1, 2, sf::Lines);
+            prozor->draw(linija_odbijanja2, 2, sf::Lines);
+        }*/
 }
 
 void crtaj_sto(sf::RenderWindow* prozor)
@@ -309,7 +298,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 		for (int i = 0; i < br_ivica; i++)
 			ivice[i].crtaj_senku();//senke ivica
 	}
-	//iscrtavanje rupa
+    //iscrtavanje rupa
 	for (int i=0; i < 6; i++)
 	{
 		prozor->draw(oko_rupa[i]);
@@ -391,7 +380,7 @@ int main()
                     inicijalizuj_kugle();
                     for (int i = 0; i < br_kugli; i++)
 						k[i].okreni();
-                    pozicija_nakon_rupe=0;
+                    br_ubacenih_kugli=0;
 				}
 				if (event.key.code == sf::Keyboard::S)
                     for (int i = 0; i < br_kugli; i++)
@@ -421,6 +410,12 @@ int main()
 					boja_oko_rupa = sf::Color(80,100,100);
 					update_boja();
 				}
+                if (event.key.code == sf::Keyboard::U)
+                {
+                    for (int i = 0; i < br_kugli; i++)
+						k[i].vrati();
+                    br_ubacenih_kugli=prethodni_br_ubacenih_kugli;
+                }
             }
             if (event.type == sf::Event::MouseWheelScrolled && !krecu_se && k[0].aktivna())
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
@@ -437,7 +432,7 @@ int main()
                 }
             if (event.type == sf::Event::MouseMoved && !fiksiran_stap)
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
-            if (event.type == sf::Event::MouseMoved && !k[0].aktivna())
+            if (event.type == sf::Event::MouseMoved && !krecu_se && !k[0].aktivna())
 			{
                 mis = sf::Vector2f((float)event.mouseMove.x, (float)event.mouseMove.y);
 				k[0].dodeli_poziciju(mis - pozicija_stola);
@@ -456,6 +451,8 @@ int main()
                     krecu_se = 1;
                     fiksiran_stap = 0;
                     tockic = 40;
+                    prethodni_br_ubacenih_kugli=br_ubacenih_kugli;
+                    for (int i = 0; i < br_kugli; i++) k[i].sacuvaj_poziciju(); 
                 }
 				if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && !k[0].aktivna())
                 {
@@ -485,8 +482,9 @@ int main()
             for (int i = 0; i < br_kugli; i++)
             {
                 bool udar_o_ivicu = 0;
-                for (int j = 0; j < br_ivica || udar_o_ivicu; j++)
-                    udar_o_ivicu = k[i].sudar_o_ivicu(ivice[j]);
+                for (int j = 0; j < br_ivica; j++)
+                    if(k[i].sudar_o_ivicu(ivice[j]))
+                        udar_o_ivicu = 1;
                 if (!udar_o_ivicu)//u koliko kugla nije udarila u neko od ivica
                     for (int l = 0; l < br_tacaka; l++)
                         k[i].sudar_o_teme(tacke[l]);//proveri da li je udarila u neko teme
