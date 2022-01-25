@@ -54,7 +54,7 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
 
 		if(intenzitet(brzina)!=0.f)
-		{	
+		{
 			sf::Vector2f osa=rotiraj(brzina, PI/2.f);
 			osa/=intenzitet(osa);
 			float ugao,ux=osa.x,uy=osa.y,uz=0;
@@ -119,12 +119,12 @@ bool kugla::provera_sudara_o_teme(sf::Vector2f tacka)
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
 {
 	if(!provera_sudara_kugli(druga)) return 0;
-	
+
 	sf::Vector2f pv1=brzina/intenzitet(brzina), pv2=druga->brzina/intenzitet(druga->brzina);
 	while(provera_sudara_kugli(druga))
 	{
 		pozicija -= pv1;
-		druga->pozicija-=pv2;	
+		druga->pozicija-=pv2;
 	}
 
 	sf::Vector2f d = druga->pozicija - this->pozicija;
@@ -158,7 +158,7 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o teme
 {
 	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
-	if (!provera_sudara_o_teme(tacka)) return 0;	
+	if (!provera_sudara_o_teme(tacka)) return 0;
 	sf::Vector2f pv=brzina/intenzitet(brzina);
 	while(provera_sudara_o_teme(tacka))
 		pozicija-=pv;
@@ -238,7 +238,7 @@ void kugla::crtaj()//iscrtavanje
 			{
 				rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
 				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), 0.f) + pozicija + pozicija_stola;
-				
+
 				z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
 
                 xyz.mat[0][0]=x;
@@ -300,7 +300,7 @@ void kugla::crtaj_precrtano()
 		crta[1].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik,poluprecnik+2.f);
 		crta[2].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik+2.f,-poluprecnik);
 		crta[3].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik,-poluprecnik-2.f);
-	
+
 		prozor->draw(crta);
 		prozor->draw(maska);
 	}

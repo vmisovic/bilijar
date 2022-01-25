@@ -173,7 +173,7 @@ void inicijalizuj_grafiku(sf::RenderWindow *prozor)
 	oko_rupa[3].setPosition(pozicija_stola + pozicija_rupe[3] - sf::Vector2f(20.f, 20.f));
 	oko_rupa[4].setPosition(pozicija_stola + pozicija_rupe[4] - sf::Vector2f(40.f, -10.f));
 	oko_rupa[5].setPosition(pozicija_stola + pozicija_rupe[5] - sf::Vector2f(60.f, 20.f));
-	
+
 	for (int i = 0; i < 6; i++)
 	{
 		u_okvir[i].setPrimitiveType(sf::Quads);
@@ -260,7 +260,7 @@ void crtaj_pomocne_linije(sf::Vector2f poz_mis, sf::RenderWindow *prozor)
 	};
 	sf::CircleShape krug_sudara;
 	prozor->draw(linija_pravca, 2, sf::Lines);
-	
+
 	krug_sudara.setRadius(k[0].getPoluprecnik());
 	krug_sudara.setPosition(pozicija_stola + poz_provere - sf::Vector2f(k[0].getPoluprecnik(),k[0].getPoluprecnik()));
 	krug_sudara.setFillColor(sf::Color::Transparent);
@@ -320,7 +320,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 	//crtanje znaka u koliko su oznacene
     for (int i = 1; i < br_kugli; i++)
 		k[i].crtaj_precrtano();
-	
+
 	//isctravanje stapa u koliko su se kugle zaustavile
     if (!krecu_se && k[0].aktivna())
 	{
@@ -452,7 +452,7 @@ int main()
                     fiksiran_stap = 0;
                     tockic = 40;
                     prethodni_br_ubacenih_kugli=br_ubacenih_kugli;
-                    for (int i = 0; i < br_kugli; i++) k[i].sacuvaj_poziciju(); 
+                    for (int i = 0; i < br_kugli; i++) k[i].sacuvaj_poziciju();
                 }
 				if (event.mouseButton.button == sf::Mouse::Right && !krecu_se && !k[0].aktivna())
                 {
@@ -496,7 +496,7 @@ int main()
 
 		    // razdvajanje kugli ako su slucajno ostale slepljene
 	        for (int i = 0; i < br_kugli - 1; i++) for (int j = i + 1; j < br_kugli; j++) k[i].razdvoji_kugle(&k[j]);
-			
+
 			for (int i = 0; i < br_kugli; i++)
 			{
 		        //razdvajanje kugli od ivica
