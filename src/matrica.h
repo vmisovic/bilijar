@@ -9,13 +9,13 @@ float** inicijalizuj_memoriju();
 
 struct matrica
 {
-    int kolona,red;
-    float** mat;
+	int kolona,red;
+	float** mat;
 
-    matrica();
-    void dodeli(int,int,float**);
-    matrica operator * (const matrica druga);
-    void operator = (const matrica druga);
+	matrica();
+	void dodeli(int,int,float**);
+	matrica operator * (const matrica druga);
+	void operator = (const matrica druga);
 };
 
 #endif

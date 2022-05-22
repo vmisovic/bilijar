@@ -29,7 +29,7 @@ class kugla
 	bool animacija;
 
 	//konstante
-    int red_br;
+	int red_br;
 	float masa = 1;
 	float poluprecnik = 16.f;//za sve kugle isti!
 	float trenje = 0.1f;
@@ -44,28 +44,28 @@ public:
 	//funkcije za podesavanje kugle
 	kugla()
 	{
-        float** memorija_mat_rotacije=new float*[VELICINA_MATRICE];
-        for(int i=0;i<VELICINA_MATRICE;i++) memorija_mat_rotacije[i] = new float[VELICINA_MATRICE];
-        mat_rotacije.mat=memorija_mat_rotacije;
+		float** memorija_mat_rotacije=new float*[VELICINA_MATRICE];
+		for(int i=0;i<VELICINA_MATRICE;i++) memorija_mat_rotacije[i] = new float[VELICINA_MATRICE];
+		mat_rotacije.mat=memorija_mat_rotacije;
 
-        mat_rotacije.kolona=3;
-        mat_rotacije.red=3;
-        mat_rotacije.mat[0][0]=1;
-        mat_rotacije.mat[1][1]=1;
-        mat_rotacije.mat[2][2]=1;
+		mat_rotacije.kolona=3;
+		mat_rotacije.red=3;
+		mat_rotacije.mat[0][0]=1;
+		mat_rotacije.mat[1][1]=1;
+		mat_rotacije.mat[2][2]=1;
 
-        float** memorija_mat_drotacije=new float*[VELICINA_MATRICE];
-        for(int i=0;i<VELICINA_MATRICE;i++) memorija_mat_drotacije[i] = new float[VELICINA_MATRICE];
-        mat_drotacije.mat=memorija_mat_drotacije;
+		float** memorija_mat_drotacije=new float*[VELICINA_MATRICE];
+		for(int i=0;i<VELICINA_MATRICE;i++) memorija_mat_drotacije[i] = new float[VELICINA_MATRICE];
+		mat_drotacije.mat=memorija_mat_drotacije;
 
-        mat_drotacije.kolona=3;
-        mat_drotacije.red=3;
+		mat_drotacije.kolona=3;
+		mat_drotacije.red=3;
 
 		float** memorija_xyz=new float*[VELICINA_MATRICE];
-        for(int i=0;i<VELICINA_MATRICE;i++) memorija_xyz[i] = new float[VELICINA_MATRICE];
-        xyz.mat=memorija_xyz;
+		for(int i=0;i<VELICINA_MATRICE;i++) memorija_xyz[i] = new float[VELICINA_MATRICE];
+		xyz.mat=memorija_xyz;
 
-        red_br=0;
+		red_br=0;
 		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
 		pozicija = sf::Vector2f(200.f, 200.f);
 		prethodna_pozicija = pozicija;
@@ -78,11 +78,11 @@ public:
 		kruzic.setRadius(poluprecnik * 0.7f);
 		senka.setRadius(poluprecnik);
 		senka.setFillColor(sf::Color(0,0,0,100));
-        pointmap = sf::VertexArray(sf::Points,(int)(4*poluprecnik*poluprecnik));
+		pointmap = sf::VertexArray(sf::Points,(int)(4*poluprecnik*poluprecnik));
 	}
 	void povezi_grafiku(sf::RenderWindow* prozor1, int br)
 	{
-        red_br=br;
+		red_br=br;
 		this->prozor = prozor1;
 		std::stringstream naziv;
 		naziv << "resources/kugla";
@@ -102,20 +102,20 @@ public:
 		ugao=PI/2.f; c=cosf(ugao); s=sinf(ugao);
 		mat_rotacije.mat[0][0]=1;
 		mat_rotacije.mat[0][1]=0;
-        mat_rotacije.mat[0][2]=0;
+		mat_rotacije.mat[0][2]=0;
 
-        mat_rotacije.mat[1][0]=0;
-        mat_rotacije.mat[1][1]=c;
-        mat_rotacije.mat[1][2]=s;
+		mat_rotacije.mat[1][0]=0;
+		mat_rotacije.mat[1][1]=c;
+		mat_rotacije.mat[1][2]=s;
 
-        mat_rotacije.mat[2][0]=0;
-        mat_rotacije.mat[2][1]=-s;
-        mat_rotacije.mat[2][2]=c;
-    }
+		mat_rotacije.mat[2][0]=0;
+		mat_rotacije.mat[2][1]=-s;
+		mat_rotacije.mat[2][2]=c;
+	}
 	void udarac_stapa(sf::Vector2f poz_mis, float jacina, bool naopacke);
 	void highlight(bool b) { oznacena = b; }
-    void sacuvaj_poziciju() { prethodna_pozicija = pozicija; bila_u_igri = u_igri; }
-    void vrati() { pozicija = prethodna_pozicija; u_igri = bila_u_igri; brzina=sf::Vector2f(0.f,0.f); }
+	void sacuvaj_poziciju() { prethodna_pozicija = pozicija; bila_u_igri = u_igri; }
+	void vrati() { pozicija = prethodna_pozicija; u_igri = bila_u_igri; brzina=sf::Vector2f(0.f,0.f); }
 
 	//funkcije za vracanje parametara kugle
 	sf::Vector2f getPosition() { return pozicija; }

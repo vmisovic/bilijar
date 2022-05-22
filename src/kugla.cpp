@@ -54,16 +54,16 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
 
 		if(intenzitet(brzina)!=0.f)
-		{	
+		{
 			sf::Vector2f osa=rotiraj(brzina, PI/2.f);
 			osa/=intenzitet(osa);
 			float ugao,ux=osa.x,uy=osa.y,uz=0;
 			ugao=intenzitet((brzina+nova_brzina)/(2.f*120.f))/poluprecnik;
 			float c=cosf(ugao),s=sinf(ugao);
 
-		    mat_drotacije.mat[0][0]=c+ux*ux*(1.f-c);
+			mat_drotacije.mat[0][0]=c+ux*ux*(1.f-c);
 			mat_drotacije.mat[0][1]=ux*uy*(1.f-c)-uz*s;
-		    mat_drotacije.mat[0][2]=ux*uz*(1.f-c)+uy*s;
+			mat_drotacije.mat[0][2]=ux*uz*(1.f-c)+uy*s;
 			mat_drotacije.mat[1][0]=uy*ux*(1.f-c)+uz*s;
 			mat_drotacije.mat[1][1]=c+uy*uy*(1.f-c);
 			mat_drotacije.mat[1][2]=uy*uz*(1.f-c)-ux*s;
@@ -119,12 +119,12 @@ bool kugla::provera_sudara_o_teme(sf::Vector2f tacka)
 bool kugla::sudar_kugli(kugla* druga)//dodeljuje nove vektore brzine kuglama u koliko je doslo do sudara
 {
 	if(!provera_sudara_kugli(druga)) return 0;
-	
+
 	sf::Vector2f pv1=brzina/intenzitet(brzina), pv2=druga->brzina/intenzitet(druga->brzina);
 	while(provera_sudara_kugli(druga))
 	{
 		pozicija -= pv1;
-		druga->pozicija-=pv2;	
+		druga->pozicija-=pv2;
 	}
 
 	sf::Vector2f d = druga->pozicija - this->pozicija;
@@ -158,7 +158,7 @@ bool kugla::sudar_o_ivicu(ivica ivica1)//dodeljuje novi vektor brzine kugli u ko
 bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli u koliko je doslo do udara o teme
 {
 	sf::Vector2f d = pozicija - tacka, normalna, paralelna;
-	if (!provera_sudara_o_teme(tacka)) return 0;	
+	if (!provera_sudara_o_teme(tacka)) return 0;
 	sf::Vector2f pv=brzina/intenzitet(brzina);
 	while(provera_sudara_o_teme(tacka))
 		pozicija-=pv;
@@ -171,24 +171,24 @@ bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli
 
 void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
 {
-    // kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
-    if(provera_sudara_o_ivicu(ivica1))
-    {
+	// kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
+	if(provera_sudara_o_ivicu(ivica1))
+	{
 		sf::Vector2f d = rotiraj(ivica1.getPravac(),-PI/2.f);
-        d/=intenzitet(d);
+		d/=intenzitet(d);
 		pozicija += d*(poluprecnik-ivica1.razdaljina_od(pozicija)+2.5f);
-    }
+	}
 }
 
 void kugla::razdvoji_kugle(kugla *druga)
 {
 	if(provera_sudara_kugli(druga))
-    {
+	{
 		sf::Vector2f d = druga->pozicija-pozicija;
 		d *= (poluprecnik*2.f/intenzitet(d)-1.f);
 		druga->pozicija += d*0.5f;
 		pozicija -= d*0.5f;
-    }
+	}
 }
 
 void kugla::razdvoji_kuglu_od_temena(sf::Vector2f tacka)
@@ -211,7 +211,7 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 			if (intenzitet(pozicija_rupe[i]-pozicija) <= 5.f)
 			{
 				if(red_br!=0) dodeli_poziciju(sf::Vector2f(100.f+(br_ubacenih_kugli++)*40,-100.f));
-                okreni();
+				okreni();
 				u_igri = 0;
 				animacija = 0;
 				brzina = sf::Vector2f(0.f, 0.f);
@@ -238,18 +238,18 @@ void kugla::crtaj()//iscrtavanje
 			{
 				rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
 				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), 0.f) + pozicija + pozicija_stola;
-				
+
 				z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
 
-                xyz.mat[0][0]=x;
-                xyz.mat[1][0]=y;
-                xyz.mat[2][0]=z;
+				xyz.mat[0][0]=x;
+				xyz.mat[1][0]=y;
+				xyz.mat[2][0]=z;
 
-                xyz=mat_rotacije*xyz;
+				xyz=mat_rotacije*xyz;
 
-                x1=xyz.mat[0][0];
-                y1=xyz.mat[1][0];
-                z1=xyz.mat[2][0];
+				x1=xyz.mat[0][0];
+				y1=xyz.mat[1][0];
+				z1=xyz.mat[2][0];
 
 				t=acosf(z1/poluprecnik);
 
@@ -300,7 +300,7 @@ void kugla::crtaj_precrtano()
 		crta[1].position = pozicija_stola + pozicija + sf::Vector2f(-poluprecnik,poluprecnik+2.f);
 		crta[2].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik+2.f,-poluprecnik);
 		crta[3].position = pozicija_stola + pozicija + sf::Vector2f(poluprecnik,-poluprecnik-2.f);
-	
+
 		prozor->draw(crta);
 		prozor->draw(maska);
 	}
