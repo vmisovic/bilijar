@@ -253,36 +253,17 @@ void crtaj_pomocne_linije(sf::Vector2f poz_mis, sf::RenderWindow *prozor)
 		pomeraj /= 2;
 	}
 
-	sf::Vertex linija_pravca[] =
-	{
-		sf::Vertex(pozicija_stola + k[0].getPosition()),
-		sf::Vertex(pozicija_stola + poz_provere)
-	};
-	sf::CircleShape krug_sudara;
-	prozor->draw(linija_pravca, 2, sf::Lines);
+	sf::VertexArray linija_pravca(sf::Lines, 2);
+	linija_pravca[0].position=pozicija_stola + k[0].getPosition();
+	linija_pravca[1].position=pozicija_stola + poz_provere;
+	prozor->draw(linija_pravca);
 
+	sf::CircleShape krug_sudara;
 	krug_sudara.setRadius(k[0].getPoluprecnik());
 	krug_sudara.setPosition(pozicija_stola + poz_provere - sf::Vector2f(k[0].getPoluprecnik(),k[0].getPoluprecnik()));
 	krug_sudara.setFillColor(sf::Color::Transparent);
 	krug_sudara.setOutlineThickness(1.f);
 	prozor->draw(krug_sudara);
-
-	/*for(int i=1;i<br_kugli;i++)
-		if(intenzitet(poz_provere-k[i].getPosition())<=2.f*k[0].getPoluprecnik())
-		{
-			sf::Vertex linija_odbijanja1[] =
-			{
-				sf::Vertex(pozicija_stola + k[0].getPosition()),
-				sf::Vertex(pozicija_rupe[3] + poz_provere)
-			};
-			sf::Vertex linija_odbijanja2[] =
-			{
-				sf::Vertex(pozicija_stola + k[0].getPosition()),
-				sf::Vertex(pozicija_stola + poz_provere)
-			};
-			prozor->draw(linija_odbijanja1, 2, sf::Lines);
-			prozor->draw(linija_odbijanja2, 2, sf::Lines);
-		}*/
 }
 
 void crtaj_sto(sf::RenderWindow* prozor)
@@ -495,7 +476,7 @@ int main()
 			krecu_se = 0;
 			for (int i = 0; i < br_kugli; i++) if (k[i].krece_se()) krecu_se = 1;
 
-			// razdvajanje kugli ako su slucajno ostale slepljene
+			//razdvajanje kugli ako su slucajno ostale slepljene
 			for (int i = 0; i < br_kugli - 1; i++) for (int j = i + 1; j < br_kugli; j++) k[i].razdvoji_kugle(&k[j]);
 
 			for (int i = 0; i < br_kugli; i++)

@@ -171,7 +171,7 @@ bool kugla::sudar_o_teme(sf::Vector2f tacka)//dodeljuje novi vektor brzine kugli
 
 void kugla::razdvoji_kuglu_od_ivice(ivica ivica1)
 {
-	// kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
+	//kada sve kugle budu bile na stolu, promeniti ovu funkciju tako da ne stavlja kugle van stola
 	if(provera_sudara_o_ivicu(ivica1))
 	{
 		sf::Vector2f d = rotiraj(ivica1.getPravac(),-PI/2.f);
@@ -324,6 +324,7 @@ void kugla::crtaj_stap(sf::Vector2f poz_mis, float jacina, bool naopacke)
 	for (int i=0;i<2;i++) oblik[i].color=boja_stapa;
 	for (int i=2;i<4;i++) oblik[i].color=sf::Color::White;
 	for (int i=0;i<3;i++) trougao[i].color=sf::Color::Black;
+
 	prozor->draw(oblik);
 	prozor->draw(trougao);
 }
@@ -350,10 +351,9 @@ void kugla::crtaj_stap_jednostavno(sf::Vector2f poz_mis, float jacina, bool naop
 	sf::Vector2f pravac_stapa = pozicija_stola + pozicija - poz_mis;
 	if (intenzitet(pravac_stapa) == 0)
 		pravac_stapa = sf::Vector2f(1.f,1.f);
-	sf::Vertex line[] =
-	{
-		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f)),
-		sf::Vertex(pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f))
-	};
-	prozor->draw(line, 2, sf::Lines);
+
+	sf::VertexArray line(sf::Lines, 2);
+	line[0].position=pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 5.f);
+	line[1].position=pozicija_stola + pozicija - (pravac_stapa) / intenzitet(pravac_stapa) * (jacina/2.f + poluprecnik + 200.f);
+	prozor->draw(line);
 }

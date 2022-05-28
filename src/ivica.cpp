@@ -21,18 +21,14 @@ float ivica::razdaljina_od(sf::Vector2f A)
 
 void ivica::crtaj()
 {
-	sf::Vertex line[] =
-	{
-		sf::Vertex(pozicija_stola + tacka1),
-		sf::Vertex(pozicija_stola + tacka2)
-	};
+	linija[0].position=pozicija_stola + tacka1;
+	linija[1].position=pozicija_stola + tacka2;
 
-	prozor->draw(line, 2, sf::Lines);
+	prozor->draw(linija);
 }
 
 void ivica::crtaj_senku()
 {
-	sf::VertexArray senka(sf::Quads, 4);
 	senka[0].position=pozicija_stola + tacka1;
 	senka[1].position=pozicija_stola + tacka2;
 	senka[2].position=pozicija_stola + tacka2 + senka_vektor;
