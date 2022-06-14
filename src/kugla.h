@@ -11,7 +11,6 @@ extern sf::Vector2f pozicija_stola, dimenzije_stola, pozicija_rupe[6], senka_vek
 extern sf::Color boja_stapa, boja_senke;
 extern int br_ubacenih_kugli;
 
-
 float intenzitet(sf::Vector2f a);
 float cos_uglaIzmedjuVektora(sf::Vector2f u, sf::Vector2f v);
 
@@ -30,20 +29,31 @@ class kugla
 
 	//konstante
 	int red_br;
-	float masa = 1;
-	float poluprecnik = 16.f;//za sve kugle isti!
-	float trenje = 0.1f;
+	float masa = 1.f;
+	float poluprecnik = 15.f;//za sve kugle isti!
+	float trenje = 0.06f;
 
 	//grafika
 	sf::Image slika;
 	sf::CircleShape krug, kruzic, senka;
-	sf::RenderWindow* prozor;
 	sf::VertexArray pointmap;
+	float z[64][64];
+	sf::RenderWindow* prozor;
 
 public:
 	//funkcije za podesavanje kugle
 	kugla()
 	{
+		red_br=0;
+		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
+		pozicija = sf::Vector2f(200.f, 200.f);
+		prethodna_pozicija = pozicija;
+		bio_sudar = 0;
+		u_igri = 0;
+		oznacena = 0;
+		animacija = 0;
+
+		//inicijalizovanje matrica rotacije
 		float** memorija_mat_rotacije=new float*[VELICINA_MATRICE];
 		for(int i=0;i<VELICINA_MATRICE;i++) memorija_mat_rotacije[i] = new float[VELICINA_MATRICE];
 		mat_rotacije.mat=memorija_mat_rotacije;
@@ -65,20 +75,22 @@ public:
 		for(int i=0;i<VELICINA_MATRICE;i++) memorija_xyz[i] = new float[VELICINA_MATRICE];
 		xyz.mat=memorija_xyz;
 
-		red_br=0;
-		prozor = NULL;//grafika se prosledjuje grugom funkcijom, kako bi mogao da deklarisem u source.cpp-u niz kugli
-		pozicija = sf::Vector2f(200.f, 200.f);
-		prethodna_pozicija = pozicija;
-		bio_sudar = 0;
-		u_igri = 0;
-		oznacena = 0;
-		animacija = 0;
 		//podesavanje za iscrtavanja
 		krug.setRadius(poluprecnik);
 		kruzic.setRadius(poluprecnik * 0.7f);
 		senka.setRadius(poluprecnik);
 		senka.setFillColor(sf::Color(0,0,0,100));
-		pointmap = sf::VertexArray(sf::Points,(int)(4*poluprecnik*poluprecnik));
+		pointmap = sf::VertexArray(sf::Points,(int)(4 * poluprecnik * poluprecnik));
+
+		//izracunavanje z komponente za svaki piksel unutar kruznice
+		int brojac = 0, r = (int)poluprecnik;
+		for (int x = -r; x < r; x++)
+			for (int y = -r; y < r; y++)
+				if (poluprecnik * poluprecnik >= x * x + y * y)
+				{
+					z[x + r][y + r] = sqrtf(poluprecnik * poluprecnik - x * x - y * y);
+					brojac++;
+				}
 	}
 	void povezi_grafiku(sf::RenderWindow* prozor1, int br)
 	{

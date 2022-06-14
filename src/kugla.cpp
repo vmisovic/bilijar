@@ -50,7 +50,7 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		if (pozicija_stola.y + pozicija.y > prozor->getSize().y - poluprecnik)
 			brzina.y = -fabs(brzina.y) * usporenje;
 		sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
-		pozicija += (brzina+nova_brzina)/(2.f*120.f);
+		pozicija += (brzina+nova_brzina)/(2.f*240.f);
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
 
 		if(intenzitet(brzina)!=0.f)
@@ -58,7 +58,7 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 			sf::Vector2f osa=rotiraj(brzina, PI/2.f);
 			osa/=intenzitet(osa);
 			float ugao,ux=osa.x,uy=osa.y,uz=0;
-			ugao=intenzitet((brzina+nova_brzina)/(2.f*120.f))/poluprecnik;
+			ugao=intenzitet((brzina+nova_brzina)/(2.f*240.f))/poluprecnik;
 			float c=cosf(ugao),s=sinf(ugao);
 
 			mat_drotacije.mat[0][0]=c+ux*ux*(1.f-c);
@@ -228,41 +228,36 @@ int kugla::usla_u_rupu()//vraca br. rupe u koju je upala, u suprotnom -1 (i pome
 void kugla::crtaj()//iscrtavanje
 {
 	//deklarisanje i podesavanje niza piksela (pozicija i boja)
-	int kx,ky,rd_br,x,y,r=poluprecnik;
-	float s=0,t,d,x1=1,y1=1,z1=1,z;
-	for (x = -r; x < r; x++)
-		for (y = -r; y < r; y++)
-		{
-			d = (float)sqrt(x * x + y * y);
-			if (poluprecnik >= d)
+	int kx, ky, brojac = 0, r = (int)poluprecnik;
+	float s = 0, t, x1 = 1, y1 = 1, z1 = 1;
+	for (int x = -r; x < r; x++)
+		for (int y = -r; y < r; y++)
+			if (poluprecnik * poluprecnik >= x * x + y * y)
 			{
-				rd_br = (int)(x + poluprecnik + (y + poluprecnik) * poluprecnik * 2.f);
-				pointmap[rd_br].position = rotiraj(sf::Vector2f((float)x, (float)y), 0.f) + pozicija + pozicija_stola;
-
-				z=sqrtf(poluprecnik*poluprecnik-x*x-y*y);
-
 				xyz.mat[0][0]=x;
 				xyz.mat[1][0]=y;
-				xyz.mat[2][0]=z;
+				xyz.mat[2][0]=z[x + r][y + r];
 
-				xyz=mat_rotacije*xyz;
+				xyz = mat_rotacije * xyz;
 
-				x1=xyz.mat[0][0];
-				y1=xyz.mat[1][0];
-				z1=xyz.mat[2][0];
+				x1 = xyz.mat[0][0];
+				y1 = xyz.mat[1][0];
+				z1 = xyz.mat[2][0];
 
-				t=acosf(z1/poluprecnik);
+				t = acosf(z1 / poluprecnik);
 
-				if(x1>0) s=atanf(y1/x1);
-				if(x1<0) s=atanf(y1/x1)+PI;
-				if(x1==0) s=PI/2.f;
-				s=PI*2.f-s;
+				if(x1 > 0)	s = atanf(y1 / x1);
+				if(x1 < 0)	s = atanf(y1 / x1)+PI;
+				if(x1 == 0)	s = PI/2.f;
+				s = PI * 2.f - s;
 
 				kx = (int)((s / 2.f / PI) * slika.getSize().x) % slika.getSize().x;
-				ky = (int)((t /PI) * slika.getSize().y) % slika.getSize().y;
-				pointmap[rd_br].color = slika.getPixel(kx,ky);
+				ky = (int)((t / PI) * slika.getSize().y) % slika.getSize().y;
+				pointmap[brojac].position = sf::Vector2f((float)x, (float)y) + pozicija + pozicija_stola;
+				pointmap[brojac].color = slika.getPixel(kx, ky);
+
+				brojac++;
 			}
-		}
 	//iscrtavanje na prozor/ekran
 	prozor->draw(pointmap);
 }

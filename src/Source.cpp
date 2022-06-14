@@ -328,7 +328,7 @@ void crtaj_sto(sf::RenderWindow* prozor)
 int main()
 {
 	sf::RenderWindow prozor(sf::VideoMode(1200,900), "Bilijar", sf::Style::Close);
-	prozor.setFramerateLimit(120);
+	prozor.setFramerateLimit(240);
 
 	memorija_nova=inicijalizuj_memoriju();
 	inicijalizuj_tacke();
