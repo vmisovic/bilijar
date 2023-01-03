@@ -31,7 +31,7 @@ class kugla
 	int red_br;
 	float masa = 1.f;
 	float poluprecnik = 15.f;//za sve kugle isti!
-	float trenje = 0.06f;
+	float trenje = 0.08f;
 
 	//grafika
 	sf::Image slika;

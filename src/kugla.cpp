@@ -50,7 +50,7 @@ void kugla::osvezi()//glupa funkcija pomeranja kugli, treba temeljne izmene
 		if (pozicija_stola.y + pozicija.y > prozor->getSize().y - poluprecnik)
 			brzina.y = -fabs(brzina.y) * usporenje;
 		sf::Vector2f nova_brzina = brzina * (1.f - 9.81f * trenje/60);
-		pozicija += (brzina+nova_brzina)/(2.f*240.f);
+		pozicija += (brzina+nova_brzina)/(2.f*60.f);
 		brzina = nova_brzina * (0.f + (intenzitet(brzina) > 5.f));
 
 		if(intenzitet(brzina)!=0.f)
